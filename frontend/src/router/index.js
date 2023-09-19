@@ -1,4 +1,6 @@
 // Composables
+import Register from "@/components/Register/Register.vue";
+import Login from "@/components/Login/Login.vue";
 import { createRouter, createWebHistory } from 'vue-router'
 
 const routes = [
@@ -6,6 +8,14 @@ const routes = [
     path: '/',
     component: () => import('@/layouts/Catalog.vue'),
     
+  },
+  {
+    path: "/register",
+    component: Register,
+  },
+  {
+    path: "/login",
+    component: Login,
   },
 ]
 
