@@ -2,7 +2,10 @@ package ru.alexandrov.backend.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import ru.alexandrov.backend.constants.ProjectConstants;
+import ru.alexandrov.backend.util.CategoryListSerializer;
+import ru.alexandrov.backend.util.PropertyListSerializer;
 
 import javax.persistence.*;
 import java.util.List;
@@ -36,10 +39,11 @@ public class Product {
             joinColumns = @JoinColumn(name = "product_id")
             , inverseJoinColumns = @JoinColumn(name = "category_id")
     )
-    @JsonIgnore
+     @JsonSerialize(using = CategoryListSerializer.class)
     private List<Category> categories;
 
     @ManyToMany(mappedBy = "products")
+    @JsonSerialize(using = PropertyListSerializer.class)
     private List<Property> properties;
 
     @JsonProperty("status_amount")
