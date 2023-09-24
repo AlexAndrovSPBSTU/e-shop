@@ -1,66 +1,102 @@
 <template>
   <v-hover v-slot="{ isHovering, props }">
-    <router-link :to="'/catalog/' + item.title" class="go-to-login__link">
+
+    <div class="go-to-login__link" @click="handleClick">
       <v-sheet
         class="item d-flex rounded-lg ma-2 pa-4"
         v-bind="props"
         :elevation="isHovering ? 24 : 6"
       >
-        <img :src="item.img" alt="" class="item__img"/>
-        <div class="item__title">{{ item.title }}</div>
-        <div class="item__description">{{ item.description }}...</div>
-        <div class="price-btn">
-          <div class="item__price">Цена: {{ item.price }}</div>
-          <v-btn variant="outlined"> Купить </v-btn>
+        <img :src="item.img" alt="" class="item__img" />
+        <div class="item__text">
+          <div class="item__text-content">
+            <div class="item__title">{{ item.title }}</div>
+            <div class="item__description">{{ item.description }}...</div>
+          </div>
+
+          <div class="price-btn">
+            
+            <v-btn variant="outlined" @click.stop>Купить </v-btn>
+            <div class="item__price">Цена: {{ item.price }}</div>
+          </div>
         </div>
       </v-sheet>
-    </router-link>
+    </div>
   </v-hover>
 </template>
 
-<script setup>
-const props = defineProps({
-  item: {
-    type: Object,
-    required: true,
-    default: () => {},
+<script>
+export default {
+  props: {
+    item: {
+      type: Object,
+      required: true,
+      default: () => {},
+    },
   },
-});
+
+  methods: {
+
+    handleClick () {
+      console.log('click')
+      this.$router.push('/catalog/' + this.item.title)
+    }
+  },
+};
 </script>
 
 <style>
 .item {
-  flex-direction: column;
-  align-items: center;
-  max-width: 260px;
+  flex-direction: row;
+
+  gap: 40px;
+}
+
+.go-to-login__link{
+  cursor: pointer;
 }
 
 .item__img {
-  max-width: 170px;
-  height: 204px;
+  height: 250px;
+  max-width: 200px;
+}
+
+.item__text {
+  height: inherit;
+  display: flex;
+  flex: 1;
 }
 
 .item__title {
-  font-size: 25px;
+  font-size: 26px;
   color: rgba(0, 0, 0, 0.8);
+  margin-bottom: 10px;
+}
+
+.item__description {
+  font-weight: 300;
 }
 
 .price-btn {
   display: flex;
-  flex-direction: row;
-  justify-content: space-around;
+  flex-direction: column-reverse;
   align-items: center;
 }
 
-@media (max-width: 500px) {
-  .price-btn {
+@media (max-width: 750px) {
+  .item{
     flex-direction: column;
   }
-  .items {
-    padding: 0;
+}
+
+@media (max-width: 500px) {
+  .item__text{
+    flex-direction: column;
   }
-  .item {
-    margin: 8px auto !important;
+  .price-btn{
+    margin-top: 20px;
+    flex-direction: row-reverse;
+    justify-content: space-between;
   }
 }
 </style>
