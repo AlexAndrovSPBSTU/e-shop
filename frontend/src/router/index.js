@@ -1,6 +1,7 @@
 // Composables
 import Register from "@/components/Register/Register.vue";
 import Login from "@/components/Login/Login.vue";
+import Card from "@/components/Card/Card.vue";
 import { createRouter, createWebHistory } from 'vue-router'
 
 const routes = [
@@ -16,6 +17,10 @@ const routes = [
   {
     path: "/login",
     component: Login,
+  },
+  {
+    path: "/catalog/:title",
+    component: Card,
   },
 ]
 
