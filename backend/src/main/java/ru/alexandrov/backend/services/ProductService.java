@@ -21,8 +21,4 @@ public class ProductService {
     public Optional<Product> getProductById(int id) {
         return productRepository.findById(id);
     }
-
-    public List<Property> getProductProperties(int id) {
-        return productRepository.findById(id).get().getProperties();
-    }
 }

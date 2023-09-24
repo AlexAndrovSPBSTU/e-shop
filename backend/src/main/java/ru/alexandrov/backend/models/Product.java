@@ -1,10 +1,11 @@
 package ru.alexandrov.backend.models;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import ru.alexandrov.backend.constants.ProjectConstants;
-import ru.alexandrov.backend.util.CategoryListSerializer;
+import ru.alexandrov.backend.util.ProductListSerializer;
 import ru.alexandrov.backend.util.PropertyListSerializer;
 
 import javax.persistence.*;
@@ -33,18 +34,15 @@ public class Product {
     @Column(name = "discount")
     private int discount;
 
-    @ManyToMany
-    @JoinTable(
-            name = "product_category",
-            joinColumns = @JoinColumn(name = "product_id")
-            , inverseJoinColumns = @JoinColumn(name = "category_id")
-    )
-     @JsonSerialize(using = CategoryListSerializer.class)
-    private List<Category> categories;
+    @ManyToOne
+    @JoinColumn(name = "category_id", referencedColumnName = "category_id")
+    private Category category;
 
     @ManyToMany(mappedBy = "products")
-    @JsonSerialize(using = PropertyListSerializer.class)
     private List<Property> properties;
+
+    @OneToMany(mappedBy = "product")
+    private List<Photo> photos;
 
     @JsonProperty("status_amount")
     public String getAmount_status() {
@@ -57,8 +55,17 @@ public class Product {
         }
     }
 
+    @JsonSerialize(using = PropertyListSerializer.class)
     public List<Property> getProperties() {
         return properties;
+    }
+
+    public List<Photo> getPhotos() {
+        return photos;
+    }
+
+    public void setPhotos(List<Photo> photos) {
+        this.photos = photos;
     }
 
     public void setProperties(List<Property> properties) {
@@ -93,6 +100,7 @@ public class Product {
         return amount;
     }
 
+
     public void setAmount(int amount) {
         this.amount = amount;
     }
@@ -113,12 +121,12 @@ public class Product {
         this.discount = discount;
     }
 
-    public List<Category> getCategories() {
-        return categories;
+    @JsonGetter("category")
+    public Integer getCategory() {
+        return category.getId();
     }
 
-    public void setCategories(List<Category> category) {
-        this.categories = category;
+    public void setCategory(Category category) {
+        this.category = category;
     }
-
 }

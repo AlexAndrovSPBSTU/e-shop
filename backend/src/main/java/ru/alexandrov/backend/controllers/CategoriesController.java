@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ru.alexandrov.backend.models.Characteristic;
 import ru.alexandrov.backend.models.Product;
 import ru.alexandrov.backend.services.CategoryService;
 import ru.alexandrov.backend.models.Category;
@@ -31,4 +32,8 @@ public class CategoriesController {
         return categoryService.getProductsByCategoryId(id);
     }
 
+    @GetMapping("/{category_id}/characteristics")
+    public List<Characteristic> getCharacteristicsByCategory(@PathVariable("category_id") int id) {
+        return categoryService.getCharacteristicsByCategoryId(id);
+    }
 }

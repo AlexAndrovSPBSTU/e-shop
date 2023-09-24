@@ -1,5 +1,7 @@
 package ru.alexandrov.backend.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -25,9 +27,11 @@ public class Characteristic {
 
     @ManyToOne
     @JoinColumn(name = "category_id", referencedColumnName = "category_id")
+    @JsonIgnore 
     private Category category;
 
     @OneToMany(mappedBy = "characteristic")
+    @JsonIgnore
     private List<Property> property;
 
     public Float getFrom() {

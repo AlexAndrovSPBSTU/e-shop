@@ -1,5 +1,8 @@
 package ru.alexandrov.backend.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -9,6 +12,7 @@ public class Property {
     @Id
     @Column(name = "property_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonIgnore
     private int id;
 
     @Column(name = "value")
@@ -16,8 +20,9 @@ public class Property {
 
     @ManyToOne
     @JoinColumn(name = "characteristic_id", referencedColumnName = "characteristic_id")
+    @JsonBackReference
     private Characteristic characteristic;
-
+    @JsonIgnore
     @ManyToMany
     @JoinTable(name = "product_property",
             joinColumns = @JoinColumn(name = "property_id"),
@@ -47,5 +52,13 @@ public class Property {
 
     public void setCharacteristic(Characteristic characteristic) {
         this.characteristic = characteristic;
+    }
+
+    public List<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(List<Product> products) {
+        this.products = products;
     }
 }

@@ -1,6 +1,5 @@
 package ru.alexandrov.backend.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -19,17 +18,18 @@ public class Category {
     @Column(name = "name")
     private String name;
 
-    @OneToMany(mappedBy = "parent")
+    @ManyToMany(mappedBy = "parents")
     private List<Category> children;
 
-    @JsonBackReference
-    @ManyToOne
-    @JoinColumn(name = "parent_id", referencedColumnName = "category_id")
-    private Category parent;
-
-    @ManyToMany(mappedBy = "categories", cascade = CascadeType.REMOVE)
+    @ManyToMany
+    @JoinTable(name = "category_parent_child",
+            joinColumns = @JoinColumn(name = "child_id"),
+            inverseJoinColumns = @JoinColumn(name = "parent_id"))
     @JsonIgnore
-//    @JsonSerialize(using = CustomProductListSerializer.class)
+    private List<Category> parents;
+
+    @OneToMany(mappedBy = "category")
+    @JsonIgnore
     private List<Product> products;
 
     @OneToMany(mappedBy = "category")
@@ -50,6 +50,7 @@ public class Category {
         }
         return list;
     }
+
     public List<Characteristic> getCharacteristics() {
         return characteristics;
     }
@@ -57,6 +58,7 @@ public class Category {
     public void setCharacteristics(List<Characteristic> characteristics) {
         this.characteristics = characteristics;
     }
+
     public void setProducts(List<Product> products) {
         this.products = products;
     }
@@ -85,11 +87,11 @@ public class Category {
         this.children = children;
     }
 
-    public Category getParent() {
-        return parent;
+    public List<Category> getParents() {
+        return parents;
     }
 
-    public void setParent(Category parent) {
-        this.parent = parent;
+    public void setParents(List<Category> parents) {
+        this.parents = parents;
     }
 }
