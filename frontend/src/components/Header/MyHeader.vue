@@ -55,14 +55,6 @@
 </template>
 
 <script>
-import { storeToRefs } from 'pinia';
-import { useStore } from '@/store/index.js'
-
-const store = useStore();
-
-const { initialState } = storeToRefs(store);
-
-console.log(initialState)
 
 
 export default {

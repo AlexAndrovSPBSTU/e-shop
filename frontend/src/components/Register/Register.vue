@@ -11,22 +11,22 @@
       <Form @submit="handleRegister" :validation-schema="schema">
         <div v-if="!successful">
           <div class="form-group">
-            <label for="fistrname">Имя</label>
-            <Field name="fistrname" type="text" class="form-control" />
-            <ErrorMessage name="fistrname" class="error-feedback" />
+            <label for="name">Имя</label>
+            <Field name="name" type="text" class="form-control" />
+            <ErrorMessage name="name" class="error-feedback" />
           </div>
           <div class="form-group">
-            <label for="secondname">Фамилия</label>
-            <Field name="secondname" type="text" class="form-control" />
-            <ErrorMessage name="secondname" class="error-feedback" />
+            <label for="surname">Фамилия</label>
+            <Field name="surname" type="text" class="form-control" />
+            <ErrorMessage name="surname" class="error-feedback" />
           </div>
           <div class="form-group">
-            <label for="email">Email</label>
+            <label for="email">Почта</label>
             <Field name="email" type="email" class="form-control" />
             <ErrorMessage name="email" class="error-feedback" />
           </div>
           <div class="form-group">
-            <label for="password">Password</label>
+            <label for="password">Пароль</label>
             <Field name="password" type="password" class="form-control" />
             <ErrorMessage name="password" class="error-feedback" />
           </div>
@@ -43,6 +43,9 @@
         :class="successful ? 'alert-success' : 'alert-danger'"
       >
         {{ message }}
+        <div class="go-to-login">
+          <router-link to="/login" class="go-to-login__link">Авторизоваться</router-link>
+        </div>
       </div>
     </div>
   </div>
@@ -61,12 +64,12 @@ export default {
   },
   data() {
     const schema = yup.object().shape({
-      fistrname: yup
+      name: yup
         .string()
         .required("Это поле обязательно")
         .min(2, "Должно быть минимум два символа!")
         .max(100, "Должно быть максимум сто символов!"),
-      secondname: yup
+      surname: yup
         .string()
         .required("Это поле обязательно")
         .min(2, "Должно быть минимум два символа!")
@@ -106,7 +109,18 @@ export default {
       this.message = "Вы были успешно зарегистрированы!!!";
       this.successful = true;
       this.loading = false;
+
+      console.log(JSON.stringify(user))
+      console.log(user2)
       /*
+
+      const requestOptions = {
+        method: "POST",
+        body: JSON.stringify(user)
+      };
+      fetch("https://jsonplaceholder.typicode.com/posts", requestOptions)
+
+
       this.message = "";
       this.successful = false;
       this.loading = true;

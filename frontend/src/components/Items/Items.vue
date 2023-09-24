@@ -14,21 +14,7 @@
             xl="auto"
             xxl="auto"
           >
-            <v-hover v-slot="{ isHovering, props }">
-              <v-sheet
-                class="item d-flex rounded-lg ma-2 pa-4"
-                v-bind="props"
-                :elevation="isHovering ? 24 : 6"
-              >
-                <img :src="item.img" alt="" />
-                <div class="item__title">{{ item.title }}</div>
-                <div class="item__description">{{ item.description }}...</div>
-                <div class="price-btn">
-                  <div class="item__price">Цена: {{ item.price }}</div>
-                  <v-btn variant="outlined"> Купить </v-btn>
-                </div>
-              </v-sheet>
-            </v-hover>
+            <item-of-catalog :item="item"/>
           </v-col>
         </v-row>
       </v-container>
@@ -40,7 +26,7 @@
                 <v-pagination
                   v-model="page"
                   class="my-4"
-                  :length="Math.ceil(items.length/24)"
+                  :length="Math.ceil(items.length / 24)"
                   :total-visible="4"
                 ></v-pagination>
               </v-container>
@@ -53,7 +39,13 @@
 </template>
 
 <script>
+import ItemOfCatalog from "@/components/ItemOfCatalog/ItemOfCatalog.vue";
+
 export default {
+  components: {
+    ItemOfCatalog
+  },
+
   data: () => ({
     page: 1,
     items: [
@@ -539,7 +531,7 @@ export default {
         img: "src/assets/productimage.png",
         amount: 999,
         price: 999,
-      }
+      },
     ],
   }),
 
@@ -563,6 +555,14 @@ export default {
     },
   },
 };
+
+/**
+ * 
+ * created() {
+  fetch("https://jsonplaceholder.typicode.com/posts", requestOptions)
+    .then(response => response.json())
+}
+ */
 </script>
 
 <style>
@@ -573,38 +573,6 @@ export default {
   justify-content: center;
 }
 
-.item {
-  flex-direction: column;
-  align-items: center;
-  max-width: 260px;
-}
-
-img {
-  max-width: 170px;
-  height: 204px;
-}
-
-.item__title {
-  font-size: 25px;
-  color: rgba(0, 0, 0, 0.8);
-}
-
-.price-btn {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  align-items: center;
-}
-
-@media (max-width: 500px) {
-  .price-btn {
-    flex-direction: column;
-  }
-  .items {
-    padding: 0;
-  }
-  .item {
-    margin: 8px auto !important;
-  }
-}
 </style>
+
+
