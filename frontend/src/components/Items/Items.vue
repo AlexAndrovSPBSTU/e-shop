@@ -1,23 +1,10 @@
 <template>
   <div class="items">
     <div class="container">
-      <v-container>
-        <v-row no-gutters>
-          <v-col
-            v-for="(item, index) in paginatedTickers"
-            :key="index"
-            cols="12"
-            sx="12"
-            sm="auto"
-            md="auto"
-            lg="auto"
-            xl="auto"
-            xxl="auto"
-          >
-            <item-of-catalog :item="item"/>
-          </v-col>
-        </v-row>
-      </v-container>
+      <div class="list" v-for="(item, index) in paginatedTickers" :key="index">
+        <item-of-catalog :item="item" />
+      </div>
+
       <div class="text-center">
         <v-container>
           <v-row justify="center">
@@ -26,7 +13,7 @@
                 <v-pagination
                   v-model="page"
                   class="my-4"
-                  :length="Math.ceil(items.length / 24)"
+                  :length="Math.ceil(items.length / 6)"
                   :total-visible="4"
                 ></v-pagination>
               </v-container>
@@ -43,7 +30,7 @@ import ItemOfCatalog from "@/components/ItemOfCatalog/ItemOfCatalog.vue";
 
 export default {
   components: {
-    ItemOfCatalog
+    ItemOfCatalog,
   },
 
   data: () => ({
@@ -51,7 +38,7 @@ export default {
     items: [
       {
         title: "Realme C55",
-        description: "64MP Kamera Juara",
+        description: "64MP Kamera Juara Я пишу ответы с помощью YaGPT 2 — новой нейросети Яндекса, подражая текстам в интернете. Поэтому результат может быть выдумкой: это не моё мнение и не мнение Яндекса. Я стараюсь быть этичной, так что на некоторые запросы не отвечаю. Не судите строго за ошибки — я только учусь.",
         img: "src/assets/productimage.png",
         amount: 999,
         price: 999,
@@ -537,11 +524,11 @@ export default {
 
   computed: {
     startIndex() {
-      return (this.page - 1) * 24;
+      return (this.page - 1) * 6;
     },
 
     endIndex() {
-      return this.page * 24;
+      return this.page * 6;
     },
 
     paginatedTickers() {
@@ -567,12 +554,6 @@ export default {
 
 <style>
 .items {
-  margin-top: 80px;
-  padding: 60px;
-  display: grid;
-  justify-content: center;
+  margin-top: 120px;
 }
-
 </style>
-
-
