@@ -11,7 +11,7 @@
                 size="x-large"
                 v-bind="props"
               ></v-icon>
-              <div class="catalog__title" v-bind="props">Каталог</div>
+              <div class="catalog__title" v-bind="props">E-SHOP</div>
             </template>
 
             <v-list>
@@ -37,28 +37,28 @@
         </div>
 
         <div class="header__right">
-          <v-icon
-            color="rgba(155, 155, 155)"
-            icon="mdi-cart-outline"
-            size="x-large"
-          ></v-icon>
-          <v-icon
-            color="rgba(155, 155, 155)"
-            icon="mdi-account"
-            size="x-large"
-          ></v-icon>
+          <router-link to="/bucket"
+            ><v-icon
+              color="rgba(155, 155, 155)"
+              icon="mdi-cart-outline"
+              size="x-large"
+            ></v-icon
+          ></router-link>
+          <router-link to="/login"
+            ><v-icon
+              color="rgba(155, 155, 155)"
+              icon="mdi-account"
+              size="x-large"
+            ></v-icon
+          ></router-link>
         </div>
-        
       </div>
     </div>
   </div>
 </template>
 
 <script>
-
-
 export default {
-
   data: () => ({
     items: [
       { title: "Click Me" },
@@ -67,8 +67,6 @@ export default {
       { title: "Click Me 2" },
     ],
   }),
-
-  
 };
 </script>
 
@@ -100,8 +98,10 @@ export default {
 }
 
 .catalog__title {
-  font-size: 25px;
-  color: rgba(0, 0, 0, 0.7);
+  font-size: 28px;
+  font-weight: 500;
+  font-style: italic;
+  color: rgba(0, 0, 0, 0.65);
   cursor: pointer;
 }
 </style>

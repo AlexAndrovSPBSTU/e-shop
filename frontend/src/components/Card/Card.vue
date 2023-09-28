@@ -51,7 +51,7 @@ export default {
       {
         title: "Каталог",
         disabled: false,
-        to: "/",
+        to: "/catalog",
       },
       {
         title: "Телефоны",
