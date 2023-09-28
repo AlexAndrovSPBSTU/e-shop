@@ -1,17 +1,25 @@
-import { defineStore } from "pinia";
-
 const user = JSON.parse(localStorage.getItem("user"));
 const initialState = user
   ? { status: { loggedIn: true }, user }
   : { status: { loggedIn: false }, user: null };
 
-export const useStore = defineStore("storeId", {
-  // arrow function recommended for full type inference
-  state: () => {
-    return {
-      initialState,
-      count: 0,
-    };
+import { createStore } from "vuex";
+
+export default createStore({
+  state: () => ({
+    initialState,
+    count: 0,
+  }),
+
+  getters: {
+    
+  },
+
+  mutations: {
+    increment(state) {
+      state.count++
+    },
+
   },
 
   actions: {

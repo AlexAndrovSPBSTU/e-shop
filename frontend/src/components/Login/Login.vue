@@ -36,7 +36,6 @@
 <script>
 import { Form, Field, ErrorMessage } from "vee-validate";
 import * as yup from "yup";
-import { useStore } from '@/store/index.js'
 
 export default {
   name: "Login",
