@@ -35,17 +35,17 @@
               <img
                 src="\src\assets\productimage.png"
                 alt=""
-                class="item__img"
+                class="advertising__img"
               />
-              <div class="item__text">
-                <div class="item__text-content">
-                  <div class="item__title">HEllo</div>
-                  <div class="item__description">HEllo...</div>
+              <div class="advertising__text">
+                <div class="advertising__text-content">
+                  <div class="advertising__title">HEllo</div>
+                  <div class="advertising__description">HEllo...</div>
                 </div>
 
                 <div class="price-btn">
                   <v-btn variant="outlined" @click.stop>Купить </v-btn>
-                  <div class="item__price">Цена: 999</div>
+                  <div class="advertising__price">Цена: 999</div>
                 </div>
               </div>
             </div>
@@ -53,17 +53,17 @@
               <img
                 src="\src\assets\productimage.png"
                 alt=""
-                class="item__img"
+                class="advertising__img"
               />
-              <div class="item__text">
-                <div class="item__text-content">
-                  <div class="item__title">HEllo</div>
-                  <div class="item__description">HEllo...</div>
+              <div class="advertising__text">
+                <div class="advertising__text-content">
+                  <div class="advertising__title">HEllo</div>
+                  <div class="advertising__description">HEllo...</div>
                 </div>
 
                 <div class="price-btn">
                   <v-btn variant="outlined" @click.stop>Купить </v-btn>
-                  <div class="item__price">Цена: 999</div>
+                  <div class="advertising__price">Цена: 999</div>
                 </div>
               </div>
             </div>
@@ -82,17 +82,17 @@
               <img
                 src="\src\assets\airpods.png"
                 alt=""
-                class="item__img"
+                class="advertising__img"
               />
-              <div class="item__text">
-                <div class="item__text-content">
-                  <div class="item__title">HEllo</div>
-                  <div class="item__description">HEllo...</div>
+              <div class="advertising__text">
+                <div class="advertising__text-content">
+                  <div class="advertising__title">HEllo</div>
+                  <div class="advertising__description">HEllo...</div>
                 </div>
 
                 <div class="price-btn">
                   <v-btn variant="outlined" @click.stop>Купить </v-btn>
-                  <div class="item__price">Цена: 999</div>
+                  <div class="advertising__price">Цена: 999</div>
                 </div>
               </div>
             </div>
@@ -100,17 +100,17 @@
               <img
                 src="\src\assets\productimage3.png"
                 alt=""
-                class="item__img"
+                class="advertising__img"
               />
-              <div class="item__text">
-                <div class="item__text-content">
-                  <div class="item__title">HEllo</div>
-                  <div class="item__description">HEllo...</div>
+              <div class="advertising__text">
+                <div class="advertising__text-content">
+                  <div class="advertising__title">HEllo</div>
+                  <div class="advertising__description">HEllo...</div>
                 </div>
 
                 <div class="price-btn">
                   <v-btn variant="outlined" @click.stop>Купить </v-btn>
-                  <div class="item__price">Цена: 999</div>
+                  <div class="advertising__price">Цена: 999</div>
                 </div>
               </div>
             </div>
@@ -219,12 +219,12 @@ export default {
     
 }
 
-.item__img {
+.advertising__img {
   height: 250px;
   max-width: 200px;
 }
 
-.item__text {
+.advertising__text {
   height: inherit;
   display: flex;
   flex-direction: column;
@@ -232,13 +232,13 @@ export default {
   flex: 1;
 }
 
-.item__title {
+.advertising__title {
   font-size: 26px;
   color: rgba(0, 0, 0, 0.8);
   margin-bottom: 10px;
 }
 
-.item__description {
+.advertising__description {
   font-weight: 300;
 }
 
