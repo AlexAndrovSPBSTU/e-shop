@@ -9,10 +9,15 @@ export default createStore({
   state: () => ({
     initialState,
     count: 0,
+    bucket: []
   }),
 
   getters: {
-    
+    getCount(state){
+      return state.count
+    },
+
+
   },
 
   mutations: {
@@ -20,6 +25,9 @@ export default createStore({
       state.count++
     },
 
+    setItem(state, data){
+      state.bucket.push({id: Date.now(), ...data})
+    }
   },
 
   actions: {
