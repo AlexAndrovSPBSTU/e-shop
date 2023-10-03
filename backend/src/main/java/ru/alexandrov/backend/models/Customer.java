@@ -2,6 +2,8 @@ package ru.alexandrov.backend.models;
 
 import javax.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "customer")
 public class Customer {
@@ -24,6 +26,17 @@ public class Customer {
 
     @Column(name = "role")
     private String role;
+
+    @OneToMany(mappedBy = "customer")
+    private List<Comment> comments;
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
 
     public String getRole() {
         return role;

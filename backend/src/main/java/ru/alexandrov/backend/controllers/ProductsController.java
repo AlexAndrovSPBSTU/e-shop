@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.alexandrov.backend.models.Product;
 import ru.alexandrov.backend.services.ProductService;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/products")
 public class ProductsController {
