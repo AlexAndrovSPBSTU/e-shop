@@ -38,7 +38,10 @@
 
         <div class="header__right">
           <router-link to="/bucket"
-            ><v-icon
+          class="bucket"
+            >
+            <span class="bucket--active" v-if="this.$store.getters['getCount'] > 0">{{this.$store.getters['getCount']}}</span>
+            <v-icon
               color="rgba(155, 155, 155)"
               icon="mdi-cart-outline"
               size="x-large"
@@ -66,6 +69,7 @@ export default {
       { title: "Click Me" },
       { title: "Click Me 2" },
     ],
+
   }),
 };
 </script>
@@ -76,6 +80,7 @@ export default {
   height: 80px;
   background-color: #ffffff;
   position: fixed;
+  z-index: 10;
 }
 
 .header__content {
@@ -95,6 +100,23 @@ export default {
   display: flex;
   gap: 10px;
   align-items: center;
+}
+
+.bucket{
+  text-decoration: none;  
+}
+
+.bucket--active{
+  position: relative;
+  left: 39px;
+  top: -12px;
+  z-index: 999;
+  padding: 1px 5px;
+  background-color: orange;
+  border-radius: 50px;
+  font-size: 14px;
+  font-weight: 400;
+  color: #ffffff;
 }
 
 .catalog__title {

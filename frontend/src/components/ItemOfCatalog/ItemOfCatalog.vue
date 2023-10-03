@@ -14,7 +14,7 @@
           </div>
 
           <div class="price-btn">
-            <v-btn variant="outlined" @click.stop="increment">Купить </v-btn>
+            <v-btn variant="outlined" @click.stop="addItems">Купить </v-btn>
             <div class="item__price">Цена: {{ item.price }}</div>
           </div>
         </div>
@@ -34,9 +34,11 @@ export default {
   },
 
   methods: {
-    increment() {
+    addItems() {
       this.$store.commit("increment");
       console.log(this.$store.state.count);
+
+      this.$store.commit("setItem", this.item)
     },
 
     handleClick() {
