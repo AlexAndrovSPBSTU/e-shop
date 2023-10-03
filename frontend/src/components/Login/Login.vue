@@ -74,8 +74,21 @@ export default {
     handleLogin(user) {
       this.loading = true;
 
-      const store = useStore();
-      // call the action as a method of the store
+      let formData = new FormData();
+      formData.append("email", user.email);
+      formData.append("password", user.password);
+
+      fetch("/", {
+        method: "POST",
+        //headers: { "Content-Type": "application/json" },
+        body: formData,
+      });
+
+
+      //console.log(formData)
+
+      /*const store = useStore();
+       //call the action as a method of the store
       store.login(user).then(() => {
         this.$router.push("/");
       },
@@ -83,7 +96,7 @@ export default {
           this.loading = false;
           this.message = "Error!!!"
             ;
-        });
+        });*/
 
       /*
       this.$store.dispatch("auth/login", user).then(
