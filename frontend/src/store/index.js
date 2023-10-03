@@ -17,6 +17,9 @@ export default createStore({
       return state.count
     },
 
+    getBucket(state){
+      return state.bucket
+    }
 
   },
 
