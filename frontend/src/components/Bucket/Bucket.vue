@@ -1,32 +1,58 @@
 <template>
   <div class="bucket">
     <my-header />
-    <div class="container">
-      <div class="bucket__content">
+    <div class="bucket__content">
+      <div class="container">
         <router-link to="/catalog" class="back-to-shop">
           Вернуться к покупкам
         </router-link>
         <div class="bucket__title">Корзина</div>
-        <div class="bucket__list">
-          <div
-            class="bucket__item"
-            v-for="(item, index) in this.$store.state.bucket"
-            :key="index"
-          >
-            <img :src="item.img" alt="" class="bucket__img" />
-            <div class="bucket__title">{{ item.title }}</div>
-            <div class="bucket__title">Total Count: {{ item.totalCount }}</div>
+
+        <div class="bucket__order">
+          <div class="bucket__list" v-if="this.$store.state.bucket.length == 0">
+            Ваша корзина пуста
+          </div>
+          <div class="bucket__list" v-else>
+            <div
+              class="bucket__item"
+              v-for="(item, index) in this.$store.state.bucket"
+              :key="index"
+            >
+              <img :src="item.img" alt="" class="bucket__img" />
+              <div class="bucket__title">{{ item.title }}</div>
+
+              <div class="bucket__btns">
+                <v-btn density="compact" icon="mdi-minus" variant="plain" @click.stop="delItems(item)"/>
+                <div class="bucket__count">
+                  {{ item.totalCount }}
+                </div>
+                <v-btn density="compact" icon="mdi-plus" variant="plain" @click.stop="addItems(item)"/>
+                <div class="bucket__price">
+                  {{ item.totalCount * item.price }}
+                </div>
+                <v-btn density="compact" icon="mdi-trash-can" variant="plain" />
+              </div>
+            </div>
+          </div>
+          <div class="place-an-order">
+            <div class="place-an-order__title">Оформить заказ</div>
+            <div class="place-an-order__sum">
+              Сумма заказа: {{ $store.getters["getSumPrice"] }}
+            </div>
+            <div class="place-an-order__totalAmount">
+              Количество товаров: {{ $store.getters["getAmountItem"] }}
+            </div>
+            <v-btn class="place-an-order__btn">Оформить</v-btn>
           </div>
         </div>
       </div>
-    
     </div>
-    <my-footer/>
+    <my-footer />
   </div>
 </template>
 
 <script>
-import MyFooter from '../Footer/MyFooter.vue';
+import MyFooter from "../Footer/MyFooter.vue";
 import MyHeader from "../Header/MyHeader.vue";
 export default {
   components: { MyHeader, MyFooter },
@@ -36,17 +62,33 @@ export default {
     };
   },
 
-  /**
- * <div class="list" v-for="(item, index) in paginatedTickers" :key="index">
-        <item-of-catalog :item="item" />
-      </div>
- */
+  methods: {
+    addItems(item) {
+      this.$store.commit("increment");
+
+      this.$store.commit("setItem", item)
+    },
+
+    delItems(item) {
+      this.$store.commit("decrement");
+
+      this.$store.commit("delItem", item)
+    },
+
+  },
 };
 </script>
 
 <style>
+.bucket {
+  height: inherit;
+  display: flex;
+  flex-direction: column;
+}
+
 .bucket__content {
   margin-top: 120px;
+  flex: 1;
 }
 
 .back-to-shop {
@@ -58,6 +100,17 @@ export default {
 
 .bucket__title {
   font-size: 35px;
+  flex: 1;
+}
+
+.bucket__order {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.bucket__list {
+  width: 80%;
 }
 
 .bucket__item {
@@ -73,5 +126,40 @@ export default {
 
 .bucket__img {
   width: 100px;
+}
+
+.bucket__btns{
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  width: 200px;
+}
+
+.bucket__price{
+  font-size: 20px;
+  margin-left: 8%;
+  margin-right: 8%;
+}
+
+.bucket__count{
+  font-size: 18px;
+  margin-left: 2%;
+  margin-right: 2%;
+}
+
+.place-an-order {
+  background-color: white;
+  border-radius: 20px;
+  box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.3);
+  width: 15%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px;
+  height: 240px;
+}
+
+.place-an-order__title {
+  font-size: 23px;
 }
 </style>
