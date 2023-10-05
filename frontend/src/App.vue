@@ -45,6 +45,7 @@
   height: 100%;
   width: 80%;
   margin: 0 auto;
+  flex: 1;
 }
 
 </style>

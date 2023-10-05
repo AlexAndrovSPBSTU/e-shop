@@ -13,11 +13,11 @@ export default createStore({
   }),
 
   getters: {
-    getCount(state){
+    getCount(state) {
       return state.count
     },
 
-    getBucket(state){
+    getBucket(state) {
       return state.bucket
     }
 
@@ -28,8 +28,12 @@ export default createStore({
       state.count++
     },
 
-    setItem(state, data){
-      state.bucket.push({id: Date.now(), ...data})
+    setItem(state, data) {
+      let item = state.bucket.findIndex(value => value.title === data.title)
+      item !== -1
+        ? state.bucket[item].totalCount++
+        : state.bucket.push({ id: Date.now(), totalCount: 1, ...data })
+
     }
   },
 
