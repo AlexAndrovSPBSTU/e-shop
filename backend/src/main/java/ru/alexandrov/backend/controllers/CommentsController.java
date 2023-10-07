@@ -3,10 +3,8 @@ package ru.alexandrov.backend.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import ru.alexandrov.backend.models.Characteristic;
 import ru.alexandrov.backend.models.Comment;
 import ru.alexandrov.backend.services.CommentService;
 
@@ -25,4 +23,17 @@ public class CommentsController {
         commentService.save(comment);
         return ResponseEntity.ok(HttpStatus.OK);
     }
+
+    @DeleteMapping("/{comment_id}")
+    public ResponseEntity<HttpStatus> deleteComment(@PathVariable("comment_id") int id) {
+        commentService.deleteComment(id);
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
+
+    @DeleteMapping("/photos")
+    public ResponseEntity<HttpStatus> deleteCommentPhotos(@RequestParam String[] urls) {
+        commentService.deleteCommentPhotos(urls);
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
+
 }
