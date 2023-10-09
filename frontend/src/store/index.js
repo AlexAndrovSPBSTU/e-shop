@@ -13,10 +13,17 @@ export default createStore({
   }),
 
   getters: {
-    getCount(state){
+    getCount(state) {
       return state.count
     },
 
+    getSumPrice(state){
+      return state.bucket.reduce((sum, current) => sum + current.price * current.totalCount, 0)
+    },
+
+    getAmountItem(state){
+      return state.bucket.reduce((sum, current) => sum + current.totalCount, 0)
+    },
 
   },
 
@@ -25,9 +32,29 @@ export default createStore({
       state.count++
     },
 
-    setItem(state, data){
-      state.bucket.push({id: Date.now(), ...data})
-    }
+    decrement(state) {
+      state.count--
+    },
+
+    setItem(state, data) {
+      let item = state.bucket.findIndex(value => value.title === data.title)
+      item !== -1
+        ? state.bucket[item].totalCount++
+        : state.bucket.push({ id: Date.now(), totalCount: 1, ...data })
+    },
+
+    delItem(state, data) {
+      let item = state.bucket.findIndex(value => value.title === data.title)
+
+      state.bucket[item].totalCount - 1 == 0 
+        ? state.bucket = state.bucket.filter((d) => d !== data)
+        : state.bucket[item].totalCount--
+    },
+
+    delAllItems(state, data){
+      state.count -= data.totalCount
+      state.bucket = state.bucket.filter((d) => d !== data)
+    },  
   },
 
   actions: {

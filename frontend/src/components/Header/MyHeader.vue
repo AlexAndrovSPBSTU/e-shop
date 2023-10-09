@@ -38,9 +38,9 @@
 
         <div class="header__right">
           <router-link to="/bucket"
-          class="bucket"
+          class="header__bucket"
             >
-            <span class="bucket--active" v-if="this.$store.getters['getCount'] > 0">{{this.$store.getters['getCount']}}</span>
+            <span class="header__bucket--active" v-if="this.$store.getters['getCount'] > 0">{{this.$store.getters['getCount']}}</span>
             <v-icon
               color="rgba(155, 155, 155)"
               icon="mdi-cart-outline"
@@ -102,14 +102,14 @@ export default {
   align-items: center;
 }
 
-.bucket{
+.header__bucket{
   text-decoration: none;  
 }
 
-.bucket--active{
+.header__bucket--active{
   position: relative;
-  left: 39px;
-  top: -12px;
+  left: 38px;
+  top: -14px;
   z-index: 999;
   padding: 1px 5px;
   background-color: orange;

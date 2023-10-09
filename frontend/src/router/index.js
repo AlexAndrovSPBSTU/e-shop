@@ -3,6 +3,7 @@ import Register from "@/components/Register/Register.vue";
 import Login from "@/components/Login/Login.vue";
 import Card from "@/components/Card/Card.vue";
 import Welcome from "@/layouts/WelcomePage.vue";
+import Bucket from "@/components/Bucket/Bucket.vue";
 import { createRouter, createWebHistory } from 'vue-router'
 
 const routes = [
@@ -22,6 +23,10 @@ const routes = [
   {
     path: "/login",
     component: Login,
+  },
+  {
+    path: "/bucket",
+    component: Bucket,
   },
   {
     path: "/catalog/:title",

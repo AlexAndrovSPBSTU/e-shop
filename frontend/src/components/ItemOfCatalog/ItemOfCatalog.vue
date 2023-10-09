@@ -36,7 +36,6 @@ export default {
   methods: {
     addItems() {
       this.$store.commit("increment");
-      console.log(this.$store.state.count);
 
       this.$store.commit("setItem", this.item)
     },
