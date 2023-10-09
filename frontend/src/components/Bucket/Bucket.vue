@@ -22,27 +22,44 @@
               <div class="bucket__title">{{ item.title }}</div>
 
               <div class="bucket__btns">
-                <v-btn density="compact" icon="mdi-minus" variant="plain" @click.stop="delItems(item)"/>
+                <v-btn
+                  density="compact"
+                  icon="mdi-minus"
+                  variant="plain"
+                  @click.stop="delItem(item)"
+                />
                 <div class="bucket__count">
                   {{ item.totalCount }}
                 </div>
-                <v-btn density="compact" icon="mdi-plus" variant="plain" @click.stop="addItems(item)"/>
+                <v-btn
+                  density="compact"
+                  icon="mdi-plus"
+                  variant="plain"
+                  @click.stop="addItem(item)"
+                />
                 <div class="bucket__price">
                   {{ item.totalCount * item.price }}
                 </div>
-                <v-btn density="compact" icon="mdi-trash-can" variant="plain" />
+                <v-btn
+                  density="compact"
+                  icon="mdi-trash-can"
+                  variant="plain"
+                  @click.stop="delAllItems(item)"
+                />
               </div>
             </div>
           </div>
           <div class="place-an-order">
-            <div class="place-an-order__title">Оформить заказ</div>
-            <div class="place-an-order__sum">
-              Сумма заказа: {{ $store.getters["getSumPrice"] }}
+            <div class="place-an-order--fixed">
+              <div class="place-an-order__title">Оформить заказ</div>
+              <div class="place-an-order__sum">
+                Сумма заказа: {{ $store.getters["getSumPrice"] }}
+              </div>
+              <div class="place-an-order__totalAmount">
+                Количество товаров: {{ $store.getters["getAmountItem"] }}
+              </div>
+              <v-btn class="place-an-order__btn">Оформить</v-btn>
             </div>
-            <div class="place-an-order__totalAmount">
-              Количество товаров: {{ $store.getters["getAmountItem"] }}
-            </div>
-            <v-btn class="place-an-order__btn">Оформить</v-btn>
           </div>
         </div>
       </div>
@@ -63,18 +80,21 @@ export default {
   },
 
   methods: {
-    addItems(item) {
+    addItem(item) {
       this.$store.commit("increment");
 
-      this.$store.commit("setItem", item)
+      this.$store.commit("setItem", item);
     },
 
-    delItems(item) {
+    delItem(item) {
       this.$store.commit("decrement");
 
-      this.$store.commit("delItem", item)
+      this.$store.commit("delItem", item);
     },
 
+    delAllItems(item) {
+      this.$store.commit("delAllItems", item);
+    },
   },
 };
 </script>
@@ -128,35 +148,45 @@ export default {
   width: 100px;
 }
 
-.bucket__btns{
+.bucket__btns {
   display: flex;
   flex-direction: row;
   align-items: flex-end;
   width: 200px;
 }
 
-.bucket__price{
+.bucket__price {
   font-size: 20px;
   margin-left: 8%;
   margin-right: 8%;
 }
 
-.bucket__count{
+.bucket__count {
   font-size: 18px;
   margin-left: 2%;
   margin-right: 2%;
 }
 
 .place-an-order {
+  
+  width: 15%;
+  padding-bottom: 20px;
+  
+  
+}
+
+.place-an-order--fixed{
   background-color: white;
   border-radius: 20px;
   box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.3);
-  width: 15%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  height: 280px;
   padding: 20px;
-  height: 240px;
+  position: sticky;
+  top: 100px;
+  right: 100px;
 }
 
 .place-an-order__title {

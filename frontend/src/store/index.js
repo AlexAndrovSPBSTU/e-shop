@@ -50,6 +50,11 @@ export default createStore({
         ? state.bucket = state.bucket.filter((d) => d !== data)
         : state.bucket[item].totalCount--
     },
+
+    delAllItems(state, data){
+      state.count -= data.totalCount
+      state.bucket = state.bucket.filter((d) => d !== data)
+    },  
   },
 
   actions: {
