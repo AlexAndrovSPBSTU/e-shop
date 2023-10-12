@@ -28,6 +28,123 @@
               </div>
             </div>
           </div>
+
+          <div class="spec">
+            <div class="spec__title">Характеристики</div>
+            <v-table>
+              <tbody>
+                <tr v-for="item in card.spec" :key="item.name">
+                  <td>{{ item.name }}</td>
+                  <td>{{ item.text }}</td>
+                </tr>
+              </tbody>
+            </v-table>
+          </div>
+
+          <div class="comments">
+            <div class="comments__title">Отзывы</div>
+            <div class="comments__content">
+              <div class="comment">
+                <div class="comment__header">
+                  <div class="author">Иванов И.</div>
+                  <div class="stars">
+                    <v-rating
+                      readonly
+                      :length="5"
+                      :size="32"
+                      :model-value="3"
+                      color="orange-lighten-1"
+                      active-color="orange-lighten-1"
+                    ></v-rating>
+                  </div>
+                </div>
+                <div class="comment__text">
+                  Качественный, хороший звук. В этих наушниках хочется слушать
+                  музыку. Шумоподавление хорошо убирает гул (например шум работы
+                  ДВС автомобиля, обдува), но вот с резкими стуками, щелчками
+                  дело обстоит заметно хуже. Через несколько минут
+                  использования, перестаёшь их чувствовать в ушах. Заряд держат
+                  заявленное время. Честное отображение уровня (а не долгие
+                  100%, а потом резкий спуск). Грамотная конструкция амбушюров с
+                  точки зрения стойкости к загрязнению от ушного канала.
+                </div>
+                <div class="comment__delete">
+                  <v-btn
+                    class="comment__delete-btn"
+                    density="compact"
+                    icon="mdi-trash-can"
+                    variant="plain"
+                    @click.stop="delAllItems(item)"
+                  />
+                </div>
+              </div>
+              <div class="comment">
+                <div class="comment__header">
+                  <div class="author">Петров П.</div>
+                  <div class="stars">
+                    <v-rating
+                      readonly
+                      :length="5"
+                      :size="32"
+                      :model-value="5"
+                      color="orange-lighten-1"
+                      active-color="orange-lighten-1"
+                    ></v-rating>
+                  </div>
+                </div>
+                <div class="comment__text">
+                  Таких басов вы ещё не слышали! 100% оригинал, прошли все
+                  проверки. Прошивка обновляется. При подключении к iPhone сразу
+                  прилетел месяц подписки Apple Music в подарок.
+                </div>
+              </div>
+              <div class="comment">
+                <div class="comment__header">
+                  <div class="author">Иванов И.</div>
+                  <div class="stars">
+                    <v-rating
+                      readonly
+                      :length="5"
+                      :size="32"
+                      :model-value="3"
+                      color="orange-lighten-1"
+                      active-color="orange-lighten-1"
+                    ></v-rating>
+                  </div>
+                </div>
+                <div class="comment__text">
+                  Качественный, хороший звук. В этих наушниках хочется слушать
+                  музыку. Шумоподавление хорошо убирает гул (например шум работы
+                  ДВС автомобиля, обдува), но вот с резкими стуками, щелчками
+                  дело обстоит заметно хуже. Через несколько минут
+                  использования, перестаёшь их чувствовать в ушах. Заряд держат
+                  заявленное время. Честное отображение уровня (а не долгие
+                  100%, а потом резкий спуск). Грамотная конструкция амбушюров с
+                  точки зрения стойкости к загрязнению от ушного канала.
+                </div>
+              </div>
+              <div class="comment">
+                <div class="comment__header">
+                  <div class="author">Петров П.</div>
+                  <div class="stars">
+                    <v-rating
+                      readonly
+                      :length="5"
+                      :size="32"
+                      :model-value="5"
+                      color="orange-lighten-1"
+                      active-color="orange-lighten-1"
+                    ></v-rating>
+                  </div>
+                </div>
+                <div class="comment__text">
+                  Таких басов вы ещё не слышали! 100% оригинал, прошли все
+                  проверки. Прошивка обновляется. При подключении к iPhone сразу
+                  прилетел месяц подписки Apple Music в подарок.
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -52,6 +169,28 @@ export default {
         "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aliquid atque consectetur fugiat, cum necessitatibus a animi doloribus qui eaque suscipit quo, dolore optio eum similique numquam minus id amet eius? Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aliquid atque consectetur fugiat, cum necessitatibus a animi doloribus qui eaque suscipit quo, dolore optio eum similique numquam minus id amet eius?Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aliquid atque consectetur fugiat, cum necessitatibus a animi doloribus qui eaque suscipit quo, dolore optio eum similique numquam minus id amet eius?",
       price: 999,
       amount: 999,
+      spec: [
+        {
+          name: "Бренд",
+          text: "APPLE",
+        },
+        {
+          name: "Модель",
+          text: "AirPods Pro 2 A2698 A2699 A2700",
+        },
+        {
+          name: "Крепление",
+          text: "в ушной раковине",
+        },
+        {
+          name: "Тип конструкции",
+          text: "внутриканальные",
+        },
+        {
+          name: "Тип соединения",
+          text: "беспроводные bluetooth",
+        },
+      ],
     },
 
     items: [
@@ -110,6 +249,7 @@ export default {
   border-radius: 20px;
   display: flex;
   gap: 60px;
+  margin-bottom: 100px;
 }
 
 .card__img-img {
@@ -148,5 +288,51 @@ export default {
 .card__price {
   font-weight: 500;
   font-size: 28px;
+}
+
+.spec > .v-table {
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.3);
+  border-radius: 20px;
+  margin-bottom: 100px;
+}
+
+.comments__title,
+.spec__title {
+  font-size: 30px;
+  margin-bottom: 20px;
+}
+
+.comments__content {
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.3);
+  border-radius: 20px;
+  background-color: white;
+}
+
+.comment {
+  margin-bottom: 20px;
+  margin: 20px;
+  padding: 20px;
+  border-bottom: 1px solid rgba(128, 128, 128, 0.478);
+}
+
+.comment:last-child {
+  border: none;
+}
+
+.comment__header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.v-rating__item label {
+  margin: 0;
+}
+
+.comment__delete{
+  display: flex;
+  justify-content: flex-end;
 }
 </style>
