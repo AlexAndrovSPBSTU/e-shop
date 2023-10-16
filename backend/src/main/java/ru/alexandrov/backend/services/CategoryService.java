@@ -7,6 +7,7 @@ import ru.alexandrov.backend.repositories.CategoryRepository;
 import ru.alexandrov.backend.models.Category;
 import ru.alexandrov.backend.models.Product;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -28,5 +29,26 @@ public class CategoryService {
 
     public List<Characteristic> getCharacteristicsByCategoryId(int id) {
         return categoryRepository.findById(id).get().getCharacteristics();
+    }
+
+    @Transactional
+    public void save(Category category, int parentId) {
+        category = categoryRepository.save(category);
+        categoryRepository.insert(category.getId(), parentId);
+    }
+
+    @Transactional
+    public void delete(int child_id, int parent_id) {
+        categoryRepository.deleteChild(child_id, parent_id);
+    }
+
+    @Transactional
+    public void insert(int child_id, int parent) {
+        categoryRepository.insert(child_id, parent);
+    }
+
+    @Transactional
+    public void rename(int categoryId, String newName) {
+        categoryRepository.rename(categoryId, newName);
     }
 }

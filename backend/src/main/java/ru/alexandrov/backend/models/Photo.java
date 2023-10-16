@@ -19,6 +19,11 @@ public class Photo {
     @JsonBackReference
     private Product product;
 
+    @ManyToOne
+    @JoinColumn(name = "comment_id", referencedColumnName = "comment_id")
+    @JsonBackReference
+    private Comment comment;
+
     public String getUrl() {
         return url;
     }
@@ -41,5 +46,13 @@ public class Photo {
 
     public void setProduct(Product product) {
         this.product = product;
+    }
+
+    public Comment getComment() {
+        return comment;
+    }
+
+    public void setComment(Comment comment) {
+        this.comment = comment;
     }
 }

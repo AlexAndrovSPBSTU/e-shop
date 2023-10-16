@@ -44,6 +44,10 @@ public class Product {
     @OneToMany(mappedBy = "product")
     private List<Photo> photos;
 
+    @OneToMany(mappedBy = "product")
+    @JsonIgnore
+    private List<Comment> comments;
+
     @JsonProperty("status_amount")
     public String getAmount_status() {
         if (amount > 5) {
@@ -58,6 +62,14 @@ public class Product {
     @JsonSerialize(using = PropertyListSerializer.class)
     public List<Property> getProperties() {
         return properties;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
     }
 
     public List<Photo> getPhotos() {
