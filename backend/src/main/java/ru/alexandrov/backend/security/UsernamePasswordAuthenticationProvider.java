@@ -1,4 +1,4 @@
-package ru.alexandrov.backend.config;
+package ru.alexandrov.backend.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -33,7 +33,8 @@ public class UsernamePasswordAuthenticationProvider implements AuthenticationPro
         Optional<Customer> optionalCustomer = customerService.findByEmail(email);
         if (optionalCustomer.isPresent()) {
             if (passwordEncoder.matches(password, optionalCustomer.get().getPassword())) {
-                return new UsernamePasswordAuthenticationToken(email, password, Collections.singletonList(new SimpleGrantedAuthority(optionalCustomer.get().getRole())));
+                return new UsernamePasswordAuthenticationToken(email, password,
+                        Collections.singletonList(new SimpleGrantedAuthority(optionalCustomer.get().getRole())));
             } else {
                 throw new BadCredentialsException("Invalid password!");
             }
