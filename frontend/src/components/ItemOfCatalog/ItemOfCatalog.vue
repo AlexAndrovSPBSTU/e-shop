@@ -1,6 +1,5 @@
 <template>
   <v-hover v-slot="{ isHovering, props }">
-
     <div class="go-to-login__link" @click="handleClick">
       <v-sheet
         class="item d-flex rounded-lg ma-2 pa-4"
@@ -15,8 +14,7 @@
           </div>
 
           <div class="price-btn">
-            
-            <v-btn variant="outlined" @click.stop>Купить </v-btn>
+            <v-btn variant="outlined" @click.stop="addItems">Купить </v-btn>
             <div class="item__price">Цена: {{ item.price }}</div>
           </div>
         </div>
@@ -36,11 +34,16 @@ export default {
   },
 
   methods: {
+    addItems() {
+      this.$store.commit("increment");
 
-    handleClick () {
-      console.log('click')
-      this.$router.push('/catalog/' + this.item.title)
-    }
+      this.$store.commit("setItem", this.item)
+    },
+
+    handleClick() {
+      console.log("click");
+      this.$router.push("/catalog/" + this.item.title);
+    },
   },
 };
 </script>
@@ -52,7 +55,7 @@ export default {
   gap: 40px;
 }
 
-.go-to-login__link{
+.go-to-login__link {
   cursor: pointer;
 }
 
@@ -84,16 +87,16 @@ export default {
 }
 
 @media (max-width: 750px) {
-  .item{
+  .item {
     flex-direction: column;
   }
 }
 
 @media (max-width: 500px) {
-  .item__text{
+  .item__text {
     flex-direction: column;
   }
-  .price-btn{
+  .price-btn {
     margin-top: 20px;
     flex-direction: row-reverse;
     justify-content: space-between;

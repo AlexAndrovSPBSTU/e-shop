@@ -17,7 +17,14 @@
                   <div class="card__price">{{ card.price }}₽</div>
                   <div class="card__amount text-body-2">В наличии: много</div>
                 </div>
-                <v-btn variant="outlined" color='orange' class="text-none text-h6"> Купить </v-btn>
+                <v-btn
+                  variant="outlined"
+                  color="orange"
+                  class="text-none text-h6"
+                  @click.stop="increment"
+                >
+                  Купить
+                </v-btn>
               </div>
             </div>
           </div>
@@ -71,6 +78,12 @@ export default {
     itemsData() {
       this.items[2].title = this.card.title;
       return this.items;
+    },
+  },
+  methods: {
+    increment() {
+      this.$store.commit("increment");
+      console.log(this.$store.state.count);
     },
   },
 };
