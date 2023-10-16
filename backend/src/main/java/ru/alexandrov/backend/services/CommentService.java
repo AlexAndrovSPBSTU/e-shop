@@ -1,35 +1,35 @@
 package ru.alexandrov.backend.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import ru.alexandrov.backend.models.Comment;
 import ru.alexandrov.backend.repositories.CommentRepository;
-import ru.alexandrov.backend.repositories.PhotosRepository;
+import ru.alexandrov.backend.repositories.CustomerRepository;
+import ru.alexandrov.backend.repositories.PhotoRepository;
+import ru.alexandrov.backend.repositories.ProductRepository;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 @Service
 public class CommentService {
     private final CommentRepository commentRepository;
-    private final PhotosRepository photosRepository;
-
+    private final PhotoRepository photoRepository;
+    private final ProductRepository productRepository;
+    private final CustomerRepository customerRepository;
 
     @Autowired
-    public CommentService(CommentRepository commentRepository, PhotosRepository photosRepository) {
+    public CommentService(CommentRepository commentRepository, PhotoRepository photoRepository, ProductRepository productRepository, CustomerRepository customerRepository) {
         this.commentRepository = commentRepository;
-        this.photosRepository = photosRepository;
+        this.photoRepository = photoRepository;
+        this.productRepository = productRepository;
+        this.customerRepository = customerRepository;
     }
 
-    public void save(Comment comment) {
+    public void save(Comment comment, int productId) {
         comment.setDate(new Date());
-//         TODO finish when jwt is presented
-//         comment.setCustomer();
+        comment.setProduct(productRepository.findById(productId).get());
+        comment.setCustomer(customerRepository.findByEmail((String) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).get());
         commentRepository.save(comment);
     }
 
@@ -37,7 +37,5 @@ public class CommentService {
         commentRepository.deleteById(id);
     }
 
-    public void deleteCommentPhotos(String[] urls) {
-        photosRepository.deleteAllByUrlIn(Arrays.asList(urls));
-    }
+
 }

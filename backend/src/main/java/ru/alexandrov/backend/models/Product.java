@@ -45,6 +45,7 @@ public class Product {
     private List<Photo> photos;
 
     @OneToMany(mappedBy = "product")
+    @JsonIgnore
     private List<Comment> comments;
 
     @JsonProperty("status_amount")

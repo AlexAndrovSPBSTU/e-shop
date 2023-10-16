@@ -19,8 +19,9 @@ public class CommentsController {
     }
 
     @PostMapping("/new")
-    public ResponseEntity<HttpStatus> createComment(@RequestBody Comment comment) {
-        commentService.save(comment);
+    public ResponseEntity<HttpStatus> createComment(@RequestBody Comment comment,
+                                                    @RequestParam int productId) {
+        commentService.save(comment, productId);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
@@ -30,10 +31,5 @@ public class CommentsController {
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
-    @DeleteMapping("/photos")
-    public ResponseEntity<HttpStatus> deleteCommentPhotos(@RequestParam String[] urls) {
-        commentService.deleteCommentPhotos(urls);
-        return ResponseEntity.ok(HttpStatus.OK);
-    }
 
 }
