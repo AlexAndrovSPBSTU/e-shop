@@ -1,0 +1,27 @@
+version: '3'
+services:
+  postgres-db:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: e-shop
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: qwdcft228
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+  spring-boot-app:
+    build:
+      context: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres-db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-db:5432/e-shop
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: qwdcft228
+
+volumes:
+  postgres-data:
