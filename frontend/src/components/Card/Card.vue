@@ -90,6 +90,7 @@
                           <img :src="photo" alt="" class="comment__img" />
                           <div class="photo__delete">
                             <v-btn
+                              v-if="this.$store.state.initialState.user.role === 'ADMIN'"
                               class="photo__delete-btn"
                               density="compact"
                               size="large"
@@ -112,9 +113,10 @@
                     </v-dialog>
                   </div>
                 </template>
-
+                <!-- Дописать здесь логику!!! -->
                 <div class="comment__delete">
                   <v-btn
+                    v-if="this.$store.state.initialState.status.loggedIn && this.$store.state.initialState.user.role === 'ADMIN'"
                     class="comment__delete-btn"
                     density="compact"
                     icon="mdi-trash-can"
