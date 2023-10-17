@@ -28,6 +28,103 @@
               </div>
             </div>
           </div>
+
+          <div class="spec">
+            <div class="spec__title">Характеристики</div>
+            <v-table>
+              <tbody>
+                <tr v-for="item in card.spec" :key="item.name">
+                  <td>{{ item.name }}</td>
+                  <td>{{ item.text }}</td>
+                </tr>
+              </tbody>
+            </v-table>
+          </div>
+
+          <div class="comments">
+            <div class="comments__header">
+              <div class="comments__title">Отзывы</div>
+              <div class="filters">
+                <v-select
+                  v-model="filter"
+                  :items="filters"
+                  variant="underlined"
+                  label="Сортировать по"
+                  class="my-select"
+                >
+                </v-select>
+              </div>
+            </div>
+
+            <div class="comments__content">
+              <div
+                class="comment"
+                v-for="(comment, index) in sortItems"
+                :key="index"
+              >
+                <div class="comment__header">
+                  <div class="author">{{ comment.author }}</div>
+                  <div class="stars">
+                    <v-rating
+                      readonly
+                      :length="5"
+                      :size="32"
+                      :model-value="comment.rating"
+                      color="orange-lighten-1"
+                      active-color="orange-lighten-1"
+                    ></v-rating>
+                  </div>
+                </div>
+                <div class="comment__text">
+                  {{ comment.text }}
+                </div>
+                <template v-if="comment.photos.length !== 0">
+                  <div class="comment__photos">
+                    <v-dialog
+                      width="1000"
+                      v-for="(photo, index) in comment.photos"
+                      :key="index"
+                    >
+                      <template v-slot:activator="{ props }">
+                        <div v-bind="props" class="comment__photo">
+                          <img :src="photo" alt="" class="comment__img" />
+                          <div class="photo__delete">
+                            <v-btn
+                              class="photo__delete-btn"
+                              density="compact"
+                              size="large"
+                              icon="mdi-plus"
+                              variant="text"
+                              @click.stop="delPhoto(photo)"
+                            />
+                          </div>
+                        </div>
+                      </template>
+
+                      <template v-slot:default="{ isActive }">
+                        <img
+                          :src="photo"
+                          alt=""
+                          class="comment__img--full"
+                          @click="isActive.value = false"
+                        />
+                      </template>
+                    </v-dialog>
+                  </div>
+                </template>
+
+                <div class="comment__delete">
+                  <v-btn
+                    class="comment__delete-btn"
+                    density="compact"
+                    icon="mdi-trash-can"
+                    variant="plain"
+                    @click.stop="delComment(comment)"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -52,7 +149,60 @@ export default {
         "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aliquid atque consectetur fugiat, cum necessitatibus a animi doloribus qui eaque suscipit quo, dolore optio eum similique numquam minus id amet eius? Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aliquid atque consectetur fugiat, cum necessitatibus a animi doloribus qui eaque suscipit quo, dolore optio eum similique numquam minus id amet eius?Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aliquid atque consectetur fugiat, cum necessitatibus a animi doloribus qui eaque suscipit quo, dolore optio eum similique numquam minus id amet eius?",
       price: 999,
       amount: 999,
+      spec: [
+        {
+          name: "Бренд",
+          text: "APPLE",
+        },
+        {
+          name: "Модель",
+          text: "AirPods Pro 2 A2698 A2699 A2700",
+        },
+        {
+          name: "Крепление",
+          text: "в ушной раковине",
+        },
+        {
+          name: "Тип конструкции",
+          text: "внутриканальные",
+        },
+        {
+          name: "Тип соединения",
+          text: "беспроводные bluetooth",
+        },
+      ],
     },
+
+    comments: [
+      {
+        author: "Иванов И.",
+        rating: 3,
+        text: "Качественный, хороший звук. В этих наушниках хочется слушать музыку. Шумоподавление хорошо убирает гул (например шум работы ДВС автомобиля, обдува), но вот с резкими стуками, щелчками дело обстоит заметно хуже. Через несколько минут использования, перестаёшь их чувствовать в ушах. Заряд держат заявленное время. Честное отображение уровня (а не долгие 100%, а потом резкий спуск). Грамотная конструкция амбушюров с точки зрения стойкости к загрязнению от ушного канала.",
+        photos: [
+          "https://static.onlinetrade.ru/img/fullreviews/86437/21_big.JPG",
+          "https://www.ferra.ru/imgs/2021/11/16/08/5029490/4b26dd764e6bac28f307d8c58bbf9c96e236297b.jpg",
+          "https://img.freepik.com/free-photo/abstract-surface-and-textures-of-white-concrete-stone-wall_74190-8189.jpg?w=1380&t=st=1697560803~exp=1697561403~hmac=108d77af72d4f1d8b0d9b1160d8df236d3dcf3759ac9171abb360ffa7a90d55e",
+        ],
+      },
+      {
+        author: "Петров П.",
+        rating: 5,
+        text: "Таких басов вы ещё не слышали! 100% оригинал, прошли все проверки. Прошивка обновляется. При подключении к iPhone сразу прилетел месяц подписки Apple Music в подарок.",
+        photos: [],
+      },
+      {
+        author: "Иванов И.",
+        rating: 4,
+        text: "Качественный, хороший звук. В этих наушниках хочется слушать музыку. Шумоподавление хорошо убирает гул (например шум работы ДВС автомобиля, обдува), но вот с резкими стуками, щелчками дело обстоит заметно хуже. Через несколько минут использования, перестаёшь их чувствовать в ушах. Заряд держат заявленное время. Честное отображение уровня (а не долгие 100%, а потом резкий спуск). Грамотная конструкция амбушюров с точки зрения стойкости к загрязнению от ушного канала.",
+        photos: [],
+      },
+      {
+        author: "Петров П.",
+        rating: 2,
+        text: "Таких басов вы ещё не слышали! 100% оригинал, прошли все проверки. Прошивка обновляется. При подключении к iPhone сразу прилетел месяц подписки Apple Music в подарок.",
+        photos: [],
+      },
+    ],
 
     items: [
       {
@@ -70,14 +220,24 @@ export default {
         disabled: true,
       },
     ],
+
+    filters: ['Рейтинг выше', 'Рейтинг ниже'],
+    filter: 'Рейтинг выше',
   }),
   created() {
-    //fetch на сервер с запром на получение определенного товара
+    //fetch на сервер с запросом на получение определенного товара
+    //fetch на сервер с запросом на получение комментов к этому товару
   },
   computed: {
     itemsData() {
       this.items[2].title = this.card.title;
       return this.items;
+    },
+
+    sortItems(){
+      return this.filter === "Рейтинг ниже"
+        ? this.comments.sort((a, b) => a.rating - b.rating) 
+        : this.comments.sort((a, b) => a.rating - b.rating).reverse()
     },
   },
   methods: {
@@ -85,7 +245,15 @@ export default {
       this.$store.commit("increment");
       console.log(this.$store.state.count);
     },
+
+    
   },
+
+  watch: {
+    filter(){
+      this.sortItems;
+    }
+  }
 };
 </script>
 
@@ -110,6 +278,7 @@ export default {
   border-radius: 20px;
   display: flex;
   gap: 60px;
+  margin-bottom: 100px;
 }
 
 .card__img-img {
@@ -148,5 +317,93 @@ export default {
 .card__price {
   font-weight: 500;
   font-size: 28px;
+}
+
+.spec > .v-table {
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.3);
+  border-radius: 20px;
+  margin-bottom: 100px;
+}
+
+.comments__title,
+.spec__title {
+  font-size: 30px;
+  margin-bottom: 20px;
+}
+
+.comments__header{
+  display: flex;
+  justify-content: space-between;
+}
+
+.my-select{
+  width: 190px;
+}
+
+.comments__content {
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.3);
+  border-radius: 20px;
+  background-color: white;
+}
+
+.comment {
+  margin-bottom: 20px;
+  margin: 20px;
+  padding: 20px;
+  border-bottom: 1px solid rgba(128, 128, 128, 0.478);
+}
+
+.comment:last-child {
+  border: none;
+}
+
+.comment__header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.comment__text {
+  margin-bottom: 20px;
+}
+
+.v-rating__item label {
+  margin: 0;
+}
+
+.comment__delete {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.comment__photos {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+
+.comment__img {
+  max-width: 200px;
+  height: 140px;
+}
+
+.comment__img--full {
+  width: 1000px;
+}
+
+.photo__delete {
+  position: relative;
+  top: -145px;
+  display: flex;
+  justify-content: flex-end;
+  z-index: 1000;
+}
+
+.photo__delete-btn {
+  text-shadow: 1px 1px 1px rgba(0, 0, 0);
+  color: white;
+  transform: rotate(45deg);
+  font-size: 24px;
 }
 </style>
