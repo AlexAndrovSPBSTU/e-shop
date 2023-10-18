@@ -17,6 +17,7 @@ public class Photo {
 
     @ManyToOne
     @JoinColumn(name = "product_id", referencedColumnName = "product_id")
+    @JsonBackReference
     private Product product;
 
     @ManyToOne

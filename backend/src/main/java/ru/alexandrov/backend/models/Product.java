@@ -2,6 +2,7 @@ package ru.alexandrov.backend.models;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import ru.alexandrov.backend.constants.ProjectConstants;
@@ -44,7 +45,7 @@ public class Product {
     private List<Property> properties;
 
     @OneToMany(mappedBy = "product")
-    @JsonIgnore
+    @JsonManagedReference
     private List<Photo> photos;
 
     @OneToMany(mappedBy = "product")
