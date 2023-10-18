@@ -7,6 +7,5 @@ import ru.alexandrov.backend.models.Photo;
 import java.util.Collection;
 
 @Repository
-public interface PhotoRepository extends CrudRepository<Photo, Integer> {
-    void deleteAllByUrlIn(Collection<String> strings);
+public interface PhotoRepository extends CrudRepository<Photo, String> {
 }

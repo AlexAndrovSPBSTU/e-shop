@@ -9,12 +9,12 @@ import ru.alexandrov.backend.services.PropertyService;
 
 @RestController
 @RequestMapping("/properties")
-public class PropertyController {
+public class PropertiesController {
 
     private final PropertyService propertyService;
 
     @Autowired
-    public PropertyController(PropertyService propertyService) {
+    public PropertiesController(PropertyService propertyService) {
         this.propertyService = propertyService;
     }
 

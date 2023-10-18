@@ -2,6 +2,7 @@ package ru.alexandrov.backend.models;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import ru.alexandrov.backend.constants.ProjectConstants;
@@ -36,12 +37,15 @@ public class Product {
 
     @ManyToOne
     @JoinColumn(name = "category_id", referencedColumnName = "category_id")
+    @JsonIgnore
     private Category category;
 
     @ManyToMany(mappedBy = "products")
+    @JsonIgnore
     private List<Property> properties;
 
     @OneToMany(mappedBy = "product")
+    @JsonManagedReference
     private List<Photo> photos;
 
     @OneToMany(mappedBy = "product")
