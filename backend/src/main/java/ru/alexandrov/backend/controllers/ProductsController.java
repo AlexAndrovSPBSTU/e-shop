@@ -30,7 +30,6 @@ public class ProductsController {
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
-
     @DeleteMapping("/{product_id}")
     public ResponseEntity<HttpStatus> deleteProduct(@PathVariable("product_id") int id) {
         productService.delete(id);

@@ -1,6 +1,5 @@
 package ru.alexandrov.backend.repositories;
 
-import org.hibernate.annotations.SQLDelete;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -24,7 +23,7 @@ public interface CategoryRepository extends CrudRepository<Category, Integer> {
     @Modifying
     @Query(value = "delete from category_parent_child where parent_id=:parentId and child_id=:childId",
             nativeQuery = true)
-    void deleteChild(@Param("childId") int childId, @Param("parentId") int parentId);
+    void deleteParentChildRelation(@Param("childId") int childId, @Param("parentId") int parentId);
 
     @Modifying
     @Query(value = "update category set name=:newName where category_id=:id",

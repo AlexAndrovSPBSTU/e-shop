@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.alexandrov.backend.models.Category;
 import ru.alexandrov.backend.models.Product;
+import ru.alexandrov.backend.repositories.CategoryRepository;
 import ru.alexandrov.backend.repositories.ProductRepository;
 
 import java.util.Optional;
@@ -11,10 +12,12 @@ import java.util.Optional;
 @Service
 public class ProductService {
     private final ProductRepository productRepository;
+    private final CategoryRepository categoryRepository;
 
     @Autowired
-    public ProductService(ProductRepository productRepository) {
+    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository) {
         this.productRepository = productRepository;
+        this.categoryRepository = categoryRepository;
     }
 
     public Optional<Product> getProductById(int id) {
@@ -22,9 +25,7 @@ public class ProductService {
     }
 
     public void save(Product product, int categoryId) {
-        Category category = new Category();
-        category.setId(categoryId);
-        product.setCategory(category);
+        product.setCategory(categoryRepository.findById(categoryId).get());
         productRepository.save(product);
     }
 

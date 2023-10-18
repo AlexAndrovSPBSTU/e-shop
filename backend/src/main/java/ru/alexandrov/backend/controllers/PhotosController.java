@@ -27,8 +27,8 @@ public class PhotosController {
     }
 
     @DeleteMapping
-    public ResponseEntity<HttpStatus> deletePhotos(@RequestParam String[] urls) {
-        photosService.deletePhotos(urls);
+    public ResponseEntity<HttpStatus> deletePhoto(@RequestParam String url) {
+        photosService.delete(url);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 }

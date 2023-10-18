@@ -9,6 +9,7 @@ import javax.persistence.*;
 public class Photo {
     @Id
     @Column(name = "url")
+//    @GeneratedValue
     private String url;
 
     @Column(name = "alt")
@@ -16,12 +17,10 @@ public class Photo {
 
     @ManyToOne
     @JoinColumn(name = "product_id", referencedColumnName = "product_id")
-    @JsonBackReference
     private Product product;
 
     @ManyToOne
     @JoinColumn(name = "comment_id", referencedColumnName = "comment_id")
-    @JsonBackReference
     private Comment comment;
 
     public String getUrl() {

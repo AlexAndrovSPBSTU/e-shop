@@ -36,12 +36,15 @@ public class Product {
 
     @ManyToOne
     @JoinColumn(name = "category_id", referencedColumnName = "category_id")
+    @JsonIgnore
     private Category category;
 
     @ManyToMany(mappedBy = "products")
+    @JsonIgnore
     private List<Property> properties;
 
     @OneToMany(mappedBy = "product")
+    @JsonIgnore
     private List<Photo> photos;
 
     @OneToMany(mappedBy = "product")

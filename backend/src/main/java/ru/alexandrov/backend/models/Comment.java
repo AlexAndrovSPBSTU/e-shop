@@ -1,6 +1,7 @@
 package ru.alexandrov.backend.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -25,7 +26,7 @@ public class Comment {
 
     @ManyToOne
     @JoinColumn(name = "product_id", referencedColumnName = "product_id")
-    @JsonBackReference
+    @JsonIgnore
     private Product product;
 
     @ManyToOne
@@ -34,6 +35,7 @@ public class Comment {
     private Customer customer;
 
     @OneToMany(mappedBy = "comment")
+    @JsonIgnore
     private List<Photo> photos;
 
     public int getId() {

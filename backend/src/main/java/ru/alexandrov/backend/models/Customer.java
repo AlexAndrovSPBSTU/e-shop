@@ -1,5 +1,9 @@
 package ru.alexandrov.backend.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import org.springframework.data.annotation.ReadOnlyProperty;
+
 import javax.persistence.*;
 
 import java.util.List;
@@ -28,6 +32,7 @@ public class Customer {
     private String role;
 
     @OneToMany(mappedBy = "customer")
+    @JsonIgnore
     private List<Comment> comments;
 
     public List<Comment> getComments() {
