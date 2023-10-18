@@ -20,7 +20,7 @@ public class Property {
 
     @ManyToOne
     @JoinColumn(name = "characteristic_id", referencedColumnName = "characteristic_id")
-    @JsonBackReference
+    @JsonIgnore
     private Characteristic characteristic;
     @JsonIgnore
     @ManyToMany

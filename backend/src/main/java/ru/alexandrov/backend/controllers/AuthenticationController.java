@@ -40,7 +40,7 @@ public class AuthenticationController {
         this.authenticationManager = authenticationManager;
     }
 
-    @PostMapping("/register")
+    @PostMapping(value = "/register", consumes = {"application/xml", "application/json"})
     public ResponseEntity<HttpStatus> registerCustomer(@RequestBody Customer customer, BindingResult bindingResult) {
         customerValidator.validate(customer, bindingResult);
         if (bindingResult.hasErrors()) {

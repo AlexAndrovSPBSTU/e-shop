@@ -38,8 +38,14 @@ public class CategoryService {
     }
 
     @Transactional
-    public void delete(int child_id, int parent_id) {
-        categoryRepository.deleteChild(child_id, parent_id);
+    public void deleteParentChildRelation(int child_id, int parent_id) {
+        categoryRepository.deleteParentChildRelation(child_id, parent_id);
+    }
+
+
+    @Transactional
+    public void delete(int child_id) {
+        categoryRepository.deleteById(child_id);
     }
 
     @Transactional

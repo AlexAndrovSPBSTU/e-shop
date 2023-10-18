@@ -45,8 +45,12 @@ public class CategoriesController {
 
     @DeleteMapping("/{category_id}")
     public ResponseEntity<HttpStatus> deleteCategory(@PathVariable("category_id") int id,
-                                                     @RequestParam int parentId) {
-        categoryService.delete(id, parentId);
+                                                     @RequestParam(required = false) Integer parentId) {
+        if (null == parentId) {
+            categoryService.delete(id);
+        } else {
+            categoryService.deleteParentChildRelation(id, parentId);
+        }
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
