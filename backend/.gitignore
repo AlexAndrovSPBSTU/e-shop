@@ -34,3 +34,4 @@ build/
 /src/main/resources/application-development.properties
 /src/main/resources/.$database_model.png.bkp
 /src/main/resources/.$database_model.png.dtmp
+/postgres-data/
