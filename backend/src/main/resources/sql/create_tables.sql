@@ -56,20 +56,12 @@ create table if not exists property
     characteristic_id int references characteristic (characteristic_id)
 );
 
-create table if not exists product_attribute
+create table if not exists product_property
 (
     product_id  int references product (product_id),
     property_id int references property (property_id),
     primary key (product_id, property_id)
 );
-
-create table if not exists photo
-(
-    url        varchar(500) primary key,
-    alt        varchar(200),
-    product_id int references product (product_id)
-);
-
 
 create table if not exists comment
 (
@@ -80,3 +72,12 @@ create table if not exists comment
     product_id  int references product (product_id),
     customer_id int references customer (customer_id)
 );
+
+create table if not exists photo
+(
+    url        varchar(500) primary key,
+    alt        varchar(200),
+    product_id int references product (product_id),
+    comment_id int references comment (comment_id)
+);
+
