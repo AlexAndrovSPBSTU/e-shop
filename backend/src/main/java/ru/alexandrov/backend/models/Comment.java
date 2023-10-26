@@ -16,7 +16,7 @@ public class Comment {
     private int id;
 
     @Column(name = "rating")
-    private int rating;
+    private Integer rating;
 
     @Column(name = "note")
     private String note;
@@ -46,11 +46,11 @@ public class Comment {
         this.id = comment_id;
     }
 
-    public int getRating() {
+    public Integer getRating() {
         return rating;
     }
 
-    public void setRating(int rating) {
+    public void setRating(Integer rating) {
         this.rating = rating;
     }
 
