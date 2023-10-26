@@ -29,13 +29,11 @@ public class PhotosService {
     }
 
     @Transactional
-    public void save(Photo photo, int id, String type) {
-        if (type.equals("product")) {
-            photo.setProduct(productRepository.findById(id).get());
-        } else if (type.equals("comment")) {
-            photo.setComment(commentRepository.findById(id).get());
+    public void save(Photo photo, Integer productId, Integer categoryId) {
+        if (productId != null) {
+            photo.setProduct(productRepository.findById(productId).get());
         } else {
-            throw new TypeMismatchException("Wrong type!");
+            photo.setComment(commentRepository.findById(categoryId).get());
         }
         photoRepository.save(photo);
     }
