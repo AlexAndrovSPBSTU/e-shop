@@ -17,7 +17,7 @@ public class Characteristic {
     private String name;
 
     @Column(name = "is_range")
-    private boolean isRange;
+    private Boolean isRange;
 
     @Column(name = "from_")
     private Float from;
@@ -27,7 +27,7 @@ public class Characteristic {
 
     @ManyToOne
     @JoinColumn(name = "category_id", referencedColumnName = "category_id")
-    @JsonIgnore 
+    @JsonIgnore
     private Category category;
 
     @OneToMany(mappedBy = "characteristic")
@@ -49,6 +49,7 @@ public class Characteristic {
     public void setTo(Float to) {
         this.to = to;
     }
+
     public List<Property> getProperty() {
         return property;
     }
@@ -74,29 +75,13 @@ public class Characteristic {
         this.name = name;
     }
 
-    public boolean isRange() {
+    public Boolean getRange() {
         return isRange;
     }
 
-    public void setRange(boolean range) {
+    public void setRange(Boolean range) {
         isRange = range;
     }
-
-//    public float getFrom() {
-//        return from;
-//    }
-//
-//    public void setFrom(float from) {
-//        this.from = from;
-//    }
-
-//    public float getTo() {
-//        return to;
-//    }
-//
-//    public void setTo(float to) {
-//        this.to = to;
-//    }
 
     public Category getCategory() {
         return category;
