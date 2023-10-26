@@ -37,6 +37,10 @@ public class CategoryService {
         categoryRepository.insert(category.getId(), parentId);
     }
 
+    public boolean exists(int id){
+        return categoryRepository.findById(id).isPresent();
+    }
+
     @Transactional
     public void deleteParentChildRelation(int child_id, int parent_id) {
         categoryRepository.deleteParentChildRelation(child_id, parent_id);

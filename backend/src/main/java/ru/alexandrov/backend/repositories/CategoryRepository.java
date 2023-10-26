@@ -8,6 +8,8 @@ import org.springframework.stereotype.Repository;
 import ru.alexandrov.backend.models.Category;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.CancellationException;
 
 @Repository
 public interface CategoryRepository extends CrudRepository<Category, Integer> {
@@ -29,4 +31,6 @@ public interface CategoryRepository extends CrudRepository<Category, Integer> {
     @Query(value = "update category set name=:newName where category_id=:id",
             nativeQuery = true)
     void rename(@Param("id") int categoryId, @Param("newName") String newName);
+
+    Optional<Category> findByName(String name);
 }
