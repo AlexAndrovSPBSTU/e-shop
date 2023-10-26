@@ -125,7 +125,7 @@ public class BasicValidationAspect {
         if (name == null || name.isEmpty()) {
             errors.append("name - Name is mandatory\n");
         } else {
-            if (characteristicRepository.findByName(name).isPresent()) {
+            if (productRepository.findByName(name).isPresent()) {
                 errors.append("name - photo with this name already exists\n");
             }
         }

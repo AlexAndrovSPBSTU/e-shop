@@ -19,14 +19,14 @@ public class CommentsController {
     }
 
     @PostMapping("/new")
-    public ResponseEntity<HttpStatus> createComment(@RequestBody Comment comment,
+    public ResponseEntity   createComment(@RequestBody Comment comment,
                                                     @RequestParam int productId) {
         commentService.save(comment, productId);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
     @DeleteMapping("/{comment_id}")
-    public ResponseEntity<HttpStatus> deleteComment(@PathVariable("comment_id") int id) {
+    public ResponseEntity deleteComment(@PathVariable("comment_id") int id) {
         commentService.deleteComment(id);
         return ResponseEntity.ok(HttpStatus.OK);
     }
