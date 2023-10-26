@@ -54,7 +54,6 @@ public class CategoryValidationAspect extends BasicValidationAspect {
     public ResponseEntity validateInsert(ProceedingJoinPoint joinPoint, Integer id, Integer parentId) throws Throwable {
         StringBuilder errors = new StringBuilder();
         validateCategoryId(id, errors);
-        validateCategoryId(parentId, errors);
         validateCategoryParentId(parentId, errors);
         return makeReturnStatement(errors, joinPoint);
     }

@@ -18,16 +18,16 @@ public class AuthenticationValidationAspect extends BasicValidationAspect {
     public ResponseEntity validateCustomerRegistration(ProceedingJoinPoint joinPoint, Customer customer) throws Throwable {
         StringBuilder errors = new StringBuilder();
         if (customer.getName() == null) {
-            errors.append("name - name is mandatory");
+            errors.append("name - name is mandatory\n");
         }
         if (customer.getSurname() == null) {
-            errors.append("surname - surname is mandatory");
+            errors.append("surname - surname is mandatory\n");
         }
         if (customer.getPassword() == null) {
-            errors.append("password - password is mandatory");
+            errors.append("password - password is mandatory\n");
         }
         if (customer.getEmail() == null) {
-            errors.append("email - email is mandatory");
+            errors.append("email - email is mandatory\n");
         } else {
             validateCustomerEmail(customer.getEmail(), errors);
         }
@@ -40,10 +40,10 @@ public class AuthenticationValidationAspect extends BasicValidationAspect {
                                                                    AuthenticationRequest authenticationRequest) throws Throwable {
         StringBuilder errors = new StringBuilder();
         if (authenticationRequest.getEmail() == null) {
-            errors.append("email - email is mandatory");
+            errors.append("email - email is mandatory\n");
         }
         if (authenticationRequest.getPassword() == null) {
-            errors.append("password - password is mandatory");
+            errors.append("password - password is mandatory\n");
         }
         return makeReturnStatement(errors, joinPoint);
     }

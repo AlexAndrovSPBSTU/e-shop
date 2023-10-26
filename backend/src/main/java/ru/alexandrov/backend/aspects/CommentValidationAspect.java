@@ -15,7 +15,7 @@ public class CommentValidationAspect extends BasicValidationAspect {
     public ResponseEntity validateCreateComment(ProceedingJoinPoint joinPoint, Comment comment, int productId) throws Throwable {
         StringBuilder errors = new StringBuilder();
         if (comment.getRating() == null) {
-            errors.append("rating - rating must be provided");
+            errors.append("rating - rating must be provided\n");
         }
         validateProductId(productId, errors);
         return makeReturnStatement(errors, joinPoint);

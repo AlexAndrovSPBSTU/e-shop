@@ -16,7 +16,7 @@ public class PhotoValidationAspect extends BasicValidationAspect {
         StringBuilder errors = new StringBuilder();
         validatePhotoUrl(photo.getUrl(), errors);
         if (categoryId == null && productId == null) {
-            errors.append("Either categoryId or productId must be provided");
+            errors.append("Either categoryId or productId must be provided\n");
         }
         return makeReturnStatement(errors, joinPoint);
     }

@@ -19,13 +19,13 @@ public class ProductsController {
 
 
     @GetMapping("/{product_id}")
-    public Product getProductById(@PathVariable("product_id") int id) {
-        return productService.getProductById(id).get();
+    public ResponseEntity getProductById(@PathVariable("product_id") int id) {
+        return ResponseEntity.ok(productService.getProductById(id).get());
     }
 
     @PostMapping("/new")
     public ResponseEntity createProduct(@RequestBody Product product,
-                                                    @RequestParam int categoryId) {
+                                        @RequestParam int categoryId) {
         productService.save(product, categoryId);
         return ResponseEntity.ok(HttpStatus.OK);
     }
@@ -38,12 +38,12 @@ public class ProductsController {
 
     @PatchMapping("/change/{product_id}")
     public ResponseEntity change(@PathVariable("product_id") int id,
-                                             @RequestParam(value = "name", required = false) String name,
-                                             @RequestParam(value = "price", required = false) Float price,
-                                             @RequestParam(value = "amount", required = false) Integer amount,
-                                             @RequestParam(value = "description", required = false) String description,
-                                             @RequestParam(value = "discount", required = false) Integer discount,
-                                             @RequestParam(value = "categoryId", required = false) Integer categoryId) {
+                                 @RequestParam(value = "name", required = false) String name,
+                                 @RequestParam(value = "price", required = false) Float price,
+                                 @RequestParam(value = "amount", required = false) Integer amount,
+                                 @RequestParam(value = "description", required = false) String description,
+                                 @RequestParam(value = "discount", required = false) Integer discount,
+                                 @RequestParam(value = "categoryId", required = false) Integer categoryId) {
         productService.change(id, name, price, amount, description, discount, categoryId);
         return ResponseEntity.ok(HttpStatus.OK);
     }

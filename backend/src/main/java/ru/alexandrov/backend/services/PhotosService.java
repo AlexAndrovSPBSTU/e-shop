@@ -27,11 +27,11 @@ public class PhotosService {
     }
 
     @Transactional
-    public void save(Photo photo, Integer productId, Integer categoryId) {
+    public void save(Photo photo, Integer productId, Integer commentId) {
         if (productId != null) {
             photo.setProduct(productRepository.findById(productId).get());
         } else {
-            photo.setComment(commentRepository.findById(categoryId).get());
+            photo.setComment(commentRepository.findById(commentId).get());
         }
         photoRepository.save(photo);
     }

@@ -78,17 +78,17 @@ public class BasicValidationAspect {
     }
 
     protected void validatePropertyValue(String value, StringBuilder errors) {
-        if (value.isEmpty()) {
-            errors.append("name -  is mandatory\n");
+        if (value == null || value.isEmpty()) {
+            errors.append("value -  is mandatory\n");
         } else {
             if (propertyRepository.findByValue(value).isPresent()) {
-                errors.append("name - category with this name already exists\n");
+                errors.append("value - property with this value already exists\n");
             }
         }
     }
 
     protected void validateCharacteristicName(String name, StringBuilder errors) {
-        if (name.isEmpty()) {
+        if (name == null || name.isEmpty()) {
             errors.append("name - Name is mandatory\n");
         } else {
             if (characteristicRepository.findByName(name).isPresent()) {
@@ -153,7 +153,7 @@ public class BasicValidationAspect {
 
     protected void validateCustomerEmail(String email, StringBuilder errors) {
         if (customerRepository.findByEmail(email).isPresent()) {
-            errors.append("email - customer with this email already exists");
+            errors.append("email - customer with this email already exists\n");
         }
     }
 

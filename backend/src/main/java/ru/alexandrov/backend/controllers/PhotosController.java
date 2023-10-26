@@ -20,9 +20,9 @@ public class PhotosController {
 
     @PostMapping("/new")
     public ResponseEntity savePhoto(@RequestBody Photo photo,
-                                                @RequestParam(required = false) Integer categoryId,
-                                                @RequestParam(required = false) Integer productId) {
-        photosService.save(photo, categoryId, productId);
+                                    @RequestParam(required = false) Integer commentId,
+                                    @RequestParam(required = false) Integer productId) {
+        photosService.save(photo, productId, commentId);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 

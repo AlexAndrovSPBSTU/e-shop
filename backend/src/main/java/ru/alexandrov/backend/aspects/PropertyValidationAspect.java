@@ -23,7 +23,7 @@ public class PropertyValidationAspect extends BasicValidationAspect {
 
     @Around(value = "execution(* ru.alexandrov.backend.controllers.PropertiesController.deleteProperty(..)) && args(id)",
             argNames = "joinPoint,id")
-    public ResponseEntity validateCreateProperty(ProceedingJoinPoint joinPoint, int id) throws Throwable {
+    public ResponseEntity validateDeleteProperty(ProceedingJoinPoint joinPoint, int id) throws Throwable {
         StringBuilder errors = new StringBuilder();
         validatePropertyId(id, errors);
         return makeReturnStatement(errors, joinPoint);
@@ -31,7 +31,7 @@ public class PropertyValidationAspect extends BasicValidationAspect {
 
     @Around(value = "execution(* ru.alexandrov.backend.controllers.PropertiesController.rename(..)) && args(id,newValue)",
             argNames = "joinPoint,id,newValue")
-    public ResponseEntity validateCreateProperty(ProceedingJoinPoint joinPoint, int id, String newValue) throws Throwable {
+    public ResponseEntity validateRenameProperty(ProceedingJoinPoint joinPoint, int id, String newValue) throws Throwable {
         StringBuilder errors = new StringBuilder();
         validatePropertyId(id, errors);
         validatePropertyValue(newValue, errors);

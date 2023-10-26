@@ -23,7 +23,7 @@ public class CharacteristicValidationAspect extends BasicValidationAspect {
 
     @Around(value = "execution(* ru.alexandrov.backend.controllers.CharacteristicsController.rename(..)) && args(id,newName)",
             argNames = "joinPoint,id,newName")
-    public ResponseEntity validateCreateCharacteristic(ProceedingJoinPoint joinPoint, int id, String newName) throws Throwable {
+    public ResponseEntity validateRename(ProceedingJoinPoint joinPoint, int id, String newName) throws Throwable {
         StringBuilder errors = new StringBuilder();
         validateCharacteristicId(id, errors);
         validateCharacteristicName(newName, errors);
@@ -32,7 +32,7 @@ public class CharacteristicValidationAspect extends BasicValidationAspect {
 
     @Around(value = "execution(* ru.alexandrov.backend.controllers.CharacteristicsController.deleteCharacteristic(..)) && args(id)",
             argNames = "joinPoint,id")
-    public ResponseEntity validateCreateCharacteristic(ProceedingJoinPoint joinPoint, int id) throws Throwable {
+    public ResponseEntity validateDelete(ProceedingJoinPoint joinPoint, int id) throws Throwable {
         StringBuilder errors = new StringBuilder();
         validateCharacteristicId(id, errors);
         return makeReturnStatement(errors, joinPoint);
