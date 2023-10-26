@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import ru.alexandrov.backend.constants.ProjectConstants;
-import ru.alexandrov.backend.util.ProductListSerializer;
 import ru.alexandrov.backend.util.PropertyListSerializer;
 
 import javax.persistence.*;
@@ -18,22 +17,22 @@ public class Product {
     @Id
     @Column(name = "product_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @Column(name = "name")
     private String name;
 
     @Column(name = "price")
-    private float price;
+    private Float price;
 
     @Column(name = "amount")
-    private int amount;
+    private Integer amount;
 
     @Column(name = "description")
     private String description;
 
     @Column(name = "discount")
-    private int discount;
+    private Integer discount;
 
     @ManyToOne
     @JoinColumn(name = "category_id", referencedColumnName = "category_id")
@@ -88,14 +87,6 @@ public class Product {
         this.properties = properties;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public String getName() {
         return name;
     }
@@ -104,20 +95,27 @@ public class Product {
         this.name = name;
     }
 
-    public float getPrice() {
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Float getPrice() {
         return price;
     }
 
-    public void setPrice(float price) {
+    public void setPrice(Float price) {
         this.price = price;
     }
 
-    public int getAmount() {
+    public Integer getAmount() {
         return amount;
     }
 
-
-    public void setAmount(int amount) {
+    public void setAmount(Integer amount) {
         this.amount = amount;
     }
 
@@ -129,11 +127,11 @@ public class Product {
         this.description = description;
     }
 
-    public int getDiscount() {
+    public Integer getDiscount() {
         return discount;
     }
 
-    public void setDiscount(int discount) {
+    public void setDiscount(Integer discount) {
         this.discount = discount;
     }
 
