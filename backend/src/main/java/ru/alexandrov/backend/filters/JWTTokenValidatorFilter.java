@@ -2,6 +2,7 @@ package ru.alexandrov.backend.filters;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.security.authentication.AccountExpiredException;
@@ -47,9 +48,8 @@ public class JWTTokenValidatorFilter extends OncePerRequestFilter {
                 Authentication auth = new UsernamePasswordAuthenticationToken(username, null,
                         Collections.singleton(new SimpleGrantedAuthority(authority)));
                 SecurityContextHolder.getContext().setAuthentication(auth);
-                //TODO Excaption handling is not good
             } catch (Exception e) {
-                throw new BadCredentialsException("Invalid Token received!");
+                throw new JwtException("Invalid Token received!");
             }
         }
         filterChain.doFilter(request, response);
