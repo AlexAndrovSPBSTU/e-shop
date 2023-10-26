@@ -19,22 +19,23 @@ public class PropertiesController {
     }
 
     @PostMapping("/new")
-    public ResponseEntity<HttpStatus> createProperty(@RequestBody Property property,
-                                                     @RequestParam int characteristicId) {
+    public ResponseEntity createProperty(@RequestBody Property property, @RequestParam int characteristicId) {
         propertyService.save(property, characteristicId);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
     @DeleteMapping("/{property_id}")
-    public ResponseEntity<HttpStatus> deleteProperty(@PathVariable("property_id") int id) {
+    public ResponseEntity deleteProperty(@PathVariable("property_id") int id) {
         propertyService.delete(id);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
     @PatchMapping("/rename/{property_id}")
-    public ResponseEntity<HttpStatus> rename(@PathVariable("property_id") int id,
-                                             @RequestParam String newValue) {
+    public ResponseEntity rename(@PathVariable("property_id") int id,
+                                             @RequestParam String newValue
+    ) {
         propertyService.changeValue(id, newValue);
         return ResponseEntity.ok(HttpStatus.OK);
     }
+
 }

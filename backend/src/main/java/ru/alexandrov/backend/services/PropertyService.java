@@ -33,4 +33,5 @@ public class PropertyService {
     public void delete(int id) {
         propertyRepository.deleteById(id);
     }
+
 }
