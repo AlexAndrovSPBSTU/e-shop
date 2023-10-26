@@ -47,7 +47,7 @@ VALUES (3, 'Number of cores', false, 2, NULL, NULL),
        (11, 'Weight', false, 1, NULL, NULL);
 
 INSERT INTO customer
-VALUES (1, 'John', 'Wick', 'wick@gmail.com', '12345', 'USER');
+VALUES (1, 'John', 'Wick', 'wick@gmail.com', '$2a$10$FHAGu5JX5LroDewAm6jVIugZ8gGKB9pMtRTdE6suNu8bZVmkkHoxe', 'USER');
 
 INSERT INTO property (property_id, value, characteristic_id)
 VALUES (4, '4', 3),
