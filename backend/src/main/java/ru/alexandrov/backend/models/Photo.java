@@ -12,9 +12,6 @@ public class Photo {
 //    @GeneratedValue
     private String url;
 
-    @Column(name = "alt")
-    private String alt;
-
     @ManyToOne
     @JoinColumn(name = "product_id", referencedColumnName = "product_id")
     @JsonBackReference
@@ -30,14 +27,6 @@ public class Photo {
 
     public void setUrl(String url) {
         this.url = url;
-    }
-
-    public String getAlt() {
-        return alt;
-    }
-
-    public void setAlt(String alt) {
-        this.alt = alt;
     }
 
     public Product getProduct() {

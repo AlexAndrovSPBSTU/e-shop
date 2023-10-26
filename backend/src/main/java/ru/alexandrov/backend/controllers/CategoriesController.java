@@ -1,11 +1,8 @@
 package ru.alexandrov.backend.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.alexandrov.backend.models.Characteristic;
-import ru.alexandrov.backend.models.Product;
 import ru.alexandrov.backend.services.CategoryService;
 import ru.alexandrov.backend.models.Category;
 
@@ -27,44 +24,55 @@ public class CategoriesController {
     }
 
     @GetMapping("/{category_id}/products")
-    public List<Product> getProductsByCategory(@PathVariable("category_id") int id) {
-        return categoryService.getProductsByCategoryId(id);
+    public ResponseEntity getProductsByCategory(@PathVariable("category_id") int id) {
+        return ResponseEntity.ok(categoryService.getProductsByCategoryId(id));
     }
 
     @GetMapping("/{category_id}/characteristics")
-    public List<Characteristic> getCharacteristicsByCategory(@PathVariable("category_id") int id) {
-        return categoryService.getCharacteristicsByCategoryId(id);
+    public ResponseEntity getCharacteristicsByCategory(@PathVariable("category_id") int id) {
+        return ResponseEntity.ok(categoryService.getCharacteristicsByCategoryId(id));
     }
 
     @PostMapping("/new")
-    public ResponseEntity<HttpStatus> createCategory(@RequestBody Category category,
-                                                     @RequestParam int parentId) {
+    public ResponseEntity createCategory(@RequestBody Category category,
+                                         @RequestParam int parentId) {
         categoryService.save(category, parentId);
-        return ResponseEntity.ok(HttpStatus.OK);
+        return ResponseEntity.ok("Category has been created");
     }
 
+    /**
+     * Deletes a category by id. If there is parentId, deletes
+     * parent child relation between categories.
+     *
+     * @param id       - id of category for deleting
+     * @param parentId - parent's id
+     * @return {@code 200} if the category was deleted, {@code 409} otherwise
+     * //     * @see #authenticate(AuthenticationRequest)
+     */
     @DeleteMapping("/{category_id}")
-    public ResponseEntity<HttpStatus> deleteCategory(@PathVariable("category_id") int id,
-                                                     @RequestParam(required = false) Integer parentId) {
+    public ResponseEntity deleteCategory(@PathVariable("category_id") int id,
+                                         @RequestParam(required = false) Integer parentId) {
         if (null == parentId) {
             categoryService.delete(id);
+            return ResponseEntity.ok("The category has been deleted");
         } else {
             categoryService.deleteParentChildRelation(id, parentId);
+            return ResponseEntity.ok("The parent-child relation has been deleted");
         }
-        return ResponseEntity.ok(HttpStatus.OK);
     }
 
     @PatchMapping("/insert/{category_id}")
-    public ResponseEntity<HttpStatus> insert(@PathVariable("category_id") int id,
-                                             @RequestParam Integer parentId) {
+    public ResponseEntity insert(@PathVariable("category_id") Integer id,
+                                 @RequestParam int parentId
+    ) {
         categoryService.insert(id, parentId);
-        return ResponseEntity.ok(HttpStatus.OK);
+        return ResponseEntity.ok("Category has been inserted");
     }
 
     @PatchMapping("/rename/{category_id}")
-    public ResponseEntity<HttpStatus> rename(@PathVariable("category_id") int category_id,
-                                             @RequestParam("newName") String newName) {
-        categoryService.rename(category_id, newName);
-        return ResponseEntity.ok(HttpStatus.OK);
+    public ResponseEntity rename(@PathVariable("category_id") int id,
+                                 @RequestParam("newName") String newName) {
+        categoryService.rename(id, newName);
+        return ResponseEntity.ok("Category has been renamed");
     }
 }

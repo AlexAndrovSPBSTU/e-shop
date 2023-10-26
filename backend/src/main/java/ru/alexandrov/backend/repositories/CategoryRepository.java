@@ -8,10 +8,11 @@ import org.springframework.stereotype.Repository;
 import ru.alexandrov.backend.models.Category;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface CategoryRepository extends CrudRepository<Category, Integer> {
-    @Query(value = "select * from category where category_id in (select child_id from category_parent_child where parent_id = 0)",
+    @Query(value = "select * from category where category_id in (select child_id from category_parent_child where parent_id = 1)",
             nativeQuery = true)
     List<Category> getRootCategories();
 
@@ -29,4 +30,6 @@ public interface CategoryRepository extends CrudRepository<Category, Integer> {
     @Query(value = "update category set name=:newName where category_id=:id",
             nativeQuery = true)
     void rename(@Param("id") int categoryId, @Param("newName") String newName);
+
+    Optional<Category> findByName(String name);
 }

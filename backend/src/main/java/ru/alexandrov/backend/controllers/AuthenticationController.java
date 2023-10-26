@@ -3,14 +3,11 @@ package ru.alexandrov.backend.controllers;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,43 +16,41 @@ import ru.alexandrov.backend.models.Customer;
 import ru.alexandrov.backend.security.AuthenticationRequest;
 import ru.alexandrov.backend.security.AuthenticationResponse;
 import ru.alexandrov.backend.services.CustomerService;
-import ru.alexandrov.backend.util.CustomerValidator;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
-import java.util.Optional;
 
 @RestController
 public class AuthenticationController {
     private final CustomerService customerService;
-    private final CustomerValidator customerValidator;
     private final AuthenticationManager authenticationManager;
 
     @Autowired
+
     public AuthenticationController(CustomerService customerService,
-                                    CustomerValidator customerValidator, AuthenticationManager authenticationManager) {
+                                    AuthenticationManager authenticationManager) {
         this.customerService = customerService;
-        this.customerValidator = customerValidator;
         this.authenticationManager = authenticationManager;
     }
 
+    /**
+     * Registers a new customer. If there is already user with such
+     * email
+     *
+     * @param customer The new customer.
+     * @return {@code 200} if the user was registered, {@code 409} otherwise
+     * //     * @see #authenticate(AuthenticationRequest)
+     */
+
     @PostMapping(value = "/register", consumes = {"application/xml", "application/json"})
-    public ResponseEntity<HttpStatus> registerCustomer(@RequestBody Customer customer, BindingResult bindingResult) {
-        customerValidator.validate(customer, bindingResult);
-        if (bindingResult.hasErrors()) {
-            StringBuilder errors = new StringBuilder();
-            for (FieldError fieldError : bindingResult.getFieldErrors()) {
-                errors.append(fieldError.getField()).append(" - ").append(fieldError.getDefaultMessage()).append(";\n");
-            }
-            throw new RuntimeException(errors.toString());
-        }
+    public ResponseEntity registerCustomer(@RequestBody Customer customer) {
         customerService.save(customer);
-        return ResponseEntity.ok(HttpStatus.OK);
+        return ResponseEntity.ok("Customer has been authenticated");
     }
 
     @PostMapping("/authenticate")
-    public ResponseEntity<AuthenticationResponse> authenticate(
+    public ResponseEntity authenticate(
             @RequestBody AuthenticationRequest authenticationRequest) {
         Authentication authentication = authenticationManager.authenticate(
                 UsernamePasswordAuthenticationToken.unauthenticated(
