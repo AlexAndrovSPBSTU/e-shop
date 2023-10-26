@@ -1,6 +1,5 @@
 package ru.alexandrov.backend.services;
 
-import org.hibernate.TypeMismatchException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.alexandrov.backend.models.Photo;
@@ -9,7 +8,6 @@ import ru.alexandrov.backend.repositories.PhotoRepository;
 import ru.alexandrov.backend.repositories.ProductRepository;
 
 import javax.transaction.Transactional;
-import java.util.Arrays;
 
 @Service
 public class PhotosService {

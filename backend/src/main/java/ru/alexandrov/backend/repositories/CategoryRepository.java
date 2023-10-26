@@ -9,7 +9,6 @@ import ru.alexandrov.backend.models.Category;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.CancellationException;
 
 @Repository
 public interface CategoryRepository extends CrudRepository<Category, Integer> {

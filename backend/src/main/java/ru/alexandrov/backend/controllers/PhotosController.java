@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.alexandrov.backend.models.Photo;
 import ru.alexandrov.backend.services.PhotosService;
 
-import javax.persistence.criteria.CriteriaBuilder;
-
 @Controller
 @RequestMapping("/photos")
 public class PhotosController {

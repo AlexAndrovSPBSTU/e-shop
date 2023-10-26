@@ -2,7 +2,6 @@ package ru.alexandrov.backend.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.alexandrov.backend.models.Characteristic;
 import ru.alexandrov.backend.models.Property;
 import ru.alexandrov.backend.repositories.CharacteristicRepository;
 import ru.alexandrov.backend.repositories.PropertyRepository;
