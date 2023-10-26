@@ -75,22 +75,27 @@
                     show-ticks
                     tick-size="5"
                     :max="5"
-                    v-model="slider" 
+                    v-model="slider"
                     thumb-label
                     color="orange"
                     class="write__slider"
                   ></v-slider>
                 </div>
+                <v-file-input
+                  label="Прикрепите фотографии"
+                  multiple
+                  v-model="fotos"
+                ></v-file-input>
                 <div class="write__btn">
                   <v-btn
-                  variant="outlined"
-                  color="orange"
-                  class="text-none text-h6"
-                >
-                  Опубликовать
-                </v-btn>
+                    variant="outlined"
+                    color="orange"
+                    class="text-none text-h6"
+                    @click="write"
+                  >
+                    Опубликовать
+                  </v-btn>
                 </div>
-                
               </div>
               <div
                 class="comment"
@@ -183,6 +188,8 @@
 import MyHeader from "@/components/Header/MyHeader.vue";
 import MyBreadcrumb from "@/components/MyBreadcrumb/MyBreadcrumb.vue";
 
+//import upload from "@/S3_API/index.js"
+
 export default {
   components: {
     MyHeader,
@@ -192,7 +199,7 @@ export default {
     card: {
       id: 1241351341,
       title: "Phone 124134",
-      img: "https://24c1624a-5fb0-4f0f-801c-1ebd2db7b6ac.selstorage.ru/123.jpg",
+      img: "https://storage.yandexcloud.net/e-shop/banner.png",
       description:
         "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aliquid atque consectetur fugiat, cum necessitatibus a animi doloribus qui eaque suscipit quo, dolore optio eum similique numquam minus id amet eius? Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aliquid atque consectetur fugiat, cum necessitatibus a animi doloribus qui eaque suscipit quo, dolore optio eum similique numquam minus id amet eius?Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aliquid atque consectetur fugiat, cum necessitatibus a animi doloribus qui eaque suscipit quo, dolore optio eum similique numquam minus id amet eius?",
       price: 999,
@@ -273,6 +280,7 @@ export default {
     filter: "Рейтинг выше",
     writeComment: "",
     slider: 5,
+    fotos: [],
   }),
   created() {
     //fetch на сервер с запросом на получение определенного товара
@@ -295,6 +303,22 @@ export default {
     increment() {
       this.$store.commit("increment");
       console.log(this.$store.state.count);
+    },
+
+    write() {
+      console.log(this.fotos[0]);
+
+      if (this.fotos.length > 0) {
+        const formData = new FormData();
+
+        formData.append("file", this.fotos[0]);
+
+        fetch("http://localhost:8001/uploadFile", {
+          method: "POST",
+          //headers: { "Content-Type": "multipart/form-data" },
+          body: formData,
+        }).then((response) => console.log(response));
+      }
     },
   },
 
@@ -399,15 +423,15 @@ export default {
   padding: 20px;
 }
 
-.write__rating{
+.write__rating {
   max-width: 300px;
 }
 
-.write__title{
+.write__title {
   margin-bottom: 30px;
 }
 
-.write__btn{
+.write__btn {
   display: flex;
   justify-content: flex-end;
 }
