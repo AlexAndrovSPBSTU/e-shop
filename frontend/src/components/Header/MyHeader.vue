@@ -47,13 +47,26 @@
               size="x-large"
             ></v-icon
           ></router-link>
-          <router-link to="/login"
+          
+          <router-link 
+            to="/login"
+            v-if="!this.$store.state.initialState.status.loggedIn"
             ><v-icon
               color="rgba(155, 155, 155)"
               icon="mdi-account"
               size="x-large"
             ></v-icon
           ></router-link>
+          <template v-else>
+            <p class="user-name">{{$store.getters["getUserName"]}}</p>
+            <div class="logout" @click="handleLogout">
+              <v-icon
+              color="rgba(155, 155, 155)"
+              icon="mdi-logout"
+              size="x-large"
+            ></v-icon>
+            </div>
+          </template>
         </div>
       </div>
     </div>
@@ -71,6 +84,13 @@ export default {
     ],
 
   }),
+
+  methods: {
+    handleLogout(){
+      this.$store.dispatch("logout")
+    }
+    
+  },
 };
 </script>
 
@@ -124,6 +144,10 @@ export default {
   font-weight: 500;
   font-style: italic;
   color: rgba(0, 0, 0, 0.65);
+  cursor: pointer;
+}
+
+.logout{
   cursor: pointer;
 }
 </style>

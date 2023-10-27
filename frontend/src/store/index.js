@@ -25,6 +25,11 @@ export default createStore({
       return state.bucket.reduce((sum, current) => sum + current.totalCount, 0)
     },
 
+    getUserName(state){
+      if(state.initialState.status.loggedIn)
+        return `${state.initialState.user.name} ${state.initialState.user.surname[0]}.`
+    }
+
   },
 
   mutations: {
@@ -58,11 +63,21 @@ export default createStore({
   },
 
   actions: {
-    async login(user) {
+    async login({ commit, state }, userL) {
       try {
-        localStorage.setItem("user", JSON.stringify(user));
-        this.initialState.user = user
-        this.initialState.status.loggedIn = true;
+        localStorage.setItem("user", JSON.stringify(userL));
+        state.initialState.user = userL
+        state.initialState.status.loggedIn = true;
+      } catch (error) {
+        return error
+      }
+    },
+
+    async logout({ commit, state }) {
+      try {
+        localStorage.removeItem("user");
+        state.initialState.user = null
+        state.initialState.status.loggedIn = false;
       } catch (error) {
         return error
       }

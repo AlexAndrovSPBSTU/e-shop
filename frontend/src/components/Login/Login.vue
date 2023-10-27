@@ -74,16 +74,29 @@ export default {
     handleLogin(user) {
       this.loading = true;
 
-      let formData = new FormData();
-      formData.append("email", user.email);
-      formData.append("password", user.password);
-
-      fetch("/", {
+      /*fetch("/", {
         method: "POST",
         //headers: { "Content-Type": "application/json" },
-        body: formData,
-      });
+        body: JSON.stringify(user),
+      }).then((response) => this.$store.dispatch("login", response));*/
 
+      const res = new Promise((resolve) => {
+        setTimeout(
+          () =>
+            resolve({
+              jwtToken:
+                "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJlLXNob3AiLCJzdWIiOiJKV1QgVG9rZW4iLCJ1c2VybmFtZSI6InZpdGFsaUB5YW5kZXgucnUiLCJhdXRob3JpdHkiOiJVU0VSIiwiaWF0IjoxNjk3NTI4NTYzLCJleHAiOjE2OTc1MzIxNjN9.tCVAzSVMX0cX3dX8tzPV-ESAU_Tii2cdCSFGkqWr-TwiopeVASKpSf2pR86Y2WddxX7gnaomSkWqIZkj2dpnfA",
+              email: "vitali@yandex.ru",
+              name: "vitali",
+              surname: "alexandrov",
+              role: "USER",
+            }),
+          1000
+        );
+      }).then(res => this.$store.dispatch("login", res)).then(_ => this.$router.push("/catalog"))
+
+      //console.log(res)
+      //this.$store.dispatch("login", res)
 
       //console.log(formData)
 

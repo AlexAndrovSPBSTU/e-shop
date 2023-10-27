@@ -58,6 +58,46 @@
 
             <div class="comments__content">
               <div
+                class="comments__write"
+                v-if="this.$store.state.initialState.status.loggedIn"
+              >
+                <v-textarea
+                  bg-color="white"
+                  color="black"
+                  label="Написать отзыв"
+                  v-model="writeComment"
+                ></v-textarea>
+
+                <div class="write__rating">
+                  <div class="write__title">Оценка</div>
+                  <v-slider
+                    step="1"
+                    show-ticks
+                    tick-size="5"
+                    :max="5"
+                    v-model="slider"
+                    thumb-label
+                    color="orange"
+                    class="write__slider"
+                  ></v-slider>
+                </div>
+                <v-file-input
+                  label="Прикрепите фотографии"
+                  multiple
+                  v-model="fotos"
+                ></v-file-input>
+                <div class="write__btn">
+                  <v-btn
+                    variant="outlined"
+                    color="orange"
+                    class="text-none text-h6"
+                    @click="write"
+                  >
+                    Опубликовать
+                  </v-btn>
+                </div>
+              </div>
+              <div
                 class="comment"
                 v-for="(comment, index) in sortItems"
                 :key="index"
@@ -88,8 +128,17 @@
                       <template v-slot:activator="{ props }">
                         <div v-bind="props" class="comment__photo">
                           <img :src="photo" alt="" class="comment__img" />
-                          <div class="photo__delete">
+                          <div
+                            class="photo__delete"
+                            v-if="
+                              this.$store.state.initialState.status.loggedIn
+                            "
+                          >
                             <v-btn
+                              v-if="
+                                this.$store.state.initialState.user.role ===
+                                'ADMIN'
+                              "
                               class="photo__delete-btn"
                               density="compact"
                               size="large"
@@ -112,16 +161,20 @@
                     </v-dialog>
                   </div>
                 </template>
-
-                <div class="comment__delete">
-                  <v-btn
-                    class="comment__delete-btn"
-                    density="compact"
-                    icon="mdi-trash-can"
-                    variant="plain"
-                    @click.stop="delComment(comment)"
-                  />
-                </div>
+                <template v-if="this.$store.state.initialState.status.loggedIn">
+                  <div class="comment__delete">
+                    <v-btn
+                      v-if="
+                        this.$store.state.initialState.user.role === 'ADMIN'
+                      "
+                      class="comment__delete-btn"
+                      density="compact"
+                      icon="mdi-trash-can"
+                      variant="plain"
+                      @click.stop="delComment(comment)"
+                    />
+                  </div>
+                </template>
               </div>
             </div>
           </div>
@@ -135,6 +188,8 @@
 import MyHeader from "@/components/Header/MyHeader.vue";
 import MyBreadcrumb from "@/components/MyBreadcrumb/MyBreadcrumb.vue";
 
+//import upload from "@/S3_API/index.js"
+
 export default {
   components: {
     MyHeader,
@@ -144,7 +199,7 @@ export default {
     card: {
       id: 1241351341,
       title: "Phone 124134",
-      img: "https://aizgbnkooo.cloudimg.io/v7/site/device_model_gsrhdald_1579987939839.jpeg?p=md",
+      img: "https://storage.yandexcloud.net/e-shop/banner.png",
       description:
         "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aliquid atque consectetur fugiat, cum necessitatibus a animi doloribus qui eaque suscipit quo, dolore optio eum similique numquam minus id amet eius? Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aliquid atque consectetur fugiat, cum necessitatibus a animi doloribus qui eaque suscipit quo, dolore optio eum similique numquam minus id amet eius?Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aliquid atque consectetur fugiat, cum necessitatibus a animi doloribus qui eaque suscipit quo, dolore optio eum similique numquam minus id amet eius?",
       price: 999,
@@ -221,12 +276,16 @@ export default {
       },
     ],
 
-    filters: ['Рейтинг выше', 'Рейтинг ниже'],
-    filter: 'Рейтинг выше',
+    filters: ["Рейтинг выше", "Рейтинг ниже"],
+    filter: "Рейтинг выше",
+    writeComment: "",
+    slider: 5,
+    fotos: [],
   }),
   created() {
     //fetch на сервер с запросом на получение определенного товара
     //fetch на сервер с запросом на получение комментов к этому товару
+    //https://24c1624a-5fb0-4f0f-801c-1ebd2db7b6ac.selstorage.ru/123.jpg
   },
   computed: {
     itemsData() {
@@ -234,10 +293,10 @@ export default {
       return this.items;
     },
 
-    sortItems(){
+    sortItems() {
       return this.filter === "Рейтинг ниже"
-        ? this.comments.sort((a, b) => a.rating - b.rating) 
-        : this.comments.sort((a, b) => a.rating - b.rating).reverse()
+        ? this.comments.sort((a, b) => a.rating - b.rating)
+        : this.comments.sort((a, b) => a.rating - b.rating).reverse();
     },
   },
   methods: {
@@ -246,14 +305,28 @@ export default {
       console.log(this.$store.state.count);
     },
 
-    
+    write() {
+      console.log(this.fotos[0]);
+
+      if (this.fotos.length > 0) {
+        const formData = new FormData();
+
+        formData.append("file", this.fotos[0]);
+
+        fetch("http://localhost:8001/uploadFile", {
+          method: "POST",
+          //headers: { "Content-Type": "multipart/form-data" },
+          body: formData,
+        }).then((response) => console.log(response));
+      }
+    },
   },
 
   watch: {
-    filter(){
+    filter() {
       this.sortItems;
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -331,12 +404,12 @@ export default {
   margin-bottom: 20px;
 }
 
-.comments__header{
+.comments__header {
   display: flex;
   justify-content: space-between;
 }
 
-.my-select{
+.my-select {
   width: 190px;
 }
 
@@ -344,6 +417,23 @@ export default {
   box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.3);
   border-radius: 20px;
   background-color: white;
+}
+
+.comments__write {
+  padding: 20px;
+}
+
+.write__rating {
+  max-width: 300px;
+}
+
+.write__title {
+  margin-bottom: 30px;
+}
+
+.write__btn {
+  display: flex;
+  justify-content: flex-end;
 }
 
 .comment {
