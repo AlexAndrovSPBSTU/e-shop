@@ -88,6 +88,7 @@
                 ></v-file-input>
                 <div class="write__btn">
                   <v-btn
+                    :disabled="!writeComment"
                     variant="outlined"
                     color="orange"
                     class="text-none text-h6"
@@ -306,6 +307,11 @@ export default {
     },
 
     write() {
+
+
+      if(this.writeComment === ""){
+        console.log('empty')
+      }
       
       let data = this.fotos.map(v => v);
       console.log(data);
@@ -313,13 +319,14 @@ export default {
       if (data.length > 0) {
         const formData = new FormData();
 
-        formData.append("file", data);
-
+        data.map(d => {
+          formData.append("files", d);
+        })
+   
         fetch("http://localhost:8001/uploadFile", {
           method: "POST",
-          //headers: { "Content-Type": "multipart/form-data" },
           body: formData,
-        }).then((response) => console.log(response));
+        }).then((response) => response.json()).then(json => console.log(json));
       }
     },
   },
