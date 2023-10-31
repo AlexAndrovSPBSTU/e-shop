@@ -16,6 +16,7 @@ const params = {
   Bucket: "e-shop", // Имя бакета, например 'sample-bucket-101'.
   Key: undefined, // Имя объекта, например 'sample_upload.txt'.
   Body: undefined, // Содержимое объекта, например 'Hello world!".
+  ContentType: undefined,
 };
 
 app.get("/", function(request, response){
@@ -24,17 +25,20 @@ app.get("/", function(request, response){
   response.send("<h2>Привет Express!</h2>");
 });
 
-app.post('/uploadFile', async (req, res) => {
+app.post('/uploadFile',async (req, res) => {
 
 
-  try {
-    
-
-    params.Body = req.files[0].buffer; // Буфер загруженного файла
+  //try {
+    //let str = req.files[0].name
+    //console.log(req)
+    console.log(req.files)
+    //console.log(req.files[0])
+    //params.Body = req.files[0].buffer; // Буфер загруженного файла
     //params.Key = uuidv4()+"."+str.slice(6)
-    //params.Key = "123."+str.slice(6)
+    //params.Key = req.files[0].originalname
+    //params.ContentType = req.files[0].mimetype
     
-
+/*
     let upload = await s3Client.send(new PutObjectCommand(params));
     console.log(
         "Successfully created " +
@@ -48,7 +52,7 @@ app.post('/uploadFile', async (req, res) => {
   } catch (err) {
     console.log("Error", err);
   }//https://storage.yandexcloud.net/e-shop/123.jpg
-
+*/
   
 });
 

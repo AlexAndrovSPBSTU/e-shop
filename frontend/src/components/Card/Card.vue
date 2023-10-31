@@ -199,7 +199,7 @@ export default {
     card: {
       id: 1241351341,
       title: "Phone 124134",
-      img: "https://storage.yandexcloud.net/e-shop/banner.png",
+      img: "https://storage.yandexcloud.net/e-shop/5.jpg",
       description:
         "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aliquid atque consectetur fugiat, cum necessitatibus a animi doloribus qui eaque suscipit quo, dolore optio eum similique numquam minus id amet eius? Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aliquid atque consectetur fugiat, cum necessitatibus a animi doloribus qui eaque suscipit quo, dolore optio eum similique numquam minus id amet eius?Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aliquid atque consectetur fugiat, cum necessitatibus a animi doloribus qui eaque suscipit quo, dolore optio eum similique numquam minus id amet eius?",
       price: 999,
@@ -306,12 +306,14 @@ export default {
     },
 
     write() {
-      console.log(this.fotos[0]);
+      
+      let data = this.fotos.map(v => v);
+      console.log(data);
 
-      if (this.fotos.length > 0) {
+      if (data.length > 0) {
         const formData = new FormData();
 
-        formData.append("file", this.fotos[0]);
+        formData.append("file", data);
 
         fetch("http://localhost:8001/uploadFile", {
           method: "POST",
