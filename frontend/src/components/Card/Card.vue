@@ -84,7 +84,7 @@
                 <v-file-input
                   label="Прикрепите фотографии"
                   multiple
-                  v-model="fotos"
+                  v-model="photos"
                 ></v-file-input>
                 <div class="write__btn">
                   <v-btn
@@ -189,7 +189,7 @@
 import MyHeader from "@/components/Header/MyHeader.vue";
 import MyBreadcrumb from "@/components/MyBreadcrumb/MyBreadcrumb.vue";
 
-//import upload from "@/S3_API/index.js"
+import uploadS3 from "@/S3_API/index.js"
 
 export default {
   components: {
@@ -281,7 +281,7 @@ export default {
     filter: "Рейтинг выше",
     writeComment: "",
     slider: 5,
-    fotos: [],
+    photos: [],
   }),
   created() {
     //fetch на сервер с запросом на получение определенного товара
@@ -306,28 +306,15 @@ export default {
       console.log(this.$store.state.count);
     },
 
-    write() {
+    async write() {
 
 
       if(this.writeComment === ""){
         console.log('empty')
       }
       
-      let data = this.fotos.map(v => v);
-      console.log(data);
-
-      if (data.length > 0) {
-        const formData = new FormData();
-
-        data.map(d => {
-          formData.append("files", d);
-        })
-   
-        fetch("http://localhost:8001/uploadFile", {
-          method: "POST",
-          body: formData,
-        }).then((response) => response.json()).then(json => console.log(json));
-      }
+      let url = await uploadS3(this.photos)
+      console.log(url)
     },
   },
 
