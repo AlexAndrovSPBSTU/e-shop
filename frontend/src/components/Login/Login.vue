@@ -89,7 +89,7 @@ export default {
               email: "vitali@yandex.ru",
               name: "vitali",
               surname: "alexandrov",
-              role: "USER",
+              role: "ADMIN",
             }),
           1000
         );

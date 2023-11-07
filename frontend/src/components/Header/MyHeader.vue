@@ -14,41 +14,27 @@
               <div class="catalog__title" v-bind="props">E-SHOP</div>
             </template>
 
-            <v-list>
-              <v-list-item v-for="(item, index) in items" :key="index">
-                <v-list-item-title>
-                  <v-menu open-on-hover location="end">
-                    <template v-slot:activator="{ props }">
-                      <div v-bind="props">{{ item.title }}</div>
-                    </template>
-
-                    <v-list>
-                      <v-list-item v-for="(item, index) in items" :key="index">
-                        <v-list-item-title>
-                          {{ item.title }}
-                        </v-list-item-title>
-                      </v-list-item>
-                    </v-list>
-                  </v-menu>
-                </v-list-item-title>
-              </v-list-item>
-            </v-list>
+            <tree-view :items="items"/>
           </v-menu>
         </div>
 
         <div class="header__right">
-          <router-link to="/bucket"
-          class="header__bucket"
+          <admin-panel />
+
+          <router-link to="/bucket" class="header__bucket">
+            <span
+              class="header__bucket--active"
+              v-if="this.$store.getters['getCount'] > 0"
+              >{{ this.$store.getters["getCount"] }}</span
             >
-            <span class="header__bucket--active" v-if="this.$store.getters['getCount'] > 0">{{this.$store.getters['getCount']}}</span>
             <v-icon
               color="rgba(155, 155, 155)"
               icon="mdi-cart-outline"
               size="x-large"
             ></v-icon
           ></router-link>
-          
-          <router-link 
+
+          <router-link
             to="/login"
             v-if="!this.$store.state.initialState.status.loggedIn"
             ><v-icon
@@ -58,13 +44,13 @@
             ></v-icon
           ></router-link>
           <template v-else>
-            <p class="user-name">{{$store.getters["getUserName"]}}</p>
+            <p class="user-name">{{ $store.getters["getUserName"] }}</p>
             <div class="logout" @click="handleLogout">
               <v-icon
-              color="rgba(155, 155, 155)"
-              icon="mdi-logout"
-              size="x-large"
-            ></v-icon>
+                color="rgba(155, 155, 155)"
+                icon="mdi-logout"
+                size="x-large"
+              ></v-icon>
             </div>
           </template>
         </div>
@@ -74,22 +60,52 @@
 </template>
 
 <script>
+import AdminPanel from '../AdminPanel/AdminPanel.vue';
+import TreeView from "../TreeView/TreeView.vue"
+
+
 export default {
+  components: { TreeView, AdminPanel },
   data: () => ({
     items: [
-      { title: "Click Me" },
-      { title: "Click Me" },
-      { title: "Click Me" },
-      { title: "Click Me 2" },
+      {
+        title: "Смартфоны",
+        items: [
+          {
+            title: "IPhone",
+            items: [
+              { title: "IPhone 10" },
+              { title: "IPhone 11" },
+              { title: "IPhone 11 Pro" },
+              { title: "IPhone 12" },
+              { title: "IPhone 13" },
+            ],
+          },
+          { title: "Honor" },
+          { title: "Samsung" },
+          { title: "HTC" },
+          { title: "Fly" },
+        ],
+      },
+      {
+        title: "Телевизоры",
+        items: [
+          { title: "Телевизоры 20`" },
+          { title: "Телевизоры 30`" },
+          { title: "Телевизоры 40`" },
+          { title: "Телевизоры 50`" },
+          { title: "Телевизоры 60`" },
+        ],
+      },
+      { title: "Аудиотехника" },
+      { title: "Компьютеры" },
     ],
-
   }),
 
   methods: {
-    handleLogout(){
-      this.$store.dispatch("logout")
-    }
-    
+    handleLogout() {
+      this.$store.dispatch("logout");
+    },
   },
 };
 </script>
@@ -122,11 +138,11 @@ export default {
   align-items: center;
 }
 
-.header__bucket{
-  text-decoration: none;  
+.header__bucket {
+  text-decoration: none;
 }
 
-.header__bucket--active{
+.header__bucket--active {
   position: relative;
   left: 38px;
   top: -14px;
@@ -147,7 +163,7 @@ export default {
   cursor: pointer;
 }
 
-.logout{
+.logout {
   cursor: pointer;
 }
 </style>
