@@ -60,7 +60,8 @@
               variant="elevated"
               color="orange"
               class="ma-2 admin__btns"
-              @click="dialog3 = true"
+              :loading="loadingDel"
+              @click="delDialog"
             >
               Удалить
             </v-btn>
@@ -70,7 +71,8 @@
               variant="elevated"
               color="orange"
               class="ma-2 admin__btns"
-              @click="dialog3 = true"
+              :loading="loadingEdit"
+              @click="editDialog"
             >
               Редактировать
             </v-btn>
@@ -136,6 +138,7 @@
         </v-card>
       </v-dialog>
 
+      <!-- Добавление нового товара -->
       <v-dialog
         class="dialog"
         v-model="productAddDialog"
@@ -143,17 +146,17 @@
         width="1024"
       >
         <v-alert
-          class="alert"
+          class="alertAdd"
           type="success"
           title="Успешно!"
           text="Товар добавлен"
-          v-model="alert"
-          :disabled="!alert"
+          v-model="alertProductAdd"
+          :disabled="!alertProductAdd"
         ></v-alert>
         <v-card>
           <v-form v-model="form" @submit.prevent="write">
             <v-card-title>
-              <span class="text-h5 ma-2">Добавление продукта</span>
+              <span class="text-h5 ma-2">Добавление товара</span>
             </v-card-title>
             <v-card-text>
               <v-container>
@@ -243,6 +246,165 @@
         </v-card>
       </v-dialog>
       <!-- <add-product :AddDialog="productAddDialog"/> -->
+
+      <!-- Удаление товара -->
+      <v-dialog
+        class="dialog"
+        v-model="productDeleteDialog"
+        persistent
+        width="600"
+      >
+        <v-alert
+          class="alertDel"
+          type="success"
+          title="Успешно!"
+          text="Товар удален"
+          v-model="alertProductDel"
+          :disabled="!alertProductDel"
+        ></v-alert>
+        <v-card>
+          <v-card-title> Удаление товара </v-card-title>
+          <v-card-text>
+            <v-select
+              v-model="categories"
+              :items="[
+                'Alabama',
+                'Alaska',
+                'American Samoa',
+                'Arizona',
+                'Arkansas',
+                'California',
+              ]"
+              label="Категории"
+              hint="Выберите нужную категорию"
+              persistent-hint
+              @update:modelValue="requestForSpecificProducts"
+            ></v-select>
+            <div
+              class="progressCircular__SpecificProducts"
+              v-if="loadingSpecificProducts"
+            >
+              <v-progress-circular
+                indeterminate
+                color="amber"
+                :size="50"
+                :width="5"
+              ></v-progress-circular>
+            </div>
+            <div
+              class="select__SpecificProducts"
+              v-if="isLoadedSpecificProducts"
+            >
+              <v-select
+                v-model="specificProducts"
+                :items="products"
+                :item-props="itemProps"
+                label="Товар"
+                hint="Выберите товар, который собираетесь удалить"
+                persistent-hint
+              ></v-select>
+            </div>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn
+              color="blue-darken-1"
+              variant="text"
+              @click="closeEditDelDialog"
+            >
+              Закрыть
+            </v-btn>
+            <v-btn
+              color="blue-darken-1"
+              variant="text"
+              :disabled="!specificProducts"
+              @click="deleteProduct"
+            >
+              Удалить
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+
+      <!-- Редактирование товара -->
+      <v-dialog
+        class="dialog"
+        v-model="productEditDialog"
+        persistent
+        width="600"
+      >
+        <v-alert
+          class="alertEdit"
+          type="success"
+          title="Успешно!"
+          text="Товар изменен"
+          v-model="alertProductEdit"
+          :disabled="!alertProductEdit"
+        ></v-alert>
+        <v-card>
+          <v-card-title> Изменить товар </v-card-title>
+          <v-card-text>
+            <v-select
+              v-model="categories"
+              :items="[
+                'Alabama',
+                'Alaska',
+                'American Samoa',
+                'Arizona',
+                'Arkansas',
+                'California',
+              ]"
+              label="Категории"
+              hint="Выберите нужную категорию"
+              persistent-hint
+              @update:modelValue="requestForSpecificProducts"
+            ></v-select>
+            <div
+              class="progressCircular__SpecificProducts"
+              v-if="loadingSpecificProducts"
+            >
+              <v-progress-circular
+                indeterminate
+                color="amber"
+                :size="50"
+                :width="5"
+              ></v-progress-circular>
+            </div>
+            <div
+              class="select__SpecificProducts"
+              v-if="isLoadedSpecificProducts"
+            >
+              <v-select
+                v-model="specificProducts"
+                :items="products"
+                :item-props="itemProps"
+                label="Товар"
+                hint="Выберите товар, который собираетесь изменить"
+                persistent-hint
+              ></v-select>
+            </div>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn
+              color="blue-darken-1"
+              variant="text"
+              @click="closeEditDelDialog"
+            >
+              Закрыть
+            </v-btn>
+            <v-btn
+              color="blue-darken-1"
+              variant="text"
+              :disabled="!specificProducts"
+              @click="productEditDialog = false"
+            >
+              Изменить
+            </v-btn>
+            <!-- Доделать с 400 строки, прикрутить логику редактирования -->
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </div>
   </div>
 </template>
@@ -256,15 +418,36 @@ export default {
   data: () => ({
     adminDialog: false,
     productsDialog: false,
-    productAddDialog: false,
-    productDeleteDialog: false,
-    productEditDialog: false,
+    productAddDialog: false, //add
+    productDeleteDialog: false, //del
+    productEditDialog: false, //edit
 
     catalogDialog: false,
     categoryAddDialog: false,
     categoryDeleteDialog: false,
     categoryEditDialog: false,
     categoryMoveDialog: false,
+
+    categories: "", //del, edit
+    specificProducts: null, //del, edit
+    products: [
+      {
+        name: "Alabama",
+        id: 1,
+      },
+      {
+        name: "Alaska",
+        id: 2,
+      },
+      {
+        name: "American Samoa",
+        id: 3,
+      },
+      {
+        name: "Arizona",
+        id: 4,
+      },
+    ], //del, edit
 
     product: {
       name: null,
@@ -273,11 +456,17 @@ export default {
       description: null,
       photos: [],
       discount: null,
-    },
+    }, //add
 
-    form: false,
-    loading: false,
-    alert: false,
+    form: false, //add
+    loading: false, //add
+    loadingDel: false, //del
+    loadingEdit: false, //edit
+    loadingSpecificProducts: false, //del, edit
+    isLoadedSpecificProducts: false, //del, edit
+    alertProductAdd: false, //add
+    alertProductDel: false, //del
+    alertProductEdit: false, //edit
 
     rules: {
       required: (value) => !!value || "Поле должно быть заполнено",
@@ -300,10 +489,67 @@ export default {
       this.product.discount = null;
       this.product.photos = [];
 
-      this.loading = await false;
+      this.loading = false;
 
-      this.alert = await true;
-      await setTimeout(() => (this.alert = false), 2000);
+      this.alertProductAdd = true;
+      setTimeout(() => (this.alertProductAdd = false), 1000);
+    },
+
+    delDialog() {
+      this.loadingDel = true;
+      // послать запрос на все категории, включить кружок загрузки
+      // как только загрузилось, показываем окно с удалением
+      setTimeout(() => {
+        this.loadingDel = false;
+        this.productDeleteDialog = true;
+      }, 500);
+    },
+
+    requestForSpecificProducts() {
+      this.loadingSpecificProducts = true;
+      setTimeout(() => {
+        this.loadingSpecificProducts = false;
+        this.isLoadedSpecificProducts = true;
+      }, 1000);
+      // послать запрос на продукты из этой категории, включить кружок загрузки
+      // как только загрузилось, показываем новой селект с продуктами
+      // если пользователь выбрал товар, показать кнопку на удаление
+    },
+
+    async deleteProduct() {
+      // послать запрос на удаление по айдишнику
+      // вернуть все состояния в исходные
+      this.categories = ""; //del
+
+      this.alertProductDel = true;
+      this.isLoadedSpecificProducts = false;
+      this.specificProducts = null;
+      setTimeout(() => (this.alertProductDel = false), 2000);
+    },
+
+    itemProps(item) {
+      return {
+        title: item.name,
+      };
+    },
+
+    closeEditDelDialog() {
+      this.categories = "";
+      this.specificProducts = null;
+      this.isLoadedSpecificProducts = false;
+      this.productEditDialog === true
+        ? (this.productEditDialog = false)
+        : (this.productDeleteDialog = false);
+    },
+
+    editDialog() {
+      this.loadingEdit = true;
+      // послать запрос на все категории, включить кружок загрузки
+      // как только загрузилось, показываем окно с удалением
+      setTimeout(() => {
+        this.loadingEdit = false;
+        this.productEditDialog = true;
+      }, 500);
     },
   },
 };
@@ -315,11 +561,19 @@ export default {
   width: 200px;
 }
 
-.alert {
+.alertAdd,
+.alertDel {
   position: absolute !important;
   z-index: 99999999;
-  bottom: 557px;
   animation: ani 2s cubic-bezier(0.12, 0.44, 0.46, 0.99);
+}
+
+.alertAdd {
+  bottom: 563px;
+}
+
+.alertDel {
+  bottom: 120px;
 }
 
 @keyframes ani {
@@ -333,5 +587,17 @@ export default {
   50% {
     opacity: 1;
   }
+}
+
+.progressCircular__SpecificProducts {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.select__SpecificProducts {
+  margin: 50px 0 0 0;
 }
 </style>
