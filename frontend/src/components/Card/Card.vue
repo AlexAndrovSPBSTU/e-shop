@@ -200,7 +200,7 @@ export default {
     card: {
       id: 1241351341,
       title: "Phone 124134",
-      img: "https://storage.yandexcloud.net/e-shop/5.jpg",
+      img: "https://storage.yandexcloud.net/e-shop/123.jpg",
       description:
         "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aliquid atque consectetur fugiat, cum necessitatibus a animi doloribus qui eaque suscipit quo, dolore optio eum similique numquam minus id amet eius? Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aliquid atque consectetur fugiat, cum necessitatibus a animi doloribus qui eaque suscipit quo, dolore optio eum similique numquam minus id amet eius?Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aliquid atque consectetur fugiat, cum necessitatibus a animi doloribus qui eaque suscipit quo, dolore optio eum similique numquam minus id amet eius?",
       price: 999,

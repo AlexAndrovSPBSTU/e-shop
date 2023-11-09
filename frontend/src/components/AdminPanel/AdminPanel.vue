@@ -331,7 +331,7 @@
         class="dialog"
         v-model="productEditDialog"
         persistent
-        width="600"
+        width="800"
       >
         <v-alert
           class="alertEdit"
@@ -381,7 +381,100 @@
                 label="Товар"
                 hint="Выберите товар, который собираетесь изменить"
                 persistent-hint
+                @update:modelValue="changeEditProduct"
               ></v-select>
+            </div>
+            <div class="edit__SpecificProducts" v-if="specificProducts">
+              <v-row class="mt-4">
+                <v-col cols="12" sm="12" md="12">
+                  <v-text-field
+                    v-model="nowEditProduct.name"
+                    :placeholder="specificProducts.name.toString()"
+                    clearable
+                    hint="Название продукта"
+                    persistent-hint
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12" sm="12" md="12">
+                  <v-text-field
+                    v-model="nowEditProduct.price"
+                    type="number"
+                    :placeholder="specificProducts.price.toString()"
+                    clearable
+                    hint="Цена продукта"
+                    persistent-hint
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12" sm="12" md="12">
+                  <v-text-field
+                    v-model="nowEditProduct.amount"
+                    type="number"
+                    :placeholder="specificProducts.amount.toString()"
+                    clearable
+                    hint="Количество на складе"
+                    persistent-hint
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12" sm="12" md="12">
+                  <v-text-field
+                    v-model="nowEditProduct.discount"
+                    type="number"
+                    :placeholder="specificProducts.discount.toString()"
+                    clearable
+                    hint="Скидка для зарегистрированных пользователей"
+                    persistent-hint
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12">
+                  <!-- тут подумать над тем, как в описание передать модель коммента, мб создавать копию эдита перед запуском меню -->
+                  <v-textarea
+                    bg-color="white"
+                    color="black"
+                    label="Описание товара*"
+                    v-model="nowEditProduct.description"
+                    rows="8"
+                    row-height="30"
+                    clearable
+                  ></v-textarea>
+                </v-col>
+                <v-col cols="12" class="edit-photo__imgs">
+                  <div
+                    class="edit-photo__imgs-container"
+                    v-for="photo in nowEditProduct.photos"
+                    :key="photo"
+                  >
+                    <img class="edit-photo__img" :src="photo" />
+                    <div class="photo__delete">
+                      <v-btn
+                        class="photo__delete-btn"
+                        density="compact"
+                        size="large"
+                        icon="mdi-plus"
+                        variant="text"
+                        @click.stop="delPhoto(photo)"
+                      />
+                    </div>
+                  </div>
+                </v-col>
+                <v-col cols="12" class="edit-Addphoto__imgs">
+                  <v-file-input
+                    label="Новые фотографии товара"
+                    multiple
+                    v-model="nowEditProduct.photos"
+                  >
+                    
+                    <!--Допилить загрузку фото!!!!-->
+                  </v-file-input>
+
+                  <v-btn
+                    color="blue-darken-1"
+                    variant="text"
+                    @click="closeEditDelDialog"
+                  >
+                    Загрузить
+                  </v-btn>
+                </v-col>
+              </v-row>
             </div>
           </v-card-text>
           <v-card-actions>
@@ -420,7 +513,7 @@ export default {
     productsDialog: false,
     productAddDialog: false, //add
     productDeleteDialog: false, //del
-    productEditDialog: false, //edit
+    productEditDialog: true, //edit
 
     catalogDialog: false,
     categoryAddDialog: false,
@@ -434,20 +527,59 @@ export default {
       {
         name: "Alabama",
         id: 1,
+        photos: [
+          "https://storage.yandexcloud.net/e-shop/121.jpg",
+          "https://storage.yandexcloud.net/e-shop/122.jpg",
+          "https://storage.yandexcloud.net/e-shop/123.jpg",
+          "https://storage.yandexcloud.net/e-shop/124.jpg",
+          "https://storage.yandexcloud.net/e-shop/125.jpg",
+        ],
+        description:
+          "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aliquid atque consectetur fugiat, cum necessitatibus a animi doloribus qui eaque suscipit quo, dolore optio eum similique numquam minus id amet eius? Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aliquid atque consectetur fugiat, cum necessitatibus a animi doloribus qui eaque suscipit quo, dolore optio eum similique numquam minus id amet eius?Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aliquid atque consectetur fugiat, cum necessitatibus a animi doloribus qui eaque suscipit quo, dolore optio eum similique numquam minus id amet eius?",
+        price: 999,
+        amount: 999,
+        discount: 5,
       },
       {
         name: "Alaska",
         id: 2,
+        photos: ["https://storage.yandexcloud.net/e-shop/123.jpg"],
+        description:
+          "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aliquid atque consectetur fugiat, cum necessitatibus a animi doloribus qui eaque suscipit quo, dolore optio eum similique numquam minus id amet eius? Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aliquid atque consectetur fugiat, cum necessitatibus a animi doloribus qui eaque suscipit quo, dolore optio eum similique numquam minus id amet eius?Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aliquid atque consectetur fugiat, cum necessitatibus a animi doloribus qui eaque suscipit quo, dolore optio eum similique numquam minus id amet eius?",
+        price: 999,
+        amount: 999,
+        discount: 5,
       },
       {
         name: "American Samoa",
         id: 3,
+        photos: ["https://storage.yandexcloud.net/e-shop/123.jpg"],
+        description:
+          "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aliquid atque consectetur fugiat, cum necessitatibus a animi doloribus qui eaque suscipit quo, dolore optio eum similique numquam minus id amet eius? Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aliquid atque consectetur fugiat, cum necessitatibus a animi doloribus qui eaque suscipit quo, dolore optio eum similique numquam minus id amet eius?Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aliquid atque consectetur fugiat, cum necessitatibus a animi doloribus qui eaque suscipit quo, dolore optio eum similique numquam minus id amet eius?",
+        price: 999,
+        amount: 999,
+        discount: 5,
       },
       {
         name: "Arizona",
         id: 4,
+        photos: ["https://storage.yandexcloud.net/e-shop/123.jpg"],
+        description:
+          "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aliquid atque consectetur fugiat, cum necessitatibus a animi doloribus qui eaque suscipit quo, dolore optio eum similique numquam minus id amet eius? Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aliquid atque consectetur fugiat, cum necessitatibus a animi doloribus qui eaque suscipit quo, dolore optio eum similique numquam minus id amet eius?Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aliquid atque consectetur fugiat, cum necessitatibus a animi doloribus qui eaque suscipit quo, dolore optio eum similique numquam minus id amet eius?",
+        price: 999,
+        amount: 999,
+        discount: 5,
       },
     ], //del, edit
+
+    nowEditProduct: {
+      name: null,
+      price: null,
+      amount: null,
+      description: null,
+      photos: [],
+      discount: null,
+    },
 
     product: {
       name: null,
@@ -550,6 +682,24 @@ export default {
         this.loadingEdit = false;
         this.productEditDialog = true;
       }, 500);
+
+      /*if (this.productEditDialog) {
+        this.nowEditProduct.description = this.specificProducts.description;
+        this.nowEditProduct.photos = this.specificProducts.photos;
+      }*/
+    },
+
+    changeEditProduct(event) {
+      this.nowEditProduct = { ...event };
+      console.log(this.nowEditProduct);
+    },
+
+    delPhoto(photo) {
+      console.log(photo);
+      //this.nowEditProduct.photos.forEach(v => console.log(v))
+      this.nowEditProduct.photos = this.nowEditProduct.photos.filter(
+        (delPhoto) => delPhoto !== photo
+      );
     },
   },
 };
@@ -599,5 +749,42 @@ export default {
 
 .select__SpecificProducts {
   margin: 50px 0 0 0;
+}
+
+.edit-photo__imgs {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.edit-photo__imgs-container {
+  height: 140px;
+  margin: 5px;
+}
+
+.edit-photo__img {
+  max-width: 200px;
+  height: 140px;
+}
+
+.edit-Addphoto__imgs {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.photo__delete {
+  position: relative;
+  top: -145px;
+  display: flex;
+  justify-content: flex-end;
+  z-index: 1000;
+}
+
+.photo__delete-btn {
+  text-shadow: 1px 1px 1px rgba(0, 0, 0);
+  color: white;
+  transform: rotate(45deg);
+  font-size: 24px;
 }
 </style>
