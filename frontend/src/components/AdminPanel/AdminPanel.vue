@@ -51,7 +51,7 @@
               color="orange"
               class="ma-2 admin__btns"
               :loading="loadingAdd"
-              @click="addDialog"
+              @click="productAddDialogFunc"
             >
               Добавить
             </v-btn>
@@ -62,7 +62,7 @@
               color="orange"
               class="ma-2 admin__btns"
               :loading="loadingDel"
-              @click="delDialog"
+              @click="productDelDialogFunc"
             >
               Удалить
             </v-btn>
@@ -73,7 +73,7 @@
               color="orange"
               class="ma-2 admin__btns"
               :loading="loadingEdit"
-              @click="editDialog"
+              @click="productEditDialogFunc"
             >
               Редактировать
             </v-btn>
@@ -95,7 +95,8 @@
               variant="elevated"
               color="orange"
               class="ma-2 admin__btns"
-              @click="dialog2 = true"
+              :loading="loadingAddCategory"
+              @click="categoryAddDialogFunc"
             >
               Добавить
             </v-btn>
@@ -105,7 +106,8 @@
               variant="elevated"
               color="orange"
               class="ma-2 admin__btns"
-              @click="dialog3 = true"
+              :loading="loadingDelCategory"
+              @click="categoryDelDialogFunc"
             >
               Удалить
             </v-btn>
@@ -115,7 +117,8 @@
               variant="elevated"
               color="orange"
               class="ma-2 admin__btns"
-              @click="dialog3 = true"
+              :loading="loadingEditCategory"
+              @click="categoryEditDialogFunc"
             >
               Редактировать
             </v-btn>
@@ -125,7 +128,8 @@
               variant="elevated"
               color="orange"
               class="ma-2 admin__btns"
-              @click="dialog3 = true"
+              :loading="loadingMoveCategory"
+              @click="categoryMoveDialogFunc"
             >
               Переместить
             </v-btn>
@@ -517,6 +521,133 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
+
+      <!-- Добавление новой категории в дерево каталога -->
+      <v-dialog v-model="categoryAddDialog" persistent width="600">
+        <v-card>
+          <v-form v-model="formAddCategory" @submit.prevent="addNewCategory">
+            <v-card-title> Добавить категорию </v-card-title>
+            <v-card-text>
+              <v-row>
+                <v-col cols="12" sm="12" md="12">
+                  <v-select
+                    v-model="categories"
+                    :items="[
+                      'Alabama',
+                      'Alaska',
+                      'American Samoa',
+                      'Arizona',
+                      'Arkansas',
+                      'California',
+                    ]"
+                    label="Категории"
+                    hint="Выберите нужную категорию"
+                    persistent-hint
+                    @update:modelValue="requestCategory"
+                  ></v-select>
+
+                  <div
+                    class="progressCircular__SpecificProducts"
+                    v-if="loadingCategory"
+                  >
+                    <v-progress-circular
+                      indeterminate
+                      color="amber"
+                      :size="50"
+                      :width="5"
+                    ></v-progress-circular>
+                  </div>
+                  <div
+                    class="select__SpecificProducts"
+                    v-if="loadingCategory"
+                  >
+                    <v-text-field
+                      v-model="valueAddCategory"
+                      label="Название категории"
+                      type="text"
+                      :rules="[rules.required]"
+                      clearable
+                      required
+                    ></v-text-field>
+                  </div>
+                </v-col>
+              </v-row>
+            </v-card-text>
+
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn
+                color="blue-darken-1"
+                variant="text"
+                @click="categoryAddDialog = false"
+              >
+                Закрыть
+              </v-btn>
+              <v-btn
+                :disabled="!formAddCategory"
+                :loading="loading"
+                color="blue-darken-1"
+                variant="text"
+                type="submit"
+              >
+                Добавить
+              </v-btn>
+            </v-card-actions>
+          </v-form>
+        </v-card>
+      </v-dialog>
+
+      <!-- Удаление категории из дерева каталога -->
+      <v-dialog v-model="categoryDelDialog" persistent width="600">
+        <v-card>
+            <v-card-title> Удалить категорию </v-card-title>
+            <v-card-text>
+              <v-row>
+                <v-col cols="12" sm="12" md="12">
+                  <v-select
+                    v-model="categories"
+                    :items="[
+                      'Alabama',
+                      'Alaska',
+                      'American Samoa',
+                      'Arizona',
+                      'Arkansas',
+                      'California',
+                    ]"
+                    label="Категории"
+                    hint="Выберите нужную категорию"
+                    persistent-hint
+                    @update:modelValue="requestCategory"
+                  ></v-select>
+                </v-col>
+              </v-row>
+            </v-card-text>
+
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn
+                color="blue-darken-1"
+                variant="text"
+                @click="categoryDelDialog = false"
+              >
+                Закрыть
+              </v-btn>
+              <v-btn
+                :disabled="!isLoadedSpecificProducts"
+                :loading="loading"
+                color="blue-darken-1"
+                variant="text"
+                @click="deleteCategory"
+              >
+                Удалить
+              </v-btn>
+            </v-card-actions>
+        </v-card>
+      </v-dialog>
+
+      <!-- Переименование категории в дереве каталога -->
+
+      <!-- Перемещение категории в дереве каталога -->
     </div>
   </div>
 </template>
@@ -529,20 +660,20 @@ export default {
   components: { AddProduct },
   data: () => ({
     adminDialog: false,
-    productsDialog: false,
-    productAddDialog: false, //add
-    productDeleteDialog: false, //del
-    productEditDialog: false, //edit
+    productsDialog: false, //product
+    productAddDialog: false, //addProduct
+    productDeleteDialog: false, //delProduct
+    productEditDialog: false, //editProduct
 
     catalogDialog: false,
     categoryAddDialog: false,
-    categoryDeleteDialog: false,
+    categoryDelDialog: false,
     categoryEditDialog: false,
     categoryMoveDialog: false,
 
-    categoriesForAdd: "", //add
-    categories: "", //del, edit
-    specificProducts: null, //del, edit
+    categoriesForAdd: "", //addProduct
+    categories: "", //delProduct, editProduct
+    specificProducts: null, //delProduct, editProduct
     products: [
       {
         name: "Alabama",
@@ -590,7 +721,7 @@ export default {
         amount: 999,
         discount: 5,
       },
-    ], //del, edit
+    ], //delProduct, editProduct
 
     nowEditProduct: {
       name: null,
@@ -599,9 +730,9 @@ export default {
       description: null,
       photos: [],
       discount: null,
-    }, // edit
+    }, // editProduct
 
-    newEditPhotos: [],
+    newEditPhotos: [], //product
 
     product: {
       name: null,
@@ -610,18 +741,29 @@ export default {
       description: null,
       photos: [],
       discount: null,
-    }, //add
+    }, //addProduct
 
-    form: false, //add
-    loading: false, //add
-    loadingAdd: false, //add
-    loadingDel: false, //del
-    loadingEdit: false, //edit
-    loadingSpecificProducts: false, //del, edit
-    isLoadedSpecificProducts: false, //del, edit
-    alertProductAdd: false, //add
-    alertProductDel: false, //del
-    alertProductEdit: false, //edit
+    form: false, //addProduct
+    loading: false, //addProduct
+    loadingAdd: false, //addProduct
+    loadingDel: false, //delProduct
+    loadingEdit: false, //editProduct
+    loadingSpecificProducts: false, //delProduct, editProduct
+    isLoadedSpecificProducts: false, //delProduct, editProduct
+    alertProductAdd: false, //addProduct
+    alertProductDel: false, //delProduct
+    alertProductEdit: false, //editProduct
+
+    ///////////////////////////////
+    formAddCategory: false, //addProduct
+    loadingMoveCategory: false, //moveCategory
+    loadingAddCategory: false, //addCategory
+    loadingDelCategory: false, //delCategory
+    loadingEditCategory: false, //editCategory
+
+    loadingCategory: false,
+
+    valueAddCategory: null,
 
     rules: {
       required: (value) => !!value || "Поле должно быть заполнено",
@@ -629,7 +771,7 @@ export default {
   }),
 
   methods: {
-    addDialog() {
+    productAddDialogFunc() {
       this.loadingAdd = true;
       // послать запрос на все категории
       setTimeout(() => {
@@ -659,7 +801,7 @@ export default {
       setTimeout(() => (this.alertProductAdd = false), 1000);
     },
 
-    delDialog() {
+    productDelDialogFunc() {
       this.loadingDel = true;
       // послать запрос на все категории, включить кружок загрузки
       // как только загрузилось, показываем окно с удалением
@@ -678,6 +820,15 @@ export default {
       // послать запрос на продукты из этой категории, включить кружок загрузки
       // как только загрузилось, показываем новой селект с продуктами
       // если пользователь выбрал товар, показать кнопку на удаление
+    },
+
+    requestCategory(){
+      this.loadingCategory = true;
+//FIX 587 ////////////////////////////////////////////////////////////
+      setTimeout(() => {
+        this.loadingCategory = false;
+        this.isLoadedSpecificProducts = true;
+      }, 1000);
     },
 
     async deleteProduct() {
@@ -706,7 +857,7 @@ export default {
         : (this.productDeleteDialog = false);
     },
 
-    editDialog() {
+    productEditDialogFunc() {
       this.loadingEdit = true;
       // послать запрос на все категории, включить кружок загрузки
       // как только загрузилось, показываем окно с удалением
@@ -748,6 +899,63 @@ export default {
       }, 1600);
 
       //this.nowEditProduct.photos = await this.nowEditProduct.photos.concat(url);
+    },
+
+    categoryAddDialogFunc() {
+      this.loadingAddCategory = true;
+      // послать запрос на все категории
+      setTimeout(() => {
+        this.loadingAddCategory = false;
+        this.categoryAddDialog = true;
+      }, 500);
+    },
+
+    categoryDelDialogFunc() {
+      this.loadingDelCategory = true;
+      // послать запрос на все категории
+      setTimeout(() => {
+        this.loadingDelCategory = false;
+        this.categoryDelDialog = true;
+      }, 500);
+    },
+
+    categoryEditDialogFunc() {
+      this.loadingEditCategory = true;
+      // послать запрос на все категории
+      setTimeout(() => {
+        this.loadingEditCategory = false;
+        this.categoryEditDialog = true;
+      }, 500);
+    },
+
+    categoryMoveDialogFunc() {
+      this.loadingMoveCategory = true;
+      // послать запрос на все категории
+      setTimeout(() => {
+        this.loadingMoveCategory = false;
+        this.categoryMoveDialog = true;
+      }, 500);
+    },
+
+    addNewCategory() {
+      if (!this.formAddCategory) return;
+
+      this.loading = true;
+
+      //запрос на добавление
+      this.valueAddCategory = null;
+      setTimeout(() => (this.loading = false), 500);
+      //setTimeout(() => (this.alertProductAdd = false), 1000);
+    },
+
+    deleteCategory() {
+      console.log(1)
+      //запрос на удаление
+      //запрос на получение обновленого списка категорий
+      //глобально записать список
+      this.categories = ""
+      
+      
     },
   },
 };
