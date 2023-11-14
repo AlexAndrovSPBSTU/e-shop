@@ -39,7 +39,7 @@
 
       <div
         v-if="message"
-        class="alert"
+        class="alert__register"
         :class="successful ? 'alert-success' : 'alert-danger'"
       >
         {{ message }}
@@ -111,7 +111,7 @@ export default {
       this.loading = false;
 
       console.log(JSON.stringify(user))
-      console.log(user2)
+      //console.log(user2)
       /*
 
       const requestOptions = {

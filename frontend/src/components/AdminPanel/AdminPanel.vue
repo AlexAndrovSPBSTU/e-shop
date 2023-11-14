@@ -50,7 +50,8 @@
               variant="elevated"
               color="orange"
               class="ma-2 admin__btns"
-              @click="productAddDialog = true"
+              :loading="loadingAdd"
+              @click="addDialog"
             >
               Добавить
             </v-btn>
@@ -161,6 +162,25 @@
             <v-card-text>
               <v-container>
                 <v-row>
+                  <v-col cols="12" sm="12" md="12">
+                    <v-select
+                      v-model="categoriesForAdd"
+                      :items="[
+                        'Alabama',
+                        'Alaska',
+                        'American Samoa',
+                        'Arizona',
+                        'Arkansas',
+                        'California',
+                      ]"
+                      label="Категории"
+                      hint="Выберите нужную категорию"
+                      persistent-hint
+                      :rules="[rules.required]"
+                      clearable
+                    ></v-select>
+                  </v-col>
+
                   <v-col cols="12" sm="6" md="6">
                     <v-text-field
                       v-model="product.name"
@@ -460,16 +480,15 @@
                   <v-file-input
                     label="Новые фотографии товара"
                     multiple
-                    v-model="nowEditProduct.photos"
+                    v-model="newEditPhotos"
                   >
-                    
                     <!--Допилить загрузку фото!!!!-->
                   </v-file-input>
 
                   <v-btn
                     color="blue-darken-1"
                     variant="text"
-                    @click="closeEditDelDialog"
+                    @click="addNewPhotosInEdit"
                   >
                     Загрузить
                   </v-btn>
@@ -513,7 +532,7 @@ export default {
     productsDialog: false,
     productAddDialog: false, //add
     productDeleteDialog: false, //del
-    productEditDialog: true, //edit
+    productEditDialog: false, //edit
 
     catalogDialog: false,
     categoryAddDialog: false,
@@ -521,6 +540,7 @@ export default {
     categoryEditDialog: false,
     categoryMoveDialog: false,
 
+    categoriesForAdd: "", //add
     categories: "", //del, edit
     specificProducts: null, //del, edit
     products: [
@@ -579,7 +599,9 @@ export default {
       description: null,
       photos: [],
       discount: null,
-    },
+    }, // edit
+
+    newEditPhotos: [],
 
     product: {
       name: null,
@@ -592,6 +614,7 @@ export default {
 
     form: false, //add
     loading: false, //add
+    loadingAdd: false, //add
     loadingDel: false, //del
     loadingEdit: false, //edit
     loadingSpecificProducts: false, //del, edit
@@ -606,6 +629,15 @@ export default {
   }),
 
   methods: {
+    addDialog() {
+      this.loadingAdd = true;
+      // послать запрос на все категории
+      setTimeout(() => {
+        this.loadingAdd = false;
+        this.productAddDialog = true;
+      }, 500);
+    },
+
     async write() {
       if (!this.form) return;
 
@@ -700,6 +732,22 @@ export default {
       this.nowEditProduct.photos = this.nowEditProduct.photos.filter(
         (delPhoto) => delPhoto !== photo
       );
+    },
+
+    async addNewPhotosInEdit() {
+      console.log(this.newEditPhotos);
+
+      let url = await uploadS3(this.newEditPhotos);
+      //console.log(2);
+      setTimeout(() => {
+        for (let i = 0; i < url.length; i++) {
+          //this.nowEditProduct.photos.push(url[i]);
+          //console.log(i+2);
+          this.nowEditProduct.photos.push(url[i]);
+        }
+      }, 1600);
+
+      //this.nowEditProduct.photos = await this.nowEditProduct.photos.concat(url);
     },
   },
 };
