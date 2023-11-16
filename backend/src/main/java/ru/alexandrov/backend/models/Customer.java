@@ -1,6 +1,7 @@
 package ru.alexandrov.backend.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.springframework.data.annotation.ReadOnlyProperty;
 
@@ -26,9 +27,11 @@ public class Customer {
     private String email;
 
     @Column(name = "password")
+    @ReadOnlyProperty
     private String password;
 
     @Column(name = "role")
+    @JsonIgnore
     private String role;
 
     @OneToMany(mappedBy = "customer")

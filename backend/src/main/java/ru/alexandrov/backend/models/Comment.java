@@ -1,7 +1,7 @@
 package ru.alexandrov.backend.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.data.annotation.ReadOnlyProperty;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -31,11 +31,9 @@ public class Comment {
 
     @ManyToOne
     @JoinColumn(name = "customer_id", referencedColumnName = "customer_id")
-    @JsonBackReference
     private Customer customer;
 
-    @OneToMany(mappedBy = "comment")
-    @JsonIgnore
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.PERSIST)
     private List<Photo> photos;
 
     public int getId() {

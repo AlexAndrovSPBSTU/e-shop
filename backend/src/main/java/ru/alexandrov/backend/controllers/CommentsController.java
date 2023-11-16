@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.alexandrov.backend.models.Comment;
+import ru.alexandrov.backend.models.Photo;
 import ru.alexandrov.backend.services.CommentService;
 
 @RestController
@@ -18,8 +19,11 @@ public class CommentsController {
     }
 
     @PostMapping("/new")
-    public ResponseEntity   createComment(@RequestBody Comment comment,
-                                                    @RequestParam int productId) {
+    public ResponseEntity createComment(@RequestBody Comment comment,
+                                        @RequestParam int productId) {
+        for (Photo photo : comment.getPhotos()) {
+            photo.setComment(comment);
+        }
         commentService.save(comment, productId);
         return ResponseEntity.ok(HttpStatus.OK);
     }

@@ -1,10 +1,8 @@
 package ru.alexandrov.backend.models;
 
-import com.fasterxml.jackson.annotation.JsonGetter;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import org.springframework.data.annotation.ReadOnlyProperty;
 import ru.alexandrov.backend.constants.ProjectConstants;
 import ru.alexandrov.backend.util.PropertyListSerializer;
 
@@ -36,19 +34,16 @@ public class Product {
 
     @ManyToOne
     @JoinColumn(name = "category_id", referencedColumnName = "category_id")
-    @JsonIgnore
     private Category category;
 
     @ManyToMany(mappedBy = "products")
-    @JsonIgnore
+    @JsonSerialize(using = PropertyListSerializer.class)
     private List<Property> properties;
 
-    @OneToMany(mappedBy = "product")
-    @JsonManagedReference
+    @OneToMany(mappedBy = "product", cascade = CascadeType.PERSIST)
     private List<Photo> photos;
 
     @OneToMany(mappedBy = "product")
-    @JsonIgnore
     private List<Comment> comments;
 
     @JsonProperty("status_amount")
@@ -62,7 +57,6 @@ public class Product {
         }
     }
 
-    @JsonSerialize(using = PropertyListSerializer.class)
     public List<Property> getProperties() {
         return properties;
     }
@@ -136,8 +130,8 @@ public class Product {
     }
 
     @JsonGetter("category")
-    public Integer getCategory() {
-        return category.getId();
+    public String getCategory() {
+        return category.getName();
     }
 
     public void setCategory(Category category) {

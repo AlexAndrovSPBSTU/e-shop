@@ -32,7 +32,7 @@ public class Characteristic {
 
     @OneToMany(mappedBy = "characteristic")
     @JsonIgnore
-    private List<Property> property;
+    private List<Property> properties;
 
     public Float getFrom() {
         return from;
@@ -50,12 +50,12 @@ public class Characteristic {
         this.to = to;
     }
 
-    public List<Property> getProperty() {
-        return property;
+    public List<Property> getProperties() {
+        return properties;
     }
 
-    public void setProperty(List<Property> property) {
-        this.property = property;
+    public void setProperties(List<Property> property) {
+        this.properties = property;
     }
 
 
