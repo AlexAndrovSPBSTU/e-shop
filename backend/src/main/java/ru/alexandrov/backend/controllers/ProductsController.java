@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.alexandrov.backend.models.Photo;
 import ru.alexandrov.backend.models.Product;
 import ru.alexandrov.backend.services.ProductService;
 
@@ -26,6 +27,9 @@ public class ProductsController {
     @PostMapping("/new")
     public ResponseEntity createProduct(@RequestBody Product product,
                                         @RequestParam int categoryId) {
+        for (Photo photo : product.getPhotos()) {
+            photo.setProduct(product);
+        }
         productService.save(product, categoryId);
         return ResponseEntity.ok(HttpStatus.OK);
     }

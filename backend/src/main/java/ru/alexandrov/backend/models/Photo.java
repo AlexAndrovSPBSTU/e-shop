@@ -1,6 +1,8 @@
 package ru.alexandrov.backend.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.data.annotation.ReadOnlyProperty;
 
 import javax.persistence.*;
 
@@ -9,17 +11,24 @@ import javax.persistence.*;
 public class Photo {
     @Id
     @Column(name = "url")
-//    @GeneratedValue
     private String url;
 
     @ManyToOne
     @JoinColumn(name = "product_id", referencedColumnName = "product_id")
-    @JsonBackReference
+    @JsonIgnore
     private Product product;
 
     @ManyToOne
     @JoinColumn(name = "comment_id", referencedColumnName = "comment_id")
+    @JsonIgnore
     private Comment comment;
+
+    public Photo() {
+    }
+
+    public Photo(String url) {
+        this.url = url;
+    }
 
     public String getUrl() {
         return url;

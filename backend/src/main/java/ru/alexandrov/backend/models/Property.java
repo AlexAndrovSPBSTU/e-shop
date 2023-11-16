@@ -22,6 +22,7 @@ public class Property {
     @JoinColumn(name = "characteristic_id", referencedColumnName = "characteristic_id")
     @JsonIgnore
     private Characteristic characteristic;
+
     @JsonIgnore
     @ManyToMany
     @JoinTable(name = "product_property",

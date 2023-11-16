@@ -14,7 +14,6 @@ public class PhotoValidationAspect extends BasicValidationAspect {
             argNames = "joinPoint,photo,categoryId,productId")
     public ResponseEntity validateSavePhoto(ProceedingJoinPoint joinPoint, Photo photo, Integer categoryId, Integer productId) throws Throwable {
         StringBuilder errors = new StringBuilder();
-        validatePhotoUrl(photo.getUrl(), errors);
         if (categoryId == null && productId == null) {
             errors.append("Either categoryId or productId must be provided\n");
         }

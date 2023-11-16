@@ -17,13 +17,14 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 
 public class JWTTokenValidatorFilter extends OncePerRequestFilter {
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+    public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         String jwt = request.getHeader(ProjectConstants.JWT_HEADER);
         if (null != jwt) {
@@ -43,8 +44,11 @@ public class JWTTokenValidatorFilter extends OncePerRequestFilter {
                 Authentication auth = new UsernamePasswordAuthenticationToken(username, null,
                         Collections.singleton(new SimpleGrantedAuthority(authority)));
                 SecurityContextHolder.getContext().setAuthentication(auth);
-            } catch (Exception e) {
-                throw new JwtException("Invalid Token received!");
+            } catch (Exception ex) {
+                response.addHeader("Content-Type", "application/json;charset=UTF-8");
+                response.getOutputStream().print(ex.getMessage());
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                return;
             }
         }
         filterChain.doFilter(request, response);
@@ -52,7 +56,6 @@ public class JWTTokenValidatorFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        return request.getServletPath().equals("/authenticate");
+        return request.getServletPath().equals("/authenticate") || request.getServletPath().equals("/register");
     }
-
 }

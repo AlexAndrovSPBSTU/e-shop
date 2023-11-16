@@ -92,17 +92,7 @@ public class BasicValidationAspect {
             errors.append("name - Name is mandatory\n");
         } else {
             if (characteristicRepository.findByName(name).isPresent()) {
-                errors.append("name - category with this name already exists\n");
-            }
-        }
-    }
-
-    protected void validatePhotoUrl(String url, StringBuilder errors) {
-        if (url == null || url.isEmpty()) {
-            errors.append("url - Url is mandatory\n");
-        } else {
-            if (photoRepository.findById(url).isPresent()) {
-                errors.append("url - photo with this url already exists\n");
+                errors.append("name - characteristic with this name already exists\n");
             }
         }
     }
@@ -122,7 +112,7 @@ public class BasicValidationAspect {
             errors.append("name - Name is mandatory\n");
         } else {
             if (productRepository.findByName(name).isPresent()) {
-                errors.append("name - photo with this name already exists\n");
+                errors.append("name - product with this name already exists\n");
             }
         }
     }
