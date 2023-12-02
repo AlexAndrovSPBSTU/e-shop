@@ -13,7 +13,7 @@ public class ProductValidationAspect extends BasicValidationAspect {
 
     @Around(value = "execution(* ru.alexandrov.backend.controllers.ProductsController.getProductById(..)) && args(id)",
             argNames = "joinPoint,id")
-    public ResponseEntity validateGetProductById(ProceedingJoinPoint joinPoint, int id) throws Throwable {
+    public ResponseEntity<?>  validateGetProductById(ProceedingJoinPoint joinPoint, int id) throws Throwable {
         StringBuilder errors = new StringBuilder();
         validateProductId(id, errors);
         return makeReturnStatement(errors, joinPoint);
@@ -21,7 +21,7 @@ public class ProductValidationAspect extends BasicValidationAspect {
 
     @Around(value = "execution(* ru.alexandrov.backend.controllers.ProductsController.createProduct(..)) && args(product,categoryId)",
             argNames = "joinPoint,product,categoryId")
-    public ResponseEntity validateCreateProduct(ProceedingJoinPoint joinPoint, Product product, Integer categoryId) throws Throwable {
+    public ResponseEntity<?>  validateCreateProduct(ProceedingJoinPoint joinPoint, Product product, Integer categoryId) throws Throwable {
         StringBuilder errors = new StringBuilder();
         validateProductName(product.getName(), errors);
         validateCategoryId(categoryId, errors);
@@ -34,7 +34,7 @@ public class ProductValidationAspect extends BasicValidationAspect {
 
     @Around(value = "execution(* ru.alexandrov.backend.controllers.ProductsController.deleteProduct(..)) && args(id)",
             argNames = "joinPoint,id")
-    public ResponseEntity validateDeleteProduct(ProceedingJoinPoint joinPoint, int id) throws Throwable {
+    public ResponseEntity<?>  validateDeleteProduct(ProceedingJoinPoint joinPoint, int id) throws Throwable {
         StringBuilder errors = new StringBuilder();
         validateProductId(id, errors);
         return makeReturnStatement(errors, joinPoint);
@@ -42,7 +42,7 @@ public class ProductValidationAspect extends BasicValidationAspect {
 
     @Around(value = "execution(* ru.alexandrov.backend.controllers.ProductsController.change(..)) && args(id,name,categoryId)",
             argNames = "joinPoint,id,name,categoryId")
-    public ResponseEntity validateChange(ProceedingJoinPoint joinPoint, int id, String name, Integer categoryId) throws Throwable {
+    public ResponseEntity<?>  validateChange(ProceedingJoinPoint joinPoint, int id, String name, Integer categoryId) throws Throwable {
         StringBuilder errors = new StringBuilder();
         validateProductId(id, errors);
         validateCategoryId(categoryId, errors);

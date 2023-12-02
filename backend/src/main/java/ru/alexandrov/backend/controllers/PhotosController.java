@@ -19,7 +19,7 @@ public class PhotosController {
     }
 
     @PostMapping("/new")
-    public ResponseEntity savePhoto(@RequestBody Photo photo,
+    public ResponseEntity<?> savePhoto(@RequestBody Photo photo,
                                     @RequestParam(required = false) Integer commentId,
                                     @RequestParam(required = false) Integer productId) {
         photosService.save(photo, productId, commentId);
@@ -27,7 +27,7 @@ public class PhotosController {
     }
 
     @DeleteMapping
-    public ResponseEntity deletePhoto(@RequestParam String url) {
+    public ResponseEntity<?> deletePhoto(@RequestParam String url) {
         photosService.delete(url);
         return ResponseEntity.ok(HttpStatus.OK);
     }

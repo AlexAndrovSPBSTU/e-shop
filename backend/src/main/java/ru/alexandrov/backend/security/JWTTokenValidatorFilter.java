@@ -1,7 +1,6 @@
-package ru.alexandrov.backend.filters;
+package ru.alexandrov.backend.security;
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,8 +16,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Collections;
 
 public class JWTTokenValidatorFilter extends OncePerRequestFilter {
@@ -56,6 +55,6 @@ public class JWTTokenValidatorFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        return request.getServletPath().equals("/authenticate") || request.getServletPath().equals("/register");
+        return Arrays.stream(ProjectConstants.WHITE_LIST[0]).anyMatch(str -> request.getServletPath().matches(str));
     }
 }

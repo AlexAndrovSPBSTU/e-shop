@@ -20,12 +20,12 @@ public class ProductsController {
 
 
     @GetMapping("/{product_id}")
-    public ResponseEntity getProductById(@PathVariable("product_id") int id) {
+    public ResponseEntity<?> getProductById(@PathVariable("product_id") int id) {
         return ResponseEntity.ok(productService.getProductById(id).get());
     }
 
     @PostMapping("/new")
-    public ResponseEntity createProduct(@RequestBody Product product,
+    public ResponseEntity<?> createProduct(@RequestBody Product product,
                                         @RequestParam int categoryId) {
         for (Photo photo : product.getPhotos()) {
             photo.setProduct(product);
@@ -35,13 +35,13 @@ public class ProductsController {
     }
 
     @DeleteMapping("/{product_id}")
-    public ResponseEntity deleteProduct(@PathVariable("product_id") int id) {
+    public ResponseEntity<?> deleteProduct(@PathVariable("product_id") int id) {
         productService.delete(id);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
     @PatchMapping("/change/{product_id}")
-    public ResponseEntity change(@PathVariable("product_id") int id,
+    public ResponseEntity<?> change(@PathVariable("product_id") int id,
                                  @RequestParam(value = "name", required = false) String name,
                                  @RequestParam(value = "price", required = false) Float price,
                                  @RequestParam(value = "amount", required = false) Integer amount,

@@ -2,6 +2,7 @@ package ru.alexandrov.backend.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -9,6 +10,11 @@ import java.util.List;
 
 @Entity
 @Table(name = "category")
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Category {
     @Id
     @Column(name = "category_id")
@@ -42,56 +48,9 @@ public class Category {
         return products.size() + children.stream().mapToInt(Category::getProductAmountOfCategory).sum();
     }
 
-
     public List<Product> getProducts() {
         List<Product> list = new ArrayList<>(products);
-        for (Category child : children) {
-            list.addAll(child.getProducts());
-        }
+        children.forEach(child -> list.addAll(child.getProducts()));
         return list;
-    }
-
-    public List<Characteristic> getCharacteristics() {
-        return characteristics;
-    }
-
-    public void setCharacteristics(List<Characteristic> characteristics) {
-        this.characteristics = characteristics;
-    }
-
-    public void setProducts(List<Product> products) {
-        this.products = products;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public List<Category> getChildren() {
-        return children;
-    }
-
-    public void setChildren(List<Category> children) {
-        this.children = children;
-    }
-
-    public List<Category> getParents() {
-        return parents;
-    }
-
-    public void setParents(List<Category> parents) {
-        this.parents = parents;
     }
 }
