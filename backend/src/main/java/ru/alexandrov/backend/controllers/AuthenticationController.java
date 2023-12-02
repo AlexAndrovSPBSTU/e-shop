@@ -44,13 +44,13 @@ public class AuthenticationController {
      */
 
     @PostMapping(value = "/register", consumes = {"application/xml", "application/json"})
-    public ResponseEntity registerCustomer(@RequestBody Customer customer) {
+    public ResponseEntity<?> registerCustomer(@RequestBody Customer customer) {
         customerService.save(customer);
         return ResponseEntity.ok("Customer has been authenticated");
     }
 
     @PostMapping("/authenticate")
-    public ResponseEntity authenticate(
+    public ResponseEntity<?> authenticate(
             @RequestBody AuthenticationRequest authenticationRequest) {
         Authentication authentication = authenticationManager.authenticate(
                 UsernamePasswordAuthenticationToken.unauthenticated(
@@ -66,16 +66,15 @@ public class AuthenticationController {
                     .claim("username", authentication.getName())
                     .claim("authority", authentication.getAuthorities().iterator().next().getAuthority())
                     .setIssuedAt(new Date())
-                    .setExpiration(new Date((new Date()).getTime() + ProjectConstants.ONE_HOUR))
+                    .setExpiration(new Date((new Date()).getTime() + ProjectConstants.ONE_DAY))
                     .signWith(key).compact();
         }
-        AuthenticationResponse authenticationResponse = new AuthenticationResponse();
-        Customer customer = customerService.findByEmail(authentication.getName()).get();
-        authenticationResponse.setName(customer.getName());
-        authenticationResponse.setSurname(customer.getSurname());
-        authenticationResponse.setEmail(customer.getEmail());
-        authenticationResponse.setJwtToken(jwt);
-        return ResponseEntity.ok(authenticationResponse);
+        return ResponseEntity.ok(AuthenticationResponse
+                .builder()
+                .customer(customerService.findByEmail(authentication.getName()).get())
+                .role(customerService.findByEmail(authentication.getName()).get().getRole())
+                .jwtToken(jwt).build()
+        );
     }
 
 

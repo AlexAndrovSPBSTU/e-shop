@@ -15,7 +15,7 @@ public class AuthenticationValidationAspect extends BasicValidationAspect {
 
     @Around(value = "execution(* ru.alexandrov.backend.controllers.AuthenticationController.registerCustomer(..)) && args(customer)",
             argNames = "joinPoint,customer")
-    public ResponseEntity validateCustomerRegistration(ProceedingJoinPoint joinPoint, Customer customer) throws Throwable {
+    public ResponseEntity<?>  validateCustomerRegistration(ProceedingJoinPoint joinPoint, Customer customer) throws Throwable {
         StringBuilder errors = new StringBuilder();
         if (customer.getName() == null) {
             errors.append("name - name is mandatory\n");
@@ -36,7 +36,7 @@ public class AuthenticationValidationAspect extends BasicValidationAspect {
 
     @Around(value = "execution(* ru.alexandrov.backend.controllers.AuthenticationController.authenticate(..)) && args(authenticationRequest)",
             argNames = "joinPoint,authenticationRequest")
-    public ResponseEntity validateAndProcessCustomerAuthentication(ProceedingJoinPoint joinPoint,
+    public ResponseEntity<?> validateAndProcessCustomerAuthentication(ProceedingJoinPoint joinPoint,
                                                                    AuthenticationRequest authenticationRequest) throws Throwable {
         StringBuilder errors = new StringBuilder();
         if (authenticationRequest.getEmail() == null) {

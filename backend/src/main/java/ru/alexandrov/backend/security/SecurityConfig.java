@@ -13,12 +13,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-import org.springframework.security.web.util.matcher.RegexRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import ru.alexandrov.backend.filters.JWTTokenValidatorFilter;
+import ru.alexandrov.backend.constants.ProjectConstants;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Collections;
 
 @Configuration
@@ -40,8 +37,7 @@ public class SecurityConfig {
                     return config;
                 }))
                 .authorizeHttpRequests(authorizationManagerRequestMatcherRegistry -> authorizationManagerRequestMatcherRegistry
-                        .requestMatchers(new RegexRequestMatcher("/register", "POST")).permitAll()
-                        .requestMatchers(new RegexRequestMatcher("/authenticate", "POST")).permitAll()
+                        .antMatchers(ProjectConstants.WHITE_LIST[1]).permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(new JWTTokenValidatorFilter(), BasicAuthenticationFilter.class)

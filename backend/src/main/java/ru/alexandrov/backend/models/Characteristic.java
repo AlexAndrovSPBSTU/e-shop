@@ -1,12 +1,16 @@
 package ru.alexandrov.backend.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
 @Table(name = "characteristic")
+@Getter
+@Setter
 public class Characteristic {
     @Id
     @Column(name = "characteristic_id")
@@ -33,62 +37,5 @@ public class Characteristic {
     @OneToMany(mappedBy = "characteristic")
     @JsonIgnore
     private List<Property> properties;
-
-    public Float getFrom() {
-        return from;
-    }
-
-    public void setFrom(Float from) {
-        this.from = from;
-    }
-
-    public Float getTo() {
-        return to;
-    }
-
-    public void setTo(Float to) {
-        this.to = to;
-    }
-
-    public List<Property> getProperties() {
-        return properties;
-    }
-
-    public void setProperties(List<Property> property) {
-        this.properties = property;
-    }
-
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Boolean getRange() {
-        return isRange;
-    }
-
-    public void setRange(Boolean range) {
-        isRange = range;
-    }
-
-    public Category getCategory() {
-        return category;
-    }
-
-    public void setCategory(Category category) {
-        this.category = category;
-    }
 
 }

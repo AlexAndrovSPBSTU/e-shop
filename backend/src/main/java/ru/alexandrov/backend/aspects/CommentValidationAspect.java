@@ -12,7 +12,7 @@ import ru.alexandrov.backend.models.Comment;
 public class CommentValidationAspect extends BasicValidationAspect {
     @Around(value = "execution(* ru.alexandrov.backend.controllers.CommentsController.createComment(..)) && args(comment,productId)",
             argNames = "joinPoint,comment,productId")
-    public ResponseEntity validateCreateComment(ProceedingJoinPoint joinPoint, Comment comment, int productId) throws Throwable {
+    public ResponseEntity<?>  validateCreateComment(ProceedingJoinPoint joinPoint, Comment comment, int productId) throws Throwable {
         StringBuilder errors = new StringBuilder();
         if (comment.getRating() == null) {
             errors.append("rating - rating must be provided\n");
@@ -23,7 +23,7 @@ public class CommentValidationAspect extends BasicValidationAspect {
 
     @Around(value = "execution(* ru.alexandrov.backend.controllers.CommentsController.deleteComment(..)) && args(id)",
             argNames = "joinPoint,id")
-    public ResponseEntity validateCreateComment(ProceedingJoinPoint joinPoint, int id) throws Throwable {
+    public ResponseEntity<?>  validateCreateComment(ProceedingJoinPoint joinPoint, int id) throws Throwable {
         StringBuilder errors = new StringBuilder();
         validateCommentId(id, errors);
         return makeReturnStatement(errors, joinPoint);

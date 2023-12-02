@@ -1,11 +1,15 @@
 package ru.alexandrov.backend.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import ru.alexandrov.backend.constants.ProjectConstants;
 import ru.alexandrov.backend.models.Characteristic;
+import ru.alexandrov.backend.models.Property;
 import ru.alexandrov.backend.repositories.CategoryRepository;
 import ru.alexandrov.backend.models.Category;
 import ru.alexandrov.backend.models.Product;
+import ru.alexandrov.backend.repositories.ProductRepository;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -13,18 +17,21 @@ import java.util.List;
 @Service
 public class CategoryService {
     private final CategoryRepository categoryRepository;
+    private final ProductRepository productRepository;
 
     @Autowired
-    public CategoryService(CategoryRepository categoryRepository) {
+    public CategoryService(CategoryRepository categoryRepository, ProductRepository productRepository) {
         this.categoryRepository = categoryRepository;
+        this.productRepository = productRepository;
     }
 
     public List<Category> getRootCategories() {
         return categoryRepository.getRootCategories();
     }
 
-    public List<Product> getProductsByCategoryId(int id) {
-        return categoryRepository.findById(id).get().getProducts();
+    public List<Product> getCategoryProductsByPage(int id, int page) {
+        return productRepository.findAllByCategory(PageRequest.of(page, ProjectConstants.PAGE_SIZE),
+                Category.builder().id(id).build()).getContent();
     }
 
     public List<Characteristic> getCharacteristicsByCategoryId(int id) {
@@ -37,7 +44,7 @@ public class CategoryService {
         categoryRepository.insert(category.getId(), parentId);
     }
 
-    public boolean exists(int id){
+    public boolean exists(int id) {
         return categoryRepository.findById(id).isPresent();
     }
 

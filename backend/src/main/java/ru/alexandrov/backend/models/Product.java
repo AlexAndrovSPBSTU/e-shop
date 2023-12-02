@@ -2,7 +2,9 @@ package ru.alexandrov.backend.models;
 
 import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import org.springframework.data.annotation.ReadOnlyProperty;
+import lombok.Getter;
+import lombok.Setter;
+
 import ru.alexandrov.backend.constants.ProjectConstants;
 import ru.alexandrov.backend.util.PropertyListSerializer;
 
@@ -11,6 +13,8 @@ import java.util.List;
 
 @Entity
 @Table(name = "product")
+@Getter
+@Setter
 public class Product {
     @Id
     @Column(name = "product_id")
@@ -34,6 +38,7 @@ public class Product {
 
     @ManyToOne
     @JoinColumn(name = "category_id", referencedColumnName = "category_id")
+    @JsonIgnore
     private Category category;
 
     @ManyToMany(mappedBy = "products")
@@ -55,86 +60,5 @@ public class Product {
         } else {
             return ProjectConstants.AMOUNT_STATUS_OUT_OF_STOCK;
         }
-    }
-
-    public List<Property> getProperties() {
-        return properties;
-    }
-
-    public List<Comment> getComments() {
-        return comments;
-    }
-
-    public void setComments(List<Comment> comments) {
-        this.comments = comments;
-    }
-
-    public List<Photo> getPhotos() {
-        return photos;
-    }
-
-    public void setPhotos(List<Photo> photos) {
-        this.photos = photos;
-    }
-
-    public void setProperties(List<Property> properties) {
-        this.properties = properties;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Float getPrice() {
-        return price;
-    }
-
-    public void setPrice(Float price) {
-        this.price = price;
-    }
-
-    public Integer getAmount() {
-        return amount;
-    }
-
-    public void setAmount(Integer amount) {
-        this.amount = amount;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Integer getDiscount() {
-        return discount;
-    }
-
-    public void setDiscount(Integer discount) {
-        this.discount = discount;
-    }
-
-    @JsonGetter("category")
-    public String getCategory() {
-        return category.getName();
-    }
-
-    public void setCategory(Category category) {
-        this.category = category;
     }
 }

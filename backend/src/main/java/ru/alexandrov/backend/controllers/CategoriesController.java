@@ -24,18 +24,23 @@ public class CategoriesController {
     }
 
     @GetMapping("/{category_id}/products")
-    public ResponseEntity getProductsByCategory(@PathVariable("category_id") int id) {
-        return ResponseEntity.ok(categoryService.getProductsByCategoryId(id));
+    public ResponseEntity<?> getProductsByCategory(@PathVariable("category_id") int id,
+                                                   @RequestParam(required = false) Integer page) {
+        if (page != null) {
+            return ResponseEntity.ok(categoryService.getCategoryProductsByPage(id, page - 1));
+        } else {
+            return ResponseEntity.ok(categoryService.getCategoryProductsByPage(id, 0));
+        }
     }
 
     @GetMapping("/{category_id}/characteristics")
-    public ResponseEntity getCharacteristicsByCategory(@PathVariable("category_id") int id) {
+    public ResponseEntity<?> getCharacteristicsByCategory(@PathVariable("category_id") int id) {
         return ResponseEntity.ok(categoryService.getCharacteristicsByCategoryId(id));
     }
 
     @PostMapping("/new")
-    public ResponseEntity createCategory(@RequestBody Category category,
-                                         @RequestParam int parentId) {
+    public ResponseEntity<?> createCategory(@RequestBody Category category,
+                                            @RequestParam int parentId) {
         categoryService.save(category, parentId);
         return ResponseEntity.ok("Category has been created");
     }
@@ -50,8 +55,8 @@ public class CategoriesController {
      * //     * @see #authenticate(AuthenticationRequest)
      */
     @DeleteMapping("/{category_id}")
-    public ResponseEntity deleteCategory(@PathVariable("category_id") int id,
-                                         @RequestParam(required = false) Integer parentId) {
+    public ResponseEntity<?> deleteCategory(@PathVariable("category_id") int id,
+                                            @RequestParam(required = false) Integer parentId) {
         if (null == parentId) {
             categoryService.delete(id);
             return ResponseEntity.ok("The category has been deleted");
@@ -62,16 +67,16 @@ public class CategoriesController {
     }
 
     @PatchMapping("/insert/{category_id}")
-    public ResponseEntity insert(@PathVariable("category_id") Integer id,
-                                 @RequestParam int parentId
+    public ResponseEntity<?> insert(@PathVariable("category_id") Integer id,
+                                    @RequestParam int parentId
     ) {
         categoryService.insert(id, parentId);
         return ResponseEntity.ok("Category has been inserted");
     }
 
     @PatchMapping("/rename/{category_id}")
-    public ResponseEntity rename(@PathVariable("category_id") int id,
-                                 @RequestParam("newName") String newName) {
+    public ResponseEntity<?> rename(@PathVariable("category_id") int id,
+                                    @RequestParam("newName") String newName) {
         categoryService.rename(id, newName);
         return ResponseEntity.ok("Category has been renamed");
     }

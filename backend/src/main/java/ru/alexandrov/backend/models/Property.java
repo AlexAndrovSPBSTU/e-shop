@@ -1,13 +1,16 @@
 package ru.alexandrov.backend.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
 @Table(name = "property")
+@Getter
+@Setter
 public class Property {
     @Id
     @Column(name = "property_id")
@@ -30,36 +33,4 @@ public class Property {
             inverseJoinColumns = @JoinColumn(name = "product_id")
     )
     private List<Product> products;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
-    }
-
-    public Characteristic getCharacteristic() {
-        return characteristic;
-    }
-
-    public void setCharacteristic(Characteristic characteristic) {
-        this.characteristic = characteristic;
-    }
-
-    public List<Product> getProducts() {
-        return products;
-    }
-
-    public void setProducts(List<Product> products) {
-        this.products = products;
-    }
 }
