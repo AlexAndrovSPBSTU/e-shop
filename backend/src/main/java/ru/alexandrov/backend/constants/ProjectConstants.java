@@ -9,7 +9,10 @@ public interface ProjectConstants {
     String JWT_KEY = "CU11iT9!dkKnxI6-sKWoOeMzpEoRHbV!sRo=/j0V/KkFVCQa1fZnnT0h7i8K2iwaEOlHU4c9HicA4fny3CQFX0nx3IFPghpCSrW=!8VhsiExIHsQm1teXVNdFdXA4!/0";
     String JWT_HEADER = "Authorization";
     int ONE_DAY = 3600_000 * 24;
-
+    String JWT_ISSUER = "e-shop";
+    String SUBJECT = "JWT Token";
+    String EMAIL = "email";
+    String ROLE = "role";
     int PAGE_SIZE = 5;
     String[][] WHITE_LIST = {
             {

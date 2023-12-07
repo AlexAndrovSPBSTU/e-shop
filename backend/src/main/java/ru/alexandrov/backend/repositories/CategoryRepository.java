@@ -12,6 +12,8 @@ import java.util.Optional;
 
 @Repository
 public interface CategoryRepository extends CrudRepository<Category, Integer> {
+
+
     @Query(value = "select * from category where category_id in (select child_id from category_parent_child where parent_id = 1)",
             nativeQuery = true)
     List<Category> getRootCategories();

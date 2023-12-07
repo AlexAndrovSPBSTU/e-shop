@@ -5,7 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import ru.alexandrov.backend.models.Photo;
 import ru.alexandrov.backend.repositories.*;
+
+import java.util.List;
 
 public class BasicValidationAspect {
     private CategoryRepository categoryRepository;
@@ -53,7 +56,7 @@ public class BasicValidationAspect {
     }
 
 
-    protected ResponseEntity makeReturnStatement(StringBuilder errors, ProceedingJoinPoint joinPoint) throws Throwable {
+    protected ResponseEntity<?> makeReturnStatement(StringBuilder errors, ProceedingJoinPoint joinPoint) throws Throwable {
         if (errors.length() != 0) {
             return new ResponseEntity<>(errors.toString(), HttpStatus.CONFLICT);
         } else {
@@ -107,6 +110,20 @@ public class BasicValidationAspect {
         }
     }
 
+    protected void validatePhotoUrl(String url, StringBuilder errors) {
+        if (url != null && !url.isEmpty()) {
+            if (photoRepository.existsById(url)) {
+                errors.append("url - photo with this url already exists\n");
+            }
+        }
+    }
+
+    protected void validatePhotos(List<Photo> photos, StringBuilder errors) {
+        for (Photo photo : photos) {
+            validatePhotoUrl(photo.getUrl(), errors);
+        }
+    }
+
     protected void validateProductName(String name, StringBuilder errors) {
         if (name == null || name.isEmpty()) {
             errors.append("name - Name is mandatory\n");
@@ -150,8 +167,7 @@ public class BasicValidationAspect {
     private void validateId(CrudRepository<?, Integer> repository, int id,
                             String varName, String entityName, StringBuilder errors) {
         if (!repository.existsById(id)) {
-            errors.append(varName + " - there is no " + entityName + " with such id\n");
+            errors.append(varName).append(" - there is no ").append(entityName).append(" with such id\n");
         }
     }
-
 }

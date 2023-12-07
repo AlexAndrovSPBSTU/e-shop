@@ -5,7 +5,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import ru.alexandrov.backend.models.cart.CartAdditionRequest;
 import ru.alexandrov.backend.models.cart.CartItem;
-import ru.alexandrov.backend.models.cart.CartItemDTO;
+import ru.alexandrov.backend.models.cart.CartResponse;
 import ru.alexandrov.backend.models.Product;
 import ru.alexandrov.backend.repositories.CartItemRepository;
 import ru.alexandrov.backend.repositories.CustomerRepository;
@@ -27,19 +27,19 @@ public class ShopService {
         this.productRepository = productRepository1;
     }
 
-    public List<CartItemDTO> getCartItems() {
+    public List<CartResponse> getCartItems() {
         return cartItemRepository.findAllByCustomer(customerRepository.findByEmail(
                         (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).get()).stream()
                 .map(cartItem -> {
                             Product product = cartItem.getProduct();
-                            CartItemDTO cartItemDTO = new CartItemDTO();
-                            cartItemDTO.setProductId(product.getId());
-                            cartItemDTO.setDescription(product.getDescription());
-                            cartItemDTO.setAmount(product.getAmount());
-                            cartItemDTO.setPrice(product.getPrice());
-                            cartItemDTO.setTotalCount(cartItem.getTotalCount());
-                            cartItemDTO.setImg(!product.getPhotos().isEmpty() ? product.getPhotos().get(0).getUrl() : null);
-                            return cartItemDTO;
+                            return CartResponse.builder()
+                                    .productId(product.getId()).
+                                    description(product.getDescription())
+                                    .amount(product.getAmount())
+                                    .price(product.getPrice())
+                                    .totalCount(cartItem.getTotalCount())
+                                    .img(!product.getPhotos().isEmpty() ? product.getPhotos().get(0).getUrl() : null)
+                                    .build();
                         }
                 ).collect(Collectors.toList());
     }

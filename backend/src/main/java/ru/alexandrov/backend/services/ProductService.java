@@ -26,6 +26,7 @@ public class ProductService {
 
     public void save(Product product, int categoryId) {
         product.setCategory(categoryRepository.findById(categoryId).get());
+        product.setRating(0.0);
         productRepository.save(product);
     }
 
@@ -33,7 +34,7 @@ public class ProductService {
         productRepository.deleteById(id);
     }
 
-    public void change(int id, String name, Float price, Integer amount,
+    public void change(int id, String name, Double price, Integer amount,
                        String description, Integer discount, Integer categoryId) {
         Product product = productRepository.findById(id).get();
         if (categoryId != null) {

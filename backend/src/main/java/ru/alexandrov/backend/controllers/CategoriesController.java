@@ -25,12 +25,12 @@ public class CategoriesController {
 
     @GetMapping("/{category_id}/products")
     public ResponseEntity<?> getProductsByCategory(@PathVariable("category_id") int id,
-                                                   @RequestParam(required = false) Integer page) {
-        if (page != null) {
-            return ResponseEntity.ok(categoryService.getCategoryProductsByPage(id, page - 1));
-        } else {
-            return ResponseEntity.ok(categoryService.getCategoryProductsByPage(id, 0));
-        }
+                                                   @RequestParam(required = false) Integer page,
+                                                   @RequestParam(required = false) Integer order,
+                                                   @RequestParam(required = false) Double from,
+                                                   @RequestParam(required = false) Double to) {
+        page = (page == null) ? 1 : page;
+        return ResponseEntity.ok(categoryService.getCategoryProducts(id, page, order, from, to));
     }
 
     @GetMapping("/{category_id}/characteristics")

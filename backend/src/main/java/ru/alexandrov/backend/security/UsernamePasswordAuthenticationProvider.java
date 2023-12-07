@@ -10,6 +10,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import ru.alexandrov.backend.models.Customer;
+import ru.alexandrov.backend.repositories.CustomerRepository;
 import ru.alexandrov.backend.services.CustomerService;
 
 import java.util.Collections;
@@ -17,12 +18,12 @@ import java.util.Optional;
 
 @Component
 public class UsernamePasswordAuthenticationProvider implements AuthenticationProvider {
-    private final CustomerService customerService;
+    private final CustomerRepository customerRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UsernamePasswordAuthenticationProvider(CustomerService customerService, PasswordEncoder passwordEncoder) {
-        this.customerService = customerService;
+    public UsernamePasswordAuthenticationProvider(CustomerRepository customerRepository, PasswordEncoder passwordEncoder) {
+        this.customerRepository = customerRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -30,7 +31,7 @@ public class UsernamePasswordAuthenticationProvider implements AuthenticationPro
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String email = authentication.getName();
         String password = authentication.getCredentials().toString();
-        Optional<Customer> optionalCustomer = customerService.findByEmail(email);
+        Optional<Customer> optionalCustomer = customerRepository.findByEmail(email);
         if (optionalCustomer.isPresent()) {
             if (passwordEncoder.matches(password, optionalCustomer.get().getPassword())) {
                 return new UsernamePasswordAuthenticationToken(email, password,

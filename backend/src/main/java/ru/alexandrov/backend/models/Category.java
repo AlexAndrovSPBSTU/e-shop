@@ -53,4 +53,10 @@ public class Category {
         children.forEach(child -> list.addAll(child.getProducts()));
         return list;
     }
+
+    public List<Category> getChildren() {
+        List<Category> list = new ArrayList<>(children);
+        children.forEach(child -> list.addAll(child.getChildren()));
+        return list;
+    }
 }

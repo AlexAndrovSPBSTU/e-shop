@@ -7,10 +7,16 @@ import org.springframework.stereotype.Repository;
 import ru.alexandrov.backend.models.Category;
 import ru.alexandrov.backend.models.Product;
 
+import java.util.Collection;
 import java.util.Optional;
 
 @Repository
 public interface ProductRepository extends CrudRepository<Product, Integer> {
     Optional<Product> findByName(String name);
-    Page<Product> findAllByCategory(Pageable pageable,Category category);
+
+    Page<Product> findAllByCategoryIn(Pageable pageable, Collection<Category> category);
+
+    Page<Product> findAllByCategoryInAndPriceBetween(Pageable pageable, Collection<Category> category, Double from, Double to);
+
+
 }

@@ -3,9 +3,8 @@ package ru.alexandrov.backend.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.alexandrov.backend.models.cart.BuyRequest;
 import ru.alexandrov.backend.models.cart.CartAdditionRequest;
-import ru.alexandrov.backend.models.cart.CartItemDTO;
+import ru.alexandrov.backend.models.cart.CartResponse;
 import ru.alexandrov.backend.services.ShopService;
 
 import java.util.List;
@@ -20,7 +19,7 @@ public class ShopController {
     }
 
     @GetMapping("/cart")
-    public List<CartItemDTO> getCart() {
+    public List<CartResponse> getCart() {
         return shopService.getCartItems();
     }
 

@@ -1,9 +1,9 @@
 package ru.alexandrov.backend.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonSetter;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.annotation.ReadOnlyProperty;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -40,4 +40,11 @@ public class Comment {
     @OneToMany(mappedBy = "comment", cascade = CascadeType.PERSIST)
     private List<Photo> photos;
 
+    @JsonSetter
+
+    public void setPhotos(List<Photo> photos) {
+        this.photos = photos;
+        if (this.photos != null)
+            this.photos.forEach(photo -> photo.setComment(this));
+    }
 }

@@ -1,13 +1,13 @@
 package ru.alexandrov.backend.models.cart;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class CartItemDTO {
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class CartResponse {
     private int productId;
     private int totalCount;
     private String description;

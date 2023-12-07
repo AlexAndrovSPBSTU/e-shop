@@ -21,9 +21,6 @@ public class CommentsController {
     @PostMapping("/new")
     public ResponseEntity<?> createComment(@RequestBody Comment comment,
                                         @RequestParam int productId) {
-        for (Photo photo : comment.getPhotos()) {
-            photo.setComment(comment);
-        }
         commentService.save(comment, productId);
         return ResponseEntity.ok(HttpStatus.OK);
     }

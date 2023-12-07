@@ -25,7 +25,7 @@ public class Product {
     private String name;
 
     @Column(name = "price")
-    private Float price;
+    private Double price;
 
     @Column(name = "amount")
     private Integer amount;
@@ -36,9 +36,11 @@ public class Product {
     @Column(name = "discount")
     private Integer discount;
 
+    @Column(name = "rating")
+    private Double rating;
+
     @ManyToOne
     @JoinColumn(name = "category_id", referencedColumnName = "category_id")
-    @JsonIgnore
     private Category category;
 
     @ManyToMany(mappedBy = "products")
@@ -60,5 +62,31 @@ public class Product {
         } else {
             return ProjectConstants.AMOUNT_STATUS_OUT_OF_STOCK;
         }
+    }
+
+    @JsonGetter
+    public String getCategory() {
+        return category.getName();
+    }
+
+    public void setPhotos(List<Photo> photos) {
+        this.photos = photos;
+        if(this.photos!=null)
+            this.photos.forEach(photo->photo.setProduct(this));
+    }
+
+    @JsonSetter
+
+    @JsonGetter
+    public Double getRating() {
+        Double averageRating = 0.0;
+        for (Comment comment : comments) {
+            averageRating += comment.getRating();
+        }
+        return (comments == null || comments.isEmpty()) ? averageRating : (double) Math.round((averageRating / comments.size()) * 10) / 10;
+    }
+
+    public void updateRating() {
+        this.rating = getRating();
     }
 }
