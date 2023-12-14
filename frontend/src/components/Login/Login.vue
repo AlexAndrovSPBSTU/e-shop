@@ -74,13 +74,20 @@ export default {
     handleLogin(user) {
       this.loading = true;
 
-      /*fetch("/", {
-        method: "POST",
-        //headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(user),
-      }).then((response) => this.$store.dispatch("login", response));*/
+      let admin = {
+        role: "ADMIN",
+      };
 
-      const res = new Promise((resolve) => {
+      fetch("http://localhost:8080/authenticate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(user),
+      })
+        .then((res) => res.json())
+        .then((data) => this.$store.dispatch("login", data))
+        .then((_) => this.$router.push("/"));
+
+      /*const res = new Promise((resolve) => {
         setTimeout(
           () =>
             resolve({
@@ -93,7 +100,7 @@ export default {
             }),
           1000
         );
-      }).then(res => this.$store.dispatch("login", res)).then(_ => this.$router.push("/catalog"))
+      }).then(res => this.$store.dispatch("login", res)).then(_ => this.$router.push("/catalog"))*/
 
       //console.log(res)
       //this.$store.dispatch("login", res)

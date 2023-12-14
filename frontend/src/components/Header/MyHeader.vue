@@ -14,7 +14,7 @@
               <div class="catalog__title" v-bind="props">E-SHOP</div>
             </template>
 
-            <tree-view :items="items"/>
+            <tree-view :children="this.$store.state.treeViewItem" />
           </v-menu>
         </div>
 
@@ -34,15 +34,36 @@
             ></v-icon
           ></router-link>
 
-          <router-link
-            to="/login"
+          <v-menu
+            open-on-hover
             v-if="!this.$store.state.initialState.status.loggedIn"
-            ><v-icon
-              color="rgba(155, 155, 155)"
-              icon="mdi-account"
-              size="x-large"
-            ></v-icon
-          ></router-link>
+          >
+            <template v-slot:activator="{ props }">
+              <v-icon
+                color="rgba(155, 155, 155)"
+                icon="mdi-account"
+                size="x-large"
+                v-bind="props"
+              ></v-icon>
+            </template>
+            <v-list>
+              <v-list-item>
+                <v-list-item-title
+                  ><router-link to="/login"
+                    >Войти</router-link
+                  ></v-list-item-title
+                >
+              </v-list-item>
+              <v-list-item>
+                <v-list-item-title
+                  ><router-link to="/register"
+                    >Регистрация</router-link
+                  ></v-list-item-title
+                >
+              </v-list-item>
+            </v-list>
+          </v-menu>
+
           <template v-else>
             <p class="user-name">{{ $store.getters["getUserName"] }}</p>
             <div class="logout" @click="handleLogout">
@@ -60,47 +81,19 @@
 </template>
 
 <script>
-import AdminPanel from '../AdminPanel/AdminPanel.vue';
-import TreeView from "../TreeView/TreeView.vue"
-
+import AdminPanel from "../AdminPanel/AdminPanel.vue";
+import TreeView from "../TreeView/TreeView.vue";
+import { getCatalog } from "@/API/index.js";
 
 export default {
   components: { TreeView, AdminPanel },
-  data: () => ({
-    items: [
-      {
-        title: "Смартфоны",
-        items: [
-          {
-            title: "IPhone",
-            items: [
-              { title: "IPhone 10" },
-              { title: "IPhone 11" },
-              { title: "IPhone 11 Pro" },
-              { title: "IPhone 12" },
-              { title: "IPhone 13" },
-            ],
-          },
-          { title: "Honor" },
-          { title: "Samsung" },
-          { title: "HTC" },
-          { title: "Fly" },
-        ],
-      },
-      {
-        title: "Телевизоры",
-        items: [
-          { title: "Телевизоры 20`" },
-          { title: "Телевизоры 30`" },
-          { title: "Телевизоры 40`" },
-          { title: "Телевизоры 50`" },
-          { title: "Телевизоры 60`" },
-        ],
-      },
-      { title: "Аудиотехника" },
-      { title: "Компьютеры" },
-    ],
-  }),
+  data: () => ({}),
+
+  mounted() {
+    getCatalog().then((data) => {
+      this.$store.commit("setTreeView", data);
+    });
+  },
 
   methods: {
     handleLogout() {

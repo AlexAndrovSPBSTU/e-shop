@@ -4,21 +4,21 @@
     <div class="welcome__carousel">
       <my-carousel />
     </div>
-    <div class="container">
+    <div class="main__container">
       <div class="categories">
-        <router-link to="/catalog" class="category">
+        <router-link to="/categories/2/products" class="category">
           <img src="src\assets\categoryimage1.png" class="category__img" />
           <div class="category__title">Смартфоны</div>
         </router-link>
-        <router-link to="/catalog" class="category">
+        <router-link to="/categories/2/products" class="category">
           <img src="src\assets\categoryimage2.png" class="category__img" />
           <div class="category__title">Телевизоры</div>
         </router-link>
-        <router-link to="/catalog" class="category">
+        <router-link to="/categories/8/products" class="category">
           <img src="src\assets\categoryimage3.png" class="category__img" />
           <div class="category__title">Ноутбуки</div>
         </router-link>
-        <router-link to="/catalog" class="category">
+        <router-link to="/categories/8/products" class="category">
           <img src="src\assets\categoryimage4.png" class="category__img" />
           <div class="category__title">Аксессуары</div>
         </router-link>
@@ -141,6 +141,11 @@ export default {
 .welcome__carousel {
   margin-top: 80px;
   margin-bottom: 40px;
+}
+
+.main__container{
+  width: 80%;
+  margin: 0 auto;
 }
 
 .categories {

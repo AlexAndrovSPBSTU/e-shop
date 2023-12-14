@@ -4,13 +4,15 @@ import Login from "@/components/Login/Login.vue";
 import Card from "@/components/Card/Card.vue";
 import Welcome from "@/layouts/WelcomePage.vue";
 import Bucket from "@/components/Bucket/Bucket.vue";
+import Admin from "@/components/AdminPanel/Admin.vue"
 import { createRouter, createWebHistory } from 'vue-router'
+
+import { isAdmin } from "@/utils";
 
 const routes = [
   {
-    path: '/catalog',
+    path: '/categories/:id/products',
     component: () => import('@/layouts/Catalog.vue'),
-    
   },
   {
     path: "/",
@@ -29,8 +31,20 @@ const routes = [
     component: Bucket,
   },
   {
-    path: "/catalog/:title",
+    path: "/products/:id",
     component: Card,
+  },
+  {
+    path: "/admin",
+    component: Admin,
+    beforeEnter: (to, from, next) => {
+      if (isAdmin()) {
+        next();
+      }
+      else {
+        next(false);
+      }
+    }
   },
 ]
 

@@ -16,6 +16,8 @@ export default async function uploadS3(fotos) {
     });
 
     let url = await response.json();
+
+    url = url.map(u => 'https://storage.yandexcloud.net/e-shop/' + u);
     console.log(url)
     return url;
   }

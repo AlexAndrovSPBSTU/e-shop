@@ -9,7 +9,8 @@ export default createStore({
   state: () => ({
     initialState,
     count: 0,
-    bucket: []
+    bucket: [],
+    treeViewItem: [],
   }),
 
   getters: {
@@ -42,14 +43,14 @@ export default createStore({
     },
 
     setItem(state, data) {
-      let item = state.bucket.findIndex(value => value.title === data.title)
+      let item = state.bucket.findIndex(value => value.name === data.name)
       item !== -1
         ? state.bucket[item].totalCount++
         : state.bucket.push({ id: Date.now(), totalCount: 1, ...data })
     },
 
     delItem(state, data) {
-      let item = state.bucket.findIndex(value => value.title === data.title)
+      let item = state.bucket.findIndex(value => value.name === data.name)
 
       state.bucket[item].totalCount - 1 == 0 
         ? state.bucket = state.bucket.filter((d) => d !== data)
@@ -59,12 +60,17 @@ export default createStore({
     delAllItems(state, data){
       state.count -= data.totalCount
       state.bucket = state.bucket.filter((d) => d !== data)
-    },  
+    },
+
+    setTreeView(state, data){
+      state.treeViewItem = data
+    },
   },
 
   actions: {
     async login({ commit, state }, userL) {
-      try {
+      //console.log(userL)
+      try { // убрать role: "ADMIN", когда пофиксят бэк
         localStorage.setItem("user", JSON.stringify(userL));
         state.initialState.user = userL
         state.initialState.status.loggedIn = true;

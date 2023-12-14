@@ -6,16 +6,35 @@
         v-bind="props"
         :elevation="isHovering ? 24 : 6"
       >
-        <img :src="item.img" alt="" class="item__img" />
+        
+        <img :src="item.photos[0].url" alt="" class="item__img" v-if="item.photos[0]"/>
         <div class="item__text">
           <div class="item__text-content">
-            <div class="item__title">{{ item.title }}</div>
+            <div class="item__title">{{ item.name }}</div>
             <div class="item__description">{{ item.description }}...</div>
           </div>
 
           <div class="price-btn">
             <v-btn variant="outlined" @click.stop="addItems">Купить </v-btn>
-            <div class="item__price">Цена: {{ item.price }}</div>
+
+            <div class="item__price">
+              Цена:
+              {{
+                this.$store.state.initialState.status.loggedIn &&
+                item.discount !== 0
+                  ? (item.price * (1 - 1 / item.discount)).toFixed(0)
+                  : item.price
+              }}₽
+            </div>
+            <div
+              v-if="
+                this.$store.state.initialState.status.loggedIn &&
+                item.discount !== 0
+              "
+              class="item__price--lineThrough"
+            >
+              {{ item.price }}₽
+            </div>
           </div>
         </div>
       </v-sheet>
@@ -37,18 +56,17 @@ export default {
     addItems() {
       this.$store.commit("increment");
 
-      this.$store.commit("setItem", this.item)
+      this.$store.commit("setItem", this.item);
     },
 
     handleClick() {
-      console.log("click");
-      this.$router.push("/catalog/" + this.item.title);
+      this.$router.push("/products/" + this.item.id);
     },
   },
 };
 </script>
 
-<style>
+<style scoped>
 .item {
   flex-direction: row;
 
@@ -67,6 +85,7 @@ export default {
 .item__text {
   height: inherit;
   display: flex;
+  justify-content: space-between;
   flex: 1;
 }
 
@@ -83,7 +102,18 @@ export default {
 .price-btn {
   display: flex;
   flex-direction: column-reverse;
-  align-items: center;
+  align-items: flex-end;
+}
+
+.item__price {
+  white-space: nowrap;
+}
+
+.item__price--lineThrough {
+  color: gray;
+  text-decoration: line-through;
+  text-decoration-style: solid;
+  text-decoration-thickness: 1px;
 }
 
 @media (max-width: 750px) {
