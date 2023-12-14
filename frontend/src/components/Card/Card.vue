@@ -1,21 +1,79 @@
 <template>
   <div class="my-card">
     <my-header />
-    <div class="container">
+    <div v-if="card == null" class="progressCircular__card">
+      <v-progress-circular
+        indeterminate
+        color="amber"
+        :size="50"
+        :width="5"
+      ></v-progress-circular>
+    </div>
+    <div v-else class="container">
       <div class="my-card__content">
         <my-breadcrumb :items="itemsData" />
         <div class="my-card__card">
-          <div class="card__title">{{ card.title }}</div>
+          <div class="card__title">{{ card.name }}</div>
           <div class="card__content">
-            <div class="card__img">
-              <img :src="card.img" alt="" class="card__img-img" />
-            </div>
+            <v-carousel show-arrows="hover" style="width: 400px; height: 500px">
+              <v-carousel-item
+                v-for="(photo, index) in card.photos"
+                :key="index"
+                :src="photo.url"
+                eager
+              >
+              </v-carousel-item>
+            </v-carousel>
             <div class="card__text">
               <div class="card__description">{{ card.description }}</div>
+              <div class="spec__title">Характеристики</div>
+
+              <v-table>
+                <tbody>
+                  <tr
+                    v-for="(item, index) in Object.entries(card.properties)"
+                    :key="index"
+                  >
+                    <td>{{ item[0] }}:</td>
+                    <span
+                      class="spec__item"
+                      v-for="(value, jndex) in item[1]"
+                      :key="jndex"
+                    >
+                      {{ value }}
+                    </span>
+                  </tr>
+                </tbody>
+              </v-table>
               <div class="card__buy">
                 <div class="card__price-amount">
-                  <div class="card__price">{{ card.price }}₽</div>
-                  <div class="card__amount text-body-2">В наличии: много</div>
+                  <div
+                    class="card__discount--logged"
+                    v-if="
+                      this.$store.state.initialState.status.loggedIn &&
+                      card.discount !== 0
+                    "
+                  >
+                    <div class="card__discount">{{ card.price }}₽</div>
+                    <div class="card__price--discount">
+                      {{ (card.price * ((100 - card.discount)/100)).toFixed(0) }}₽
+                    </div>
+                  </div>
+
+                  <div v-else class="card__price">{{ card.price }}₽</div>
+                  <div
+                    class="card__amount text-body-2"
+                    v-if="card.amount === 0"
+                  >
+                    Нет в наличии
+                  </div>
+                  <div
+                    class="card__amount text-body-2"
+                    v-else-if="card.amount > 5"
+                  >
+                    В наличии
+                  </div>
+                  <div class="card__amount text-body-2" v-else>Мало</div>
                 </div>
                 <v-btn
                   variant="outlined"
@@ -27,18 +85,6 @@
                 </v-btn>
               </div>
             </div>
-          </div>
-
-          <div class="spec">
-            <div class="spec__title">Характеристики</div>
-            <v-table>
-              <tbody>
-                <tr v-for="item in card.spec" :key="item.name">
-                  <td>{{ item.name }}</td>
-                  <td>{{ item.text }}</td>
-                </tr>
-              </tbody>
-            </v-table>
           </div>
 
           <div class="comments">
@@ -92,7 +138,7 @@
                     variant="outlined"
                     color="orange"
                     class="text-none text-h6"
-                    @click="write"
+                    @click="writeNewComment"
                   >
                     Опубликовать
                   </v-btn>
@@ -104,7 +150,13 @@
                 :key="index"
               >
                 <div class="comment__header">
-                  <div class="author">{{ comment.author }}</div>
+                  <div class="author">
+                    {{ comment.customer.name }}
+                    {{ comment.customer.surname }}
+                    {{
+                      comment.date.split("T")[0].split("-").reverse().join(".")
+                    }}
+                  </div>
                   <div class="stars">
                     <v-rating
                       readonly
@@ -117,7 +169,7 @@
                   </div>
                 </div>
                 <div class="comment__text">
-                  {{ comment.text }}
+                  {{ comment.note }}
                 </div>
                 <template v-if="comment.photos.length !== 0">
                   <div class="comment__photos">
@@ -128,7 +180,7 @@
                     >
                       <template v-slot:activator="{ props }">
                         <div v-bind="props" class="comment__photo">
-                          <img :src="photo" alt="" class="comment__img" />
+                          <img :src="photo.url" alt="" class="comment__img" />
                           <div
                             class="photo__delete"
                             v-if="
@@ -153,7 +205,7 @@
 
                       <template v-slot:default="{ isActive }">
                         <img
-                          :src="photo"
+                          :src="photo.url"
                           alt=""
                           class="comment__img--full"
                           @click="isActive.value = false"
@@ -188,8 +240,15 @@
 <script>
 import MyHeader from "@/components/Header/MyHeader.vue";
 import MyBreadcrumb from "@/components/MyBreadcrumb/MyBreadcrumb.vue";
-
-import uploadS3 from "@/S3_API/index.js"
+import { useRoute } from "vue-router";
+import uploadS3 from "@/S3_API/index.js";
+import {
+  getProduct,
+  getCatalog,
+  newComment,
+  deleteComment,
+  deletePhotos,
+} from "@/API/index.js";
 
 export default {
   components: {
@@ -197,37 +256,7 @@ export default {
     MyBreadcrumb,
   },
   data: () => ({
-    card: {
-      id: 1241351341,
-      title: "Phone 124134",
-      img: "https://storage.yandexcloud.net/e-shop/123.jpg",
-      description:
-        "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aliquid atque consectetur fugiat, cum necessitatibus a animi doloribus qui eaque suscipit quo, dolore optio eum similique numquam minus id amet eius? Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aliquid atque consectetur fugiat, cum necessitatibus a animi doloribus qui eaque suscipit quo, dolore optio eum similique numquam minus id amet eius?Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aliquid atque consectetur fugiat, cum necessitatibus a animi doloribus qui eaque suscipit quo, dolore optio eum similique numquam minus id amet eius?",
-      price: 999,
-      amount: 999,
-      spec: [
-        {
-          name: "Бренд",
-          text: "APPLE",
-        },
-        {
-          name: "Модель",
-          text: "AirPods Pro 2 A2698 A2699 A2700",
-        },
-        {
-          name: "Крепление",
-          text: "в ушной раковине",
-        },
-        {
-          name: "Тип конструкции",
-          text: "внутриканальные",
-        },
-        {
-          name: "Тип соединения",
-          text: "беспроводные bluetooth",
-        },
-      ],
-    },
+    card: null,
 
     comments: [
       {
@@ -260,22 +289,13 @@ export default {
       },
     ],
 
-    items: [
-      {
-        title: "Каталог",
-        disabled: false,
-        to: "/catalog",
-      },
-      {
-        title: "Телефоны",
-        disabled: false,
-        to: "/login",
-      },
-      {
-        title: "#",
-        disabled: true,
-      },
-    ],
+    items: [],
+
+    breadCrumb: {
+      id: 1,
+      name: "Root",
+      children: null,
+    },
 
     filters: ["Рейтинг выше", "Рейтинг ниже"],
     filter: "Рейтинг выше",
@@ -283,38 +303,117 @@ export default {
     slider: 5,
     photos: [],
   }),
+
   created() {
-    //fetch на сервер с запросом на получение определенного товара
-    //fetch на сервер с запросом на получение комментов к этому товару
-    //https://24c1624a-5fb0-4f0f-801c-1ebd2db7b6ac.selstorage.ru/123.jpg
+    const route = useRoute();
+
+    getProduct(route.path).then((data) => {
+      this.card = data;
+      console.log(data);
+    });
+
+    getCatalog().then((data) => {
+      this.$store.commit("setTreeView", data);
+      this.breadCrumb.children = data;
+    });
   },
+
   computed: {
     itemsData() {
-      this.items[2].title = this.card.title;
+      if (this.items.length !== 0) return this.items;
+
+      if (this.card == null)
+        return [
+          {
+            title: "Каталог",
+            disabled: true,
+          },
+        ];
+
+      function getPath(model, name) {
+        var path,
+          item = { name: model.name, id: model.id };
+
+        if (!model || typeof model !== "object") return;
+
+        if (model.name === name) return [item];
+
+        (model.children || []).some((child) => (path = getPath(child, name)));
+        return path && [item, ...path];
+      }
+
+      const arr = getPath(this.breadCrumb, this.card.category);
+
+      console.log(arr);
+
+      arr.forEach((value) => {
+        this.items.push({
+          title: value.name,
+          disabled: false,
+          to: `/categories/${value.id}/products`,
+        });
+      });
+
+      this.items[0].title = "Каталог";
+
+      this.items.push({
+        title: this.card.name,
+        disabled: true,
+      });
       return this.items;
     },
 
     sortItems() {
       return this.filter === "Рейтинг ниже"
-        ? this.comments.sort((a, b) => a.rating - b.rating)
-        : this.comments.sort((a, b) => a.rating - b.rating).reverse();
+        ? this.card.comments.sort((a, b) => a.rating - b.rating)
+        : this.card.comments.sort((a, b) => a.rating - b.rating).reverse();
     },
   },
   methods: {
     increment() {
       this.$store.commit("increment");
-      console.log(this.$store.state.count);
+      this.$store.commit("setItem", this.card);
     },
 
-    async write() {
+    async writeNewComment() {
+      let url = this.photos.length !== 0 ? await uploadS3(this.photos) : [];
 
+      setTimeout(async () => {
+        await newComment(this.card.id, this.slider, url, this.writeComment);
 
-      if(this.writeComment === ""){
-        console.log('empty')
-      }
-      
-      let url = await uploadS3(this.photos)
-      console.log(url)
+        const route = useRoute();
+
+        console.log(route);
+        console.log(route.path);
+
+        await getProduct(route.path).then((data) => {
+          this.card = data;
+        });
+
+        this.writeComment = "";
+        this.slider = 5;
+        this.photos = [];
+      }, 300);
+    },
+
+    async delComment(comment) {
+      await deleteComment(comment.id);
+
+      const route = useRoute();
+
+      await getProduct(route.path).then((data) => {
+        this.card = data;
+      });
+    },
+
+    async delPhoto(photo) {
+      await deletePhotos(`url=${photo.url}`);
+
+      const route = useRoute();
+
+      await getProduct(route.path).then((data) => {
+        this.card = data;
+      });
     },
   },
 
@@ -350,8 +449,12 @@ export default {
   margin-bottom: 100px;
 }
 
-.card__img-img {
-  max-width: 300px;
+.v-window--show-arrows-on-hover {
+  border-bottom-left-radius: 20px !important;
+}
+
+.card__img {
+  max-width: 600px;
   margin-top: 10px;
   margin-left: 10px;
 }
@@ -361,10 +464,11 @@ export default {
   flex-direction: column;
   justify-content: space-between;
   padding-bottom: 3%;
+  width: 65%;
 }
 
 .card__description {
-  margin-top: 20px;
+  margin-top: 60px;
   margin-right: 4%;
   padding-bottom: 2%;
   border-bottom: 1px solid rgba(0, 0, 0, 0.3);
@@ -372,6 +476,7 @@ export default {
 
 .card__buy {
   width: 400px;
+  max-height: 110px;
   margin-right: 5%;
   margin-left: auto;
   padding: 20px 30px;
@@ -379,7 +484,7 @@ export default {
   box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.3);
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
 }
 
@@ -388,16 +493,67 @@ export default {
   font-size: 28px;
 }
 
-.spec > .v-table {
+.card__price--discount {
+  font-weight: 500;
+  font-size: 28px;
+}
+
+.card__discount {
+  font-weight: 500;
+  font-size: 21px;
+  color: gray;
+  text-decoration: line-through;
+  text-decoration-style: solid;
+  text-decoration-thickness: 1px;
+  position: relative;
+  top: 18px;
+  left: 100px;
+}
+
+/*.spec > .v-table {
   box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.3);
   border-radius: 20px;
   margin-bottom: 100px;
+}*/
+
+/*td{
+  height: 37px !important;
+  max-width: 20px !important;
+}*/
+
+tr,
+td {
+  display: flex;
+  align-items: center;
 }
 
-.comments__title,
-.spec__title {
+td {
+  min-width: 150px;
+}
+
+.spec__item {
+  text-align: center;
+  min-width: 52px;
+  padding: 5px 10px;
+  background-color: orange;
+  border-radius: 20px;
+  color: white;
+  font-weight: 500;
+  margin: 3px;
+  cursor: pointer;
+}
+
+.spec__item:hover {
+  background-color: rgb(255, 136, 0);
+}
+
+.comments__title {
   font-size: 30px;
   margin-bottom: 20px;
+}
+
+.spec__title {
+  font-size: 20px;
 }
 
 .comments__header {
@@ -475,7 +631,7 @@ export default {
 }
 
 .comment__img--full {
-  width: 1000px;
+  aspect-ratio: 4 / 3;
 }
 
 .photo__delete {
@@ -491,5 +647,11 @@ export default {
   color: white;
   transform: rotate(45deg);
   font-size: 24px;
+}
+
+.progressCircular__card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
 }
 </style>

@@ -3,7 +3,7 @@
     <my-header />
     <div class="bucket__content">
       <div class="container">
-        <router-link to="/catalog" class="back-to-shop">
+        <router-link to="/categories/1/products" class="back-to-shop">
           Вернуться к покупкам
         </router-link>
         <div class="bucket__title">Корзина</div>
@@ -18,8 +18,8 @@
               v-for="(item, index) in this.$store.state.bucket"
               :key="index"
             >
-              <img :src="item.img" alt="" class="bucket__img" />
-              <div class="bucket__title">{{ item.title }}</div>
+              <img :src="item.photos[0].url" alt="" class="bucket__img" />
+              <div class="bucket__title">{{ item.name }}</div>
 
               <div class="bucket__btns">
                 <v-btn
@@ -119,7 +119,7 @@ export default {
 }
 
 .bucket__title {
-  font-size: 35px;
+  font-size: 25px;
   flex: 1;
 }
 
@@ -145,7 +145,8 @@ export default {
 }
 
 .bucket__img {
-  width: 100px;
+  width: 150px;
+  height: 200px;
 }
 
 .bucket__btns {

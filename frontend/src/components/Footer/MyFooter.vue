@@ -54,7 +54,6 @@
                   color="rgba(221, 42, 123)"
                   icon="mdi-instagram"
                   size="x-large"
-                  v-bind="props"
                 ></v-icon>
               </li>
               <li class="list-item">
@@ -62,7 +61,6 @@
                   color="rgba(0, 66, 255)"
                   icon="mdi-facebook"
                   size="x-large"
-                  v-bind="props"
                 ></v-icon>
               </li>
               <li class="list-item">
@@ -70,7 +68,6 @@
                   color="rgba(6, 162, 247)"
                   icon="mdi-twitter"
                   size="x-large"
-                  v-bind="props"
                 ></v-icon>
               </li>
             </ul>

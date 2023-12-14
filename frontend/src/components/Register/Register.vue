@@ -93,17 +93,7 @@ export default {
       schema,
     };
   },
-  /*
-  computed: {
-    loggedIn() {
-      return this.$store.state.auth.status.loggedIn;
-    },
-  },
-  mounted() {
-    if (this.loggedIn) {
-      this.$router.push("/profile");
-    }
-  },*/
+
   methods: {
     handleRegister(user) {
       this.message = "Вы были успешно зарегистрированы!!!";
@@ -111,37 +101,13 @@ export default {
       this.loading = false;
 
       console.log(JSON.stringify(user))
-      //console.log(user2)
-      /*
 
-      const requestOptions = {
+      fetch("http://localhost:8080/register", {
         method: "POST",
-        body: JSON.stringify(user)
-      };
-      fetch("https://jsonplaceholder.typicode.com/posts", requestOptions)
-
-
-      this.message = "";
-      this.successful = false;
-      this.loading = true;
-
-      this.$store.dispatch("auth/register", user).then(
-        (data) => {
-          this.message = data.message;
-          this.successful = true;
-          this.loading = false;
-        },
-        (error) => {
-          this.message =
-            (error.response &&
-              error.response.data &&
-              error.response.data.message) ||
-            error.message ||
-            error.toString();
-          this.successful = false;
-          this.loading = false;
-        }
-      );*/
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(user),
+      }).catch(reason => console.log(reason))
+      
     },
   },
 };
