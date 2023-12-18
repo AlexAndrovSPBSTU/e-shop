@@ -19,8 +19,7 @@ export async function getProducts(path) {
   return res.json()
 }
 
-export async function getCurrentBatchProducts(path, query) {
-
+export async function getCurrentBatchProducts(path) {
 
   const res = await fetch("http://localhost:8080" + path, {
     method: "GET",
@@ -221,6 +220,114 @@ export async function moveCategory(idChild, idParent) {
 
   await fetch(
     "http://localhost:8080/categories/insert/" + idChild + "?parentId=" + idParent,
+    {
+      method: "PATCH",
+      headers: {
+        Authorization: getJWT(),
+      }
+    }
+  )
+}
+
+export async function getCharacteristic(id, isRange) {
+
+  let url = isRange
+    ? "http://localhost:8080/categories/" + id + "/characteristics" + isRange
+    : "http://localhost:8080/categories/" + id + "/characteristics"
+
+  const res = await fetch(url, {
+    method: "GET",
+  })
+
+  return res.json()
+}
+
+export async function addCharacteristic(body, id) {
+
+  await fetch(
+    "http://localhost:8080/characteristics/new?categoryId=" + id,
+    {
+      method: "POST",
+      headers: {
+        Authorization: getJWT(),
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    }
+  )
+}
+
+export async function deleteCharacteristic(id) {
+
+  await fetch(
+    "http://localhost:8080/characteristics/" + id,
+    {
+      method: "DELETE",
+      headers: {
+        Authorization: getJWT(),
+      }
+    }
+  )
+}
+
+export async function renameCharacteristic(name, id) {
+
+  await fetch(
+    "http://localhost:8080/characteristics/rename/" + id + "?newName=" + name,
+    {
+      method: "PATCH",
+      headers: {
+        Authorization: getJWT(),
+      }
+    }
+  )
+}
+
+export async function pushNewProperty(body, id) {
+
+  await fetch(
+    "http://localhost:8080/properties/new?characteristicId=" + id,
+    {
+      method: "POST",
+      headers: {
+        Authorization: getJWT(),
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    }
+  )
+}
+
+export async function deleteProperty(id) {
+
+  await fetch(
+    "http://localhost:8080/properties/" + id,
+    {
+      method: "DELETE",
+      headers: {
+        Authorization: getJWT(),
+      }
+    }
+  )
+}
+
+export async function renameProperty(name, id) {
+
+  await fetch(
+    "http://localhost:8080/properties/rename/" + id + "?newValue=" + name,
+    {
+      method: "PATCH",
+      headers: {
+        Authorization: getJWT(),
+      }
+    }
+  )
+}
+
+export async function addPropertyInProduct(idProduct, idProperty){
+
+  await fetch(
+    "http://localhost:8080/products/" + idProduct + "/addProperty?propertyId=" + idProperty,
     {
       method: "PATCH",
       headers: {
