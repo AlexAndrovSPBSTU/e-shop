@@ -26,7 +26,10 @@
             </v-carousel>
             <div class="card__text">
               <div class="card__description">{{ card.description }}</div>
-              <div class="spec__title">Характеристики</div>
+              <div class="spec__title-and-admin">
+                <div class="spec__title">Характеристики</div>
+              </div>
+              
 
               <v-table>
                 <tbody>
@@ -291,6 +294,8 @@ export default {
 
     items: [],
 
+    idCategory: 0,
+
     breadCrumb: {
       id: 1,
       name: "Root",
@@ -336,7 +341,10 @@ export default {
 
         if (!model || typeof model !== "object") return;
 
-        if (model.name === name) return [item];
+        if (model.name === name) {
+            //this.idCategory = item.id
+            return [item]
+          };
 
         (model.children || []).some((child) => (path = getPath(child, name)));
         return path && [item, ...path];
@@ -345,6 +353,8 @@ export default {
       const arr = getPath(this.breadCrumb, this.card.category);
 
       console.log(arr);
+      this.idCategory = arr.find(value => value.name == this.card.category).id
+      console.log("id category =", this.idCategory)
 
       arr.forEach((value) => {
         this.items.push({
@@ -653,5 +663,13 @@ td {
   position: absolute;
   top: 50%;
   left: 50%;
+}
+
+.spec__title-and-admin{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  
 }
 </style>

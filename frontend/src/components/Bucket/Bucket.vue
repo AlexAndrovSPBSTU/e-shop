@@ -37,7 +37,18 @@
                   variant="plain"
                   @click.stop="addItem(item)"
                 />
-                <div class="bucket__price">
+                
+                <div
+                  v-if="
+                    this.$store.state.initialState.status.loggedIn &&
+                    item.discount !== 0
+                  "
+                >
+                  <div class="bucket__price">
+                    {{ (item.totalCount * (item.price * ((100 - item.discount) / 100))).toFixed(0) }}
+                  </div>
+                </div>
+                <div v-else class="bucket__price">
                   {{ item.totalCount * item.price }}
                 </div>
                 <v-btn
@@ -169,14 +180,11 @@ export default {
 }
 
 .place-an-order {
-  
   width: 15%;
   padding-bottom: 20px;
-  
-  
 }
 
-.place-an-order--fixed{
+.place-an-order--fixed {
   background-color: white;
   border-radius: 20px;
   box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.3);

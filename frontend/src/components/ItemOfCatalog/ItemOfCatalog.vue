@@ -22,7 +22,7 @@
               {{
                 this.$store.state.initialState.status.loggedIn &&
                 item.discount !== 0
-                  ? (item.price * (1 - 1 / item.discount)).toFixed(0)
+                  ? (item.price * ((100 - item.discount) / 100)).toFixed(0)
                   : item.price
               }}₽
             </div>
