@@ -15,7 +15,6 @@ public class PropertyValidationAspect extends BasicValidationAspect {
             argNames = "joinPoint,property,characteristicId")
     public ResponseEntity<?>  validateCreateProperty(ProceedingJoinPoint joinPoint, Property property, int characteristicId) throws Throwable {
         StringBuilder errors = new StringBuilder();
-        validatePropertyValue(property.getValue(), errors);
         validateCharacteristicId(characteristicId, errors);
         return makeReturnStatement(errors, joinPoint);
     }
@@ -34,8 +33,6 @@ public class PropertyValidationAspect extends BasicValidationAspect {
     public ResponseEntity<?>  validateRenameProperty(ProceedingJoinPoint joinPoint, int id, String newValue) throws Throwable {
         StringBuilder errors = new StringBuilder();
         validatePropertyId(id, errors);
-        validatePropertyValue(newValue, errors);
         return makeReturnStatement(errors, joinPoint);
     }
-
 }

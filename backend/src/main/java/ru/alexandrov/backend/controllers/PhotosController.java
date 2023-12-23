@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import ru.alexandrov.backend.models.Photo;
+import ru.alexandrov.backend.models.Photos;
 import ru.alexandrov.backend.services.PhotosService;
 
 @Controller
@@ -19,7 +19,7 @@ public class PhotosController {
     }
 
     @PostMapping("/new")
-    public ResponseEntity<?> savePhoto(@RequestBody Photo photo,
+    public ResponseEntity<?> savePhoto(@RequestBody Photos photo,
                                     @RequestParam(required = false) Integer commentId,
                                     @RequestParam(required = false) Integer productId) {
         photosService.save(photo, productId, commentId);
@@ -27,7 +27,7 @@ public class PhotosController {
     }
 
     @DeleteMapping
-    public ResponseEntity<?> deletePhoto(@RequestParam String url) {
+    public ResponseEntity<?> deletePhoto(@RequestParam String[] url) {
         photosService.delete(url);
         return ResponseEntity.ok(HttpStatus.OK);
     }

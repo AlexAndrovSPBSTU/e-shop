@@ -11,7 +11,8 @@ import ru.alexandrov.backend.models.Characteristic;
 @Component
 public class CharacteristicValidationAspect extends BasicValidationAspect {
 
-    @Around(value = "execution(* ru.alexandrov.backend.controllers.CharacteristicsController.createCharacteristic(..)) && args(characteristic,categoryId)",
+    @Around(value = "execution(* ru.alexandrov.backend.controllers.CharacteristicsController.createCharacteristic(..)) " +
+            "&& args(characteristic,categoryId)",
             argNames = "joinPoint,characteristic,categoryId")
     public ResponseEntity<?>  validateCreateCharacteristic(ProceedingJoinPoint joinPoint, Characteristic characteristic, int categoryId) throws Throwable {
         StringBuilder errors = new StringBuilder();

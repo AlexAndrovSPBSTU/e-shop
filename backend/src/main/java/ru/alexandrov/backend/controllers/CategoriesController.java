@@ -23,19 +23,21 @@ public class CategoriesController {
         return categoryService.getRootCategories();
     }
 
+
     @GetMapping("/{category_id}/products")
     public ResponseEntity<?> getProductsByCategory(@PathVariable("category_id") int id,
-                                                   @RequestParam(required = false) Integer page) {
-        if (page != null) {
-            return ResponseEntity.ok(categoryService.getCategoryProductsByPage(id, page - 1));
-        } else {
-            return ResponseEntity.ok(categoryService.getCategoryProductsByPage(id, 0));
-        }
+                                                   @RequestParam(required = false) Integer page,
+                                                   @RequestParam(required = false) Integer order,
+                                                   @RequestParam(required = false) String price,
+                                                   @RequestParam(required = false) String[] query) {
+        page = (page == null) ? 1 : page;
+        return ResponseEntity.ok(categoryService.getCategoryProducts(id, page, order, price, query));
     }
 
     @GetMapping("/{category_id}/characteristics")
-    public ResponseEntity<?> getCharacteristicsByCategory(@PathVariable("category_id") int id) {
-        return ResponseEntity.ok(categoryService.getCharacteristicsByCategoryId(id));
+    public ResponseEntity<?> getCharacteristicsByCategory(@PathVariable("category_id") int id,
+                                                          @RequestParam(required = false) Boolean isRange) {
+        return ResponseEntity.ok(categoryService.getCharacteristicsByCategoryId(id, isRange));
     }
 
     @PostMapping("/new")

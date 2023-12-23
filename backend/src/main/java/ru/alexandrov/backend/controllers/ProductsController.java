@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.alexandrov.backend.models.Photo;
 import ru.alexandrov.backend.models.Product;
 import ru.alexandrov.backend.services.ProductService;
 
@@ -24,12 +23,16 @@ public class ProductsController {
         return ResponseEntity.ok(productService.getProductById(id).get());
     }
 
+    @PatchMapping("/{product_id}/addProperty")
+    public ResponseEntity<?> setProductProperty(@PathVariable("product_id") int productId,
+                                                @RequestParam int propertyId) {
+        productService.assignProperty(productId, propertyId);
+        return ResponseEntity.ok("Property has been assigned");
+    }
+
     @PostMapping("/new")
     public ResponseEntity<?> createProduct(@RequestBody Product product,
-                                        @RequestParam int categoryId) {
-        for (Photo photo : product.getPhotos()) {
-            photo.setProduct(product);
-        }
+                                           @RequestParam int categoryId) {
         productService.save(product, categoryId);
         return ResponseEntity.ok(HttpStatus.OK);
     }
@@ -42,12 +45,12 @@ public class ProductsController {
 
     @PatchMapping("/change/{product_id}")
     public ResponseEntity<?> change(@PathVariable("product_id") int id,
-                                 @RequestParam(value = "name", required = false) String name,
-                                 @RequestParam(value = "price", required = false) Float price,
-                                 @RequestParam(value = "amount", required = false) Integer amount,
-                                 @RequestParam(value = "description", required = false) String description,
-                                 @RequestParam(value = "discount", required = false) Integer discount,
-                                 @RequestParam(value = "categoryId", required = false) Integer categoryId) {
+                                    @RequestParam(value = "name", required = false) String name,
+                                    @RequestParam(value = "price", required = false) Double price,
+                                    @RequestParam(value = "amount", required = false) Integer amount,
+                                    @RequestParam(value = "description", required = false) String description,
+                                    @RequestParam(value = "discount", required = false) Integer discount,
+                                    @RequestParam(value = "categoryId", required = false) Integer categoryId) {
         productService.change(id, name, price, amount, description, discount, categoryId);
         return ResponseEntity.ok(HttpStatus.OK);
     }

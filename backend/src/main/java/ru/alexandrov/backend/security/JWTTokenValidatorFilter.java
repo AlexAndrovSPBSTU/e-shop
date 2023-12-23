@@ -37,11 +37,11 @@ public class JWTTokenValidatorFilter extends OncePerRequestFilter {
                         .parseClaimsJws(jwt)
                         .getBody();
 
-                String username = String.valueOf(claims.get("username"));
-                String authority = (String) claims.get("authority");
+                String username = String.valueOf(claims.get(ProjectConstants.EMAIL));
+                String role = String.valueOf(claims.get(ProjectConstants.ROLE));
 
                 Authentication auth = new UsernamePasswordAuthenticationToken(username, null,
-                        Collections.singleton(new SimpleGrantedAuthority(authority)));
+                        Collections.singleton(new SimpleGrantedAuthority(role)));
                 SecurityContextHolder.getContext().setAuthentication(auth);
             } catch (Exception ex) {
                 response.addHeader("Content-Type", "application/json;charset=UTF-8");
@@ -58,3 +58,4 @@ public class JWTTokenValidatorFilter extends OncePerRequestFilter {
         return Arrays.stream(ProjectConstants.WHITE_LIST[0]).anyMatch(str -> request.getServletPath().matches(str));
     }
 }
+
