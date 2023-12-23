@@ -2,8 +2,7 @@ package ru.alexandrov.backend.models;
 
 import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import ru.alexandrov.backend.constants.ProjectConstants;
 import ru.alexandrov.backend.util.PropertyListSerializer;
@@ -15,6 +14,9 @@ import java.util.List;
 @Table(name = "product")
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Product {
     @Id
     @Column(name = "product_id")
@@ -69,13 +71,12 @@ public class Product {
         return category.getName();
     }
 
+    @JsonSetter
     public void setPhotos(List<Photo> photos) {
         this.photos = photos;
-        if(this.photos!=null)
-            this.photos.forEach(photo->photo.setProduct(this));
+        if (this.photos != null)
+            this.photos.forEach(photo -> photo.setProduct(this));
     }
-
-    @JsonSetter
 
     @JsonGetter
     public Double getRating() {
@@ -88,5 +89,14 @@ public class Product {
 
     public void updateRating() {
         this.rating = getRating();
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", description='" + description + '\'' +
+                '}';
     }
 }

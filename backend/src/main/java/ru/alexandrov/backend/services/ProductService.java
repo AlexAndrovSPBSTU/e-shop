@@ -6,18 +6,22 @@ import ru.alexandrov.backend.models.Category;
 import ru.alexandrov.backend.models.Product;
 import ru.alexandrov.backend.repositories.CategoryRepository;
 import ru.alexandrov.backend.repositories.ProductRepository;
+import ru.alexandrov.backend.repositories.PropertyRepository;
 
+import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Service
 public class ProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
+    private final PropertyRepository propertyRepository;
 
     @Autowired
-    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository) {
+    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository, PropertyRepository propertyRepository) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
+        this.propertyRepository = propertyRepository;
     }
 
     public Optional<Product> getProductById(int id) {
@@ -58,5 +62,10 @@ public class ProductService {
             product.setDescription(description);
         }
         productRepository.save(product);
+    }
+
+    @Transactional
+    public void assignProperty(int productId, int propertyId) {
+        productRepository.insertProductPropertyRelation(productId, propertyId);
     }
 }

@@ -5,8 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Table(name = "category")
@@ -23,6 +22,9 @@ public class Category {
 
     @Column(name = "name")
     private String name;
+
+    @Column(name = "diverged")
+    private Boolean isDiverged;
 
     @ManyToMany(mappedBy = "parents")
     private List<Category> children;
@@ -48,15 +50,19 @@ public class Category {
         return products.size() + children.stream().mapToInt(Category::getProductAmountOfCategory).sum();
     }
 
-    public List<Product> getProducts() {
-        List<Product> list = new ArrayList<>(products);
-        children.forEach(child -> list.addAll(child.getProducts()));
+    @JsonIgnore
+    public List<Category> getAllChildren() {
+        List<Category> list = new ArrayList<>(children);
+        children.forEach(child -> list.addAll(child.getAllChildren()));
         return list;
     }
 
-    public List<Category> getChildren() {
-        List<Category> list = new ArrayList<>(children);
-        children.forEach(child -> list.addAll(child.getChildren()));
-        return list;
+    public Set<Characteristic> getCharacteristics() {
+        if (isDiverged) {
+            return Collections.emptySet();
+        }
+        Set<Characteristic> characteristicList = new HashSet<>(characteristics);
+        parents.forEach(parent -> characteristicList.addAll(parent.getCharacteristics()));
+        return characteristicList;
     }
 }

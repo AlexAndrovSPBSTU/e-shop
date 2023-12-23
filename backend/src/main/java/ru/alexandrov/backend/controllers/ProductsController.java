@@ -23,6 +23,13 @@ public class ProductsController {
         return ResponseEntity.ok(productService.getProductById(id).get());
     }
 
+    @PatchMapping("/{product_id}/addProperty")
+    public ResponseEntity<?> setProductProperty(@PathVariable("product_id") int productId,
+                                                @RequestParam int propertyId) {
+        productService.assignProperty(productId, propertyId);
+        return ResponseEntity.ok("Property has been assigned");
+    }
+
     @PostMapping("/new")
     public ResponseEntity<?> createProduct(@RequestBody Product product,
                                            @RequestParam int categoryId) {

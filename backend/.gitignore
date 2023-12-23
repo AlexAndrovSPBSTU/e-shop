@@ -35,3 +35,4 @@ build/
 /src/main/resources/.$database_model.png.bkp
 /src/main/resources/.$database_model.png.dtmp
 /postgres-data/
+/dependencies.txt

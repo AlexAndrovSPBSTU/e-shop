@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
+import ru.alexandrov.backend.models.cart.Purchase;
 
 import javax.persistence.*;
 
@@ -40,4 +41,15 @@ public class Customer {
     @JsonIgnore
     private List<Comment> comments;
 
+    @OneToMany(mappedBy = "customer")
+    private List<Purchase> purchases;
+
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
+                ", email='" + email + '\'' +
+                '}';
+    }
 }

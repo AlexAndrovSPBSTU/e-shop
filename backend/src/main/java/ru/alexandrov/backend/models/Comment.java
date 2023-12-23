@@ -1,5 +1,6 @@
 package ru.alexandrov.backend.models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import lombok.Getter;
@@ -26,6 +27,7 @@ public class Comment {
     private String note;
 
     @Column(name = "date_time")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy")
     private Date date;
 
     @ManyToOne
