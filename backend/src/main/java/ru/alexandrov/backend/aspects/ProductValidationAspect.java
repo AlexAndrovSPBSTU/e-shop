@@ -25,7 +25,8 @@ public class ProductValidationAspect extends BasicValidationAspect {
         StringBuilder errors = new StringBuilder();
         validateProductName(product.getName(), errors);
         validateCategoryId(categoryId, errors);
-        validatePhotos(product.getPhotos(), errors);
+        if (product.getPhotos() != null)
+            validatePhotos(product.getPhotos(), errors);
         if (product.getDiscount() == null) product.setDiscount(0);
         if (product.getAmount() == null) product.setAmount(0);
         if (product.getDescription() == null) product.setDescription("");

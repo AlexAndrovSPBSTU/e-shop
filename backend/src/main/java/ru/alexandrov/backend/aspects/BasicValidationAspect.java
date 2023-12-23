@@ -5,9 +5,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import ru.alexandrov.backend.models.Customer;
 import ru.alexandrov.backend.models.Photo;
+import ru.alexandrov.backend.models.Product;
+import ru.alexandrov.backend.models.cart.CartItemId;
+import ru.alexandrov.backend.models.cart.Purchase;
 import ru.alexandrov.backend.repositories.*;
 
+import java.security.Principal;
 import java.util.List;
 
 public class BasicValidationAspect {
@@ -18,7 +23,12 @@ public class BasicValidationAspect {
     private CustomerRepository customerRepository;
     private PhotoRepository photoRepository;
     private CommentRepository commentRepository;
+    private CartItemRepository cartItemRepository;
 
+    @Autowired
+    public void setCartItemRepository(CartItemRepository cartItemRepository) {
+        this.cartItemRepository = cartItemRepository;
+    }
 
     @Autowired
     public void setCategoryRepository(CategoryRepository categoryRepository) {
@@ -60,33 +70,14 @@ public class BasicValidationAspect {
         if (errors.length() != 0) {
             return new ResponseEntity<>(errors.toString(), HttpStatus.CONFLICT);
         } else {
-            return (ResponseEntity<String>) joinPoint.proceed();
+            return (ResponseEntity<?>) joinPoint.proceed();
         }
     }
 
-    protected void validateCategoryName(String name, StringBuilder errors) {
-        if (name.isEmpty()) {
-            errors.append("name - Name is mandatory\n");
-        } else {
-            if (categoryRepository.findByName(name).isPresent()) {
-                errors.append("name - category with this name already exists\n");
-            }
-        }
-    }
 
     protected void validateCharacteristicRange(Boolean isRange, StringBuilder errors) {
         if (isRange == null) {
             errors.append("isRange - isRange is mandatory\n");
-        }
-    }
-
-    protected void validatePropertyValue(String value, StringBuilder errors) {
-        if (value == null || value.isEmpty()) {
-            errors.append("value -  is mandatory\n");
-        } else {
-            if (propertyRepository.findByValue(value).isPresent()) {
-                errors.append("value - property with this value already exists\n");
-            }
         }
     }
 
@@ -138,6 +129,14 @@ public class BasicValidationAspect {
         validateId(commentRepository, id, "commentId", "comment", errors);
     }
 
+    protected void validateCartItem(int id, Principal principal, StringBuilder errors) {
+        Customer customer = customerRepository.findByEmail(principal.getName()).get();
+        Product product = productRepository.findById(id).get();
+        if (!cartItemRepository.existsById(CartItemId.builder().customer(customer).purchase(Purchase.builder().id(-1).build()).product(product).build())) {
+            errors.append("There is no such product in the cart");
+        }
+    }
+
     protected void validateProductId(int id, StringBuilder errors) {
         validateId(productRepository, id, "productId", "product", errors);
     }
@@ -154,13 +153,15 @@ public class BasicValidationAspect {
         validateId(characteristicRepository, id, "characteristicId", "characteristic", errors);
     }
 
-    protected void validateCategoryParentId(int id, StringBuilder errors) {
-        validateId(categoryRepository, id, "parentId", "category", errors);
-    }
-
     protected void validateCustomerEmail(String email, StringBuilder errors) {
         if (customerRepository.findByEmail(email).isPresent()) {
             errors.append("email - customer with this email already exists\n");
+        }
+    }
+
+    protected void validatePage(Integer page, StringBuilder errors) {
+        if (page != null && page <= 0) {
+            errors.append("Page has to be more than 0\n");
         }
     }
 

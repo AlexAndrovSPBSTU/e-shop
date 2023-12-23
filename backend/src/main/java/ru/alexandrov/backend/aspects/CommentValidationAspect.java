@@ -17,7 +17,8 @@ public class CommentValidationAspect extends BasicValidationAspect {
         if (comment.getRating() == null) {
             errors.append("rating - rating must be provided\n");
         }
-        validatePhotos(comment.getPhotos(), errors);
+        if (comment.getPhotos() != null)
+            validatePhotos(comment.getPhotos(), errors);
         validateProductId(productId, errors);
         return makeReturnStatement(errors, joinPoint);
     }
