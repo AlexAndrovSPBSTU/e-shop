@@ -38,6 +38,10 @@ export default createStore({
       state.count++
     },
 
+    setCount(state, data) {
+      state.count = data
+    },
+
     decrement(state) {
       state.count--
     },
@@ -69,8 +73,7 @@ export default createStore({
 
   actions: {
     async login({ commit, state }, userL) {
-      //console.log(userL)
-      try { // убрать role: "ADMIN", когда пофиксят бэк
+      try {
         localStorage.setItem("user", JSON.stringify(userL));
         state.initialState.user = userL
         state.initialState.status.loggedIn = true;
@@ -84,6 +87,7 @@ export default createStore({
         localStorage.removeItem("user");
         state.initialState.user = null
         state.initialState.status.loggedIn = false;
+        state.count = 0
       } catch (error) {
         return error
       }

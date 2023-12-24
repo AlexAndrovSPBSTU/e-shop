@@ -22,12 +22,6 @@
         <div class="form-group">
           <v-btn class="btn" type="submit"> Отправить </v-btn>
         </div>
-
-        <div class="form-group">
-          <div v-if="message" class="alert alert-danger" role="alert">
-            {{ message }}
-          </div>
-        </div>
       </Form>
     </div>
   </div>
@@ -36,6 +30,7 @@
 <script>
 import { Form, Field, ErrorMessage } from "vee-validate";
 import * as yup from "yup";
+import { login } from "@/API/index.js";
 
 export default {
   name: "Login",
@@ -55,84 +50,31 @@ export default {
 
     return {
       loading: false,
-      message: "",
       schema,
     };
   },
-  /*
-  computed: {
-    loggedIn() {
-      return this.$store.state.auth.status.loggedIn;
-    },
-  },
-  created() {
-    if (this.loggedIn) {
-      this.$router.push("/profile");
-    }
-  },*/
+
   methods: {
     handleLogin(user) {
       this.loading = true;
 
-      let admin = {
-        role: "ADMIN",
-      };
-
-      fetch("http://localhost:8080/authenticate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(user),
-      })
-        .then((res) => res.json())
-        .then((data) => this.$store.dispatch("login", data))
-        .then((_) => this.$router.push("/"));
-
-      /*const res = new Promise((resolve) => {
-        setTimeout(
-          () =>
-            resolve({
-              jwtToken:
-                "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJlLXNob3AiLCJzdWIiOiJKV1QgVG9rZW4iLCJ1c2VybmFtZSI6InZpdGFsaUB5YW5kZXgucnUiLCJhdXRob3JpdHkiOiJVU0VSIiwiaWF0IjoxNjk3NTI4NTYzLCJleHAiOjE2OTc1MzIxNjN9.tCVAzSVMX0cX3dX8tzPV-ESAU_Tii2cdCSFGkqWr-TwiopeVASKpSf2pR86Y2WddxX7gnaomSkWqIZkj2dpnfA",
-              email: "vitali@yandex.ru",
-              name: "vitali",
-              surname: "alexandrov",
-              role: "ADMIN",
-            }),
-          1000
-        );
-      }).then(res => this.$store.dispatch("login", res)).then(_ => this.$router.push("/catalog"))*/
-
-      //console.log(res)
-      //this.$store.dispatch("login", res)
-
-      //console.log(formData)
-
-      /*const store = useStore();
-       //call the action as a method of the store
-      store.login(user).then(() => {
-        this.$router.push("/");
-      },
-      (error) => {
-          this.loading = false;
-          this.message = "Error!!!"
-            ;
-        });*/
-
-      /*
-      this.$store.dispatch("auth/login", user).then(
-        () => {
-          this.$router.push("/profile");
-        },
-        (error) => {
-          this.loading = false;
-          this.message =
-            (error.response &&
-              error.response.data &&
-              error.response.data.message) ||
-            error.message ||
-            error.toString();
-        }
-      );*/
+      login(user)
+        .then((response) => {
+          if (!response.ok) {
+            if (response.status === 401) {
+              alert("Неверные учетные данные");
+            }
+          }
+          return response.json();
+        })
+        .then((data) => {
+          this.$store
+            .dispatch("login", data)
+            .then((_) => this.$router.push("/"));
+        })
+        .catch((error) => {
+          console.error("Ошибка при выполнении fetch:", error);
+        });
     },
   },
 };

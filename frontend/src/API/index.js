@@ -173,7 +173,7 @@ export async function deleteSpecificProduct(id) {
   })
 }
 
-export async function addCategory(name, id) {
+export async function addCategory(name, isDiverged, id) {
 
   await fetch(
     "http://localhost:8080/categories/new?parentId=" + id,
@@ -185,6 +185,7 @@ export async function addCategory(name, id) {
       },
       body: JSON.stringify({
         name: name,
+        isDiverged: isDiverged,
       }),
     }
   )
@@ -324,7 +325,7 @@ export async function renameProperty(name, id) {
   )
 }
 
-export async function addPropertyInProduct(idProduct, idProperty){
+export async function addPropertyInProduct(idProduct, idProperty) {
 
   await fetch(
     "http://localhost:8080/products/" + idProduct + "/addProperty?propertyId=" + idProperty,
@@ -335,4 +336,100 @@ export async function addPropertyInProduct(idProduct, idProperty){
       }
     }
   )
+}
+
+export async function addToCard(id) {
+  //http://localhost:8080/add?id=2
+
+  await fetch(
+    "http://localhost:8080/add?id=" + id,
+    {
+      method: "POST",
+      headers: {
+        Authorization: getJWT()
+      }
+    }
+  )
+}
+
+export async function reduceItemOnCard(id) {
+  //http://localhost:8080/add?id=2
+
+  await fetch(
+    "http://localhost:8080/reduce?id=" + id,
+    {
+      method: "POST",
+      headers: {
+        Authorization: getJWT()
+      }
+    }
+  )
+}
+
+export async function deleteItemsOnCard(id) {
+  //http://localhost:8080/add?id=2
+
+  await fetch(
+    "http://localhost:8080/delete?id=" + id,
+    {
+      method: "POST",
+      headers: {
+        Authorization: getJWT()
+      }
+    }
+  )
+}
+
+export async function getCart() {
+
+  const res = await fetch(
+    "http://localhost:8080/cart",
+    {
+      method: "GET",
+      headers: {
+        Authorization: getJWT(),
+      }
+    }
+  )
+
+  return res.json()
+}
+
+export async function buyCart(queryIds) {
+  const response = await fetch(
+    "http://localhost:8080/buy?" + queryIds,
+    {
+      method: "POST",
+      headers: {
+        Authorization: getJWT(),
+      },
+    }
+  );
+
+  if (!response.ok) {
+    const errorBody = await response.json();
+    return errorBody
+  }
+
+  return { ok: "ok" };
+}
+
+export async function register(user) {
+  const res = await fetch("http://localhost:8080/register", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(user),
+  })
+
+  return res
+}
+
+export async function login(user) {
+  const res = await fetch("http://localhost:8080/authenticate", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(user),
+  })
+
+  return res
 }

@@ -15,7 +15,7 @@
         <div class="my-card__card">
           <div class="card__title">{{ card.name }}</div>
           <div class="card__content">
-            <v-carousel show-arrows="hover" style="width: 400px; height: 500px">
+            <v-carousel show-arrows="hover" style="width: 400px; height: 700px">
               <v-carousel-item
                 v-for="(photo, index) in card.photos"
                 :key="index"
@@ -29,7 +29,6 @@
               <div class="spec__title-and-admin">
                 <div class="spec__title">Характеристики</div>
               </div>
-              
 
               <v-table>
                 <tbody>
@@ -59,15 +58,14 @@
                   >
                     <div class="card__discount">{{ card.price }}₽</div>
                     <div class="card__price--discount">
-                      {{ (card.price * ((100 - card.discount)/100)).toFixed(0) }}₽
+                      {{
+                        (card.price * ((100 - card.discount) / 100)).toFixed(0)
+                      }}₽
                     </div>
                   </div>
 
                   <div v-else class="card__price">{{ card.price }}₽</div>
-                  <div
-                    class="card__amount text-body-2"
-                    v-if="card.amount === 0"
-                  >
+                  <div class="card__amount text-body-2" v-if="card.amount < 1">
                     Нет в наличии
                   </div>
                   <div
@@ -78,14 +76,27 @@
                   </div>
                   <div class="card__amount text-body-2" v-else>Мало</div>
                 </div>
-                <v-btn
-                  variant="outlined"
-                  color="orange"
-                  class="text-none text-h6"
-                  @click.stop="increment"
-                >
-                  Купить
-                </v-btn>
+                <div v-if="card.amount < 1">
+                  <v-btn
+                    variant="outlined"
+                    color="orange"
+                    class="text-none text-h6"
+                    @click.stop="increment"
+                    disabled
+                  >
+                    Купить
+                  </v-btn>
+                </div>
+                <div v-else>
+                  <v-btn
+                    variant="outlined"
+                    color="orange"
+                    class="text-none text-h6"
+                    @click.stop="increment"
+                  >
+                    Купить
+                  </v-btn>
+                </div>
               </div>
             </div>
           </div>
@@ -251,6 +262,8 @@ import {
   newComment,
   deleteComment,
   deletePhotos,
+  addToCard,
+  getCart,
 } from "@/API/index.js";
 
 export default {
@@ -342,9 +355,9 @@ export default {
         if (!model || typeof model !== "object") return;
 
         if (model.name === name) {
-            //this.idCategory = item.id
-            return [item]
-          };
+          //this.idCategory = item.id
+          return [item];
+        }
 
         (model.children || []).some((child) => (path = getPath(child, name)));
         return path && [item, ...path];
@@ -353,14 +366,16 @@ export default {
       const arr = getPath(this.breadCrumb, this.card.category);
 
       console.log(arr);
-      this.idCategory = arr.find(value => value.name == this.card.category).id
-      console.log("id category =", this.idCategory)
+      this.idCategory = arr.find(
+        (value) => value.name == this.card.category
+      ).id;
+      console.log("id category =", this.idCategory);
 
       arr.forEach((value) => {
         this.items.push({
           title: value.name,
           disabled: false,
-          to: `/categories/${value.id}/products`,
+          to: `/categories/${value.id}/products?page=1&order=4`,
         });
       });
 
@@ -381,8 +396,25 @@ export default {
   },
   methods: {
     increment() {
+      const user = JSON.parse(localStorage.getItem("user"));
+      if (user) {
+        getProduct(`/products/${this.card.id}`).then((res) => {
+          if (res.amount < 1) {
+            alert("Товар закончился");
+            this.card.amount = 0;
+          } else {
+            addToCard(this.card.id).then(() => {
+              getCart().then((res) => {
+                console.log(res);
+                this.$store.commit("setCount", res.totalCount);
+              });
+            });
+          }
+        });
+      } else {
+        this.$store.commit("setItem", this.card);
+      }
       this.$store.commit("increment");
-      this.$store.commit("setItem", this.card);
     },
 
     async writeNewComment() {
@@ -665,11 +697,10 @@ td {
   left: 50%;
 }
 
-.spec__title-and-admin{
+.spec__title-and-admin {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  
 }
 </style>

@@ -288,7 +288,7 @@
                       v-model="characteristic"
                       :items="arrayCharacteristic"
                       :item-props="itemProps"
-                      label="Категории"
+                      label="Характеристики"
                       hint="Выберите характиристику которую собираетесь переименовать"
                       persistent-hint
                       :rules="[rules.required]"

@@ -83,11 +83,21 @@
 <script>
 import AdminPanel from "../AdminPanel/AdminPanel.vue";
 import TreeView from "../TreeView/TreeView.vue";
-import { getCatalog } from "@/API/index.js";
+import { getCatalog, getCart } from "@/API/index.js";
 
 export default {
   components: { TreeView, AdminPanel },
   data: () => ({}),
+
+  beforeCreate() {
+    const user = JSON.parse(localStorage.getItem("user"));
+      if(user){
+        getCart().then((res) => {
+          //console.log(res)
+          this.$store.commit("setCount", res.totalCount);
+        })
+      }
+  },
 
   mounted() {
     getCatalog().then((data) => {
@@ -98,6 +108,9 @@ export default {
   methods: {
     handleLogout() {
       this.$store.dispatch("logout");
+      if(this.$route.path == "/bucket"){
+        this.$router.push("/")
+      }
     },
   },
 };
