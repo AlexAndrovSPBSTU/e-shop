@@ -6,19 +6,19 @@
     </div>
     <div class="main__container">
       <div class="categories">
-        <router-link to="/categories/2/products" class="category">
+        <router-link to="/categories/2/products?page=1&order=4" class="category">
           <img src="src\assets\categoryimage1.png" class="category__img" />
           <div class="category__title">Смартфоны</div>
         </router-link>
-        <router-link to="/categories/2/products" class="category">
+        <router-link to="/categories/2/products?page=1&order=4" class="category">
           <img src="src\assets\categoryimage2.png" class="category__img" />
           <div class="category__title">Телевизоры</div>
         </router-link>
-        <router-link to="/categories/8/products" class="category">
+        <router-link to="/categories/3/products?page=1&order=4" class="category">
           <img src="src\assets\categoryimage3.png" class="category__img" />
           <div class="category__title">Ноутбуки</div>
         </router-link>
-        <router-link to="/categories/8/products" class="category">
+        <router-link to="/categories/3/products?page=1&order=4" class="category">
           <img src="src\assets\categoryimage4.png" class="category__img" />
           <div class="category__title">Аксессуары</div>
         </router-link>

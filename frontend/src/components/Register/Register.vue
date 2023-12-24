@@ -1,8 +1,7 @@
 <template>
   <div class="">
-
     <div class="card card-container">
-        <div class="title">Регистрация</div>
+      <div class="title">Регистрация</div>
       <img
         id="profile-img"
         src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
@@ -44,7 +43,9 @@
       >
         {{ message }}
         <div class="go-to-login">
-          <router-link to="/login" class="go-to-login__link">Авторизоваться</router-link>
+          <router-link to="/login" class="go-to-login__link"
+            >Авторизоваться</router-link
+          >
         </div>
       </div>
     </div>
@@ -54,6 +55,7 @@
 <script>
 import { Form, Field, ErrorMessage } from "vee-validate";
 import * as yup from "yup";
+import { register } from "@/API/index.js";
 
 export default {
   name: "Register",
@@ -96,18 +98,40 @@ export default {
 
   methods: {
     handleRegister(user) {
-      this.message = "Вы были успешно зарегистрированы!!!";
-      this.successful = true;
       this.loading = false;
 
-      console.log(JSON.stringify(user))
+      console.log(JSON.stringify(user));
 
-      fetch("http://localhost:8080/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(user),
-      }).catch(reason => console.log(reason))
-      
+      register(user)
+        .then((response) => {
+          if (!response.ok) {
+            // Обработка ошибки
+            if (response.status === 409) {
+              // Обработка ошибки 409 (конфликт)
+              console.log("Ошибка 409: Такой пользователь уже существует");
+              this.message =
+                "Такой пользователь уже существует!!! Вместо регистрации, аутентифицируйтесь!!!";
+              this.successful = true;
+              // Возможно, вы хотите выполнить какие-то дополнительные действия
+            } else {
+              // Обработка других ошибок
+              console.error("Ошибка при выполнении запроса:", response.status);
+            }
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+          // Обработка успешного ответа
+          this.message = "Вы были успешно зарегистрированы!!!";
+          this.successful = true;
+          return response.json();
+        })
+        .then((data) => {
+          // Обработка данных
+          console.log("Успешная регистрация:", data);
+        })
+        .catch((error) => {
+          // Обработка ошибок fetch
+          console.error("Ошибка при выполнении fetch:", error);
+        });
     },
   },
 };

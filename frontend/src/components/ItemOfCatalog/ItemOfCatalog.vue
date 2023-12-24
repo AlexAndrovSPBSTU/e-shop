@@ -6,8 +6,12 @@
         v-bind="props"
         :elevation="isHovering ? 24 : 6"
       >
-        
-        <img :src="item.photos[0].url" alt="" class="item__img" v-if="item.photos[0]"/>
+        <img
+          :src="item.photos[0].url"
+          alt=""
+          class="item__img"
+          v-if="item.photos[0]"
+        />
         <div class="item__text">
           <div class="item__text-content">
             <div class="item__title">{{ item.name }}</div>
@@ -15,7 +19,14 @@
           </div>
 
           <div class="price-btn">
-            <v-btn variant="outlined" @click.stop="addItems">Купить </v-btn>
+            <div class="" v-if="item.amount < 1">
+              <v-btn disabled variant="outlined" @click.stop="addItems"
+                >Нет в наличии
+              </v-btn>
+            </div>
+            <div class="" v-else>
+              <v-btn variant="outlined" @click.stop="addItems">Купить</v-btn>
+            </div>
 
             <div class="item__price">
               Цена:
@@ -43,6 +54,8 @@
 </template>
 
 <script>
+import { addToCard, getCart, getProduct } from "@/API/index.js";
+
 export default {
   props: {
     item: {
@@ -54,9 +67,26 @@ export default {
 
   methods: {
     addItems() {
+      const user = JSON.parse(localStorage.getItem("user"));
+      if (user) {
+        //http://localhost:8080/products/:productId
+        getProduct(`/products/${this.item.id}`).then((res) => {
+          if (res.amount < 1) {
+            alert("Товар закончился");
+            this.item.amount = 0;
+          } else {
+            addToCard(this.item.id).then(() => {
+              getCart().then((res) => {
+                console.log(res);
+                this.$store.commit("setCount", res.totalCount);
+              });
+            });
+          }
+        });
+      } else {
+        this.$store.commit("setItem", this.item);
+      }
       this.$store.commit("increment");
-
-      this.$store.commit("setItem", this.item);
     },
 
     handleClick() {

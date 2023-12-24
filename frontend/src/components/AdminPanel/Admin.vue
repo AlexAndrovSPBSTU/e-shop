@@ -574,6 +574,12 @@
                     required
                   ></v-text-field>
                 </v-col>
+                <v-col cols="12" sm="12" md="12">
+                  <v-checkbox 
+                  label="Наследуем характеристики?"
+                  v-model="isDiverged"
+                  ></v-checkbox>
+                </v-col>
               </v-row>
             </v-card-text>
 
@@ -1085,6 +1091,8 @@ export default {
     categoryEditDialog: false,
     categoryMoveDialog: false,
 
+    isDiverged: false,
+
     categoriesForAdd: null, //addProduct
     categories: null, //delProduct, editProduct
     specificProducts: null, //delProduct, editProduct
@@ -1490,7 +1498,7 @@ export default {
 
       this.loading = true;
 
-      addCategory(this.newCategory, this.categoriesForAddCategory.id).then(
+      addCategory(this.newCategory, this.isDiverged, this.categoriesForAddCategory.id).then(
         (res) => {
           this.categoriesForAddCategory = null;
           this.newCategory = null;

@@ -25,7 +25,7 @@ defineProps({
 const router = useRouter();
 
 function goTO(id) {
-  router.push(`/categories/${id}/products?page=1`);
+  router.push(`/categories/${id}/products?page=1&order=4`);
 }
 </script>
 
