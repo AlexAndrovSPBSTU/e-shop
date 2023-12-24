@@ -5,16 +5,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import ru.alexandrov.backend.models.Category;
 import ru.alexandrov.backend.models.Customer;
 import ru.alexandrov.backend.models.Photo;
 import ru.alexandrov.backend.models.Product;
+import ru.alexandrov.backend.models.cart.CartItem;
 import ru.alexandrov.backend.models.cart.CartItemId;
 import ru.alexandrov.backend.models.cart.Purchase;
 import ru.alexandrov.backend.repositories.*;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 
+
+//В этом классе находятся большинство методов для валидации
+//свойств объектов. В каждый метод отпарвляется строка,
+//в которую мы складываем все ошибки прохождения валидации.
+//В случае отсутсвия ошибок, вызывается эндпоинт, иначе -
+//досрочное завершение эндпоинта и отправка 409 кода с ошибками.
 public class BasicValidationAspect {
     private CategoryRepository categoryRepository;
     private CharacteristicRepository characteristicRepository;
@@ -81,16 +90,6 @@ public class BasicValidationAspect {
         }
     }
 
-    protected void validateCharacteristicName(String name, StringBuilder errors) {
-        if (name == null || name.isEmpty()) {
-            errors.append("name - Name is mandatory\n");
-        } else {
-            if (characteristicRepository.findByName(name).isPresent()) {
-                errors.append("name - characteristic with this name already exists\n");
-            }
-        }
-    }
-
     protected void validatePhotoUrlForDeleting(String url, StringBuilder errors) {
         if (url == null || url.isEmpty()) {
             errors.append("url - url is mandatory\n");
@@ -132,8 +131,27 @@ public class BasicValidationAspect {
     protected void validateCartItem(int id, Principal principal, StringBuilder errors) {
         Customer customer = customerRepository.findByEmail(principal.getName()).get();
         Product product = productRepository.findById(id).get();
-        if (!cartItemRepository.existsById(CartItemId.builder().customer(customer).purchase(Purchase.builder().id(-1).build()).product(product).build())) {
+        Optional<CartItem> cartItem = cartItemRepository.findById(CartItemId.builder().customer(customer).purchase(Purchase.builder().id(-1).build()).product(product).build());
+        if (!cartItem.isPresent()) {
             errors.append("There is no such product in the cart");
+        }
+    }
+
+    protected void validateCartItemBeforeBuy(int id, Principal principal, List<Integer> soldOutProducts, List<Integer> nonExistentProducts) {
+        Customer customer = customerRepository.findByEmail(principal.getName()).get();
+        Optional<Product> product = productRepository.findById(id);
+
+        if (!product.isPresent()) {
+            nonExistentProducts.add(id);
+        } else {
+            Optional<CartItem> cartItem = cartItemRepository.findById(CartItemId.builder().customer(customer).purchase(Purchase.builder().id(-1).build()).product(product.get()).build());
+            if (!cartItem.isPresent()) {
+                nonExistentProducts.add(id);
+            } else {
+                if (product.get().getAmount() < cartItem.get().getTotalCount()) {
+                    soldOutProducts.add(id);
+                }
+            }
         }
     }
 
@@ -156,6 +174,21 @@ public class BasicValidationAspect {
     protected void validateCustomerEmail(String email, StringBuilder errors) {
         if (customerRepository.findByEmail(email).isPresent()) {
             errors.append("email - customer with this email already exists\n");
+        }
+    }
+
+
+    protected void validateCustomerEmailExistence(String email, StringBuilder errors) {
+        if (!customerRepository.findByEmail(email).isPresent()) {
+            errors.append("email - customer with this email doesn't exists\n");
+        }
+    }
+
+    protected void validatePaternity(int id, int parentId, StringBuilder errors, ProceedingJoinPoint joinPoint) {
+        Category category = categoryRepository.findById(id).get();
+        Category parentCategory = categoryRepository.findById(parentId).get();
+        if (category.getAllChildren().stream().anyMatch(category1 -> category1.equals(parentCategory))) {
+            errors.append("Parent category can not be inserted into one of subcategory.");
         }
     }
 

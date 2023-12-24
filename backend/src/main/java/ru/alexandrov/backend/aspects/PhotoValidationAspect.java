@@ -10,13 +10,24 @@ import ru.alexandrov.backend.models.Photo;
 @Component
 @Aspect
 public class PhotoValidationAspect extends BasicValidationAspect {
-    @Around(value = "execution(* ru.alexandrov.backend.controllers.PhotosController.savePhoto(..)) && args(photo,categoryId,productId)",
-            argNames = "joinPoint,photo,categoryId,productId")
-    public ResponseEntity<?> validateSavePhoto(ProceedingJoinPoint joinPoint, Photo photo, Integer categoryId, Integer productId) throws Throwable {
+    @Around(value = "execution(* ru.alexandrov.backend.controllers.PhotosController.savePhoto(..)) && args(photo,commentId,productId)",
+            argNames = "joinPoint,photo,commentId,productId")
+    public ResponseEntity<?> validateSavePhoto(ProceedingJoinPoint joinPoint, Photo photo, Integer commentId, Integer productId) throws Throwable {
         StringBuilder errors = new StringBuilder();
-        if (categoryId == null && productId == null) {
-            errors.append("Either categoryId or productId must be provided\n");
+
+        //Фото обязательно должно быть прикреплено или к комментарию или к продукту
+        if (commentId == null && productId == null) {
+            errors.append("Either commentId or productId must be provided\n");
         }
+
+        if (commentId != null) {
+            validateCommentId(commentId, errors);
+        }
+
+        if (productId != null) {
+            validateProductId(productId, errors);
+        }
+
         return makeReturnStatement(errors, joinPoint);
     }
 
@@ -25,10 +36,12 @@ public class PhotoValidationAspect extends BasicValidationAspect {
             argNames = "joinPoint,url")
     public ResponseEntity<?> validateDeletePhoto(ProceedingJoinPoint joinPoint, String[] url) throws Throwable {
         StringBuilder errors = new StringBuilder();
-        for (String ur : url
-        ) {
-            validatePhotoUrlForDeleting(ur, errors);
+
+        //Проверяем что все фото находятся в базе данных
+        for (String u : url) {
+            validatePhotoUrlForDeleting(u, errors);
         }
+
         return makeReturnStatement(errors, joinPoint);
     }
 }

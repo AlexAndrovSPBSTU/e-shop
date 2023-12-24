@@ -19,7 +19,6 @@ import ru.alexandrov.backend.security.AuthenticationResponse;
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
-import java.util.Optional;
 
 @Service
 public class CustomerService {
@@ -32,10 +31,6 @@ public class CustomerService {
         this.customerRepository = customerRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
-    }
-
-    public Optional<Customer> findByEmail(String email) {
-        return customerRepository.findByEmail(email);
     }
 
     public void save(Customer customer) {

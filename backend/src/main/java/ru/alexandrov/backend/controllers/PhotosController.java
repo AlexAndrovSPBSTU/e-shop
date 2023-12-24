@@ -18,6 +18,14 @@ public class PhotosController {
         this.photosService = photosService;
     }
 
+
+    /**
+     * Saves new photo and assigns it to either comment or product.
+     *
+     * @param commentId comment's if to which photo will be assigned
+     * @param productId product's id to which photo will be assigned
+     * @return {@code 200} if the comment was assigned, {@code 409} otherwise
+     */
     @PostMapping("/new")
     public ResponseEntity<?> savePhoto(@RequestBody Photos photo,
                                     @RequestParam(required = false) Integer commentId,
@@ -26,6 +34,12 @@ public class PhotosController {
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
+    /**
+     * Deletes an array of url.
+     *
+     * @param url       array url we delete
+     * @return {@code 200} if all the urls were deleted, {@code 409} otherwise
+     */
     @DeleteMapping
     public ResponseEntity<?> deletePhoto(@RequestParam String[] url) {
         photosService.delete(url);

@@ -29,6 +29,10 @@ public class ProductService {
     }
 
     public void save(Product product, int categoryId) {
+        if (product.getDiscount() == null) product.setDiscount(0);
+        if (product.getAmount() == null) product.setAmount(0);
+        if (product.getDescription() == null) product.setDescription("");
+        if (product.getPrice() == null) product.setPrice(0.0);
         product.setCategory(categoryRepository.findById(categoryId).get());
         product.setRating(0.0);
         productRepository.save(product);

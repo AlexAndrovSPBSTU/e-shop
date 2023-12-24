@@ -42,6 +42,7 @@ public class Customer {
     private List<Comment> comments;
 
     @OneToMany(mappedBy = "customer")
+    @JsonIgnore
     private List<Purchase> purchases;
 
     @Override

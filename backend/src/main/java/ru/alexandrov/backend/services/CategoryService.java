@@ -3,12 +3,15 @@ package ru.alexandrov.backend.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import ru.alexandrov.backend.constants.ProjectConstants;
-import ru.alexandrov.backend.models.*;
-import ru.alexandrov.backend.models.cart.CartItem;
-import ru.alexandrov.backend.repositories.*;
+import ru.alexandrov.backend.models.Category;
+import ru.alexandrov.backend.models.Characteristic;
+import ru.alexandrov.backend.models.Product;
+import ru.alexandrov.backend.models.Property;
+import ru.alexandrov.backend.repositories.CategoryRepository;
+import ru.alexandrov.backend.repositories.CharacteristicRepository;
+import ru.alexandrov.backend.repositories.ProductRepository;
 import ru.alexandrov.backend.util.ProductSorting;
 
 import javax.transaction.Transactional;
@@ -34,17 +37,24 @@ public class CategoryService {
     }
 
 
-    public List<Product> getCategoryProducts(int id, int page, Integer order, String price, String[] query) {
+    public List<Product> getCategoryProducts(int id, int page, Integer order, String price, String[] filter) {
         Category category = categoryRepository.findById(id).get();
+
+        //Если order не был отправлен, ставим по умолчанию 4(Убывание по рейтингу)
         order = order == null ? 4 : order;
         double from = 0, to = Double.MAX_VALUE;
 
+        //price это isRange хар-ка. Примеры
+        //http://localhost:8080/categories/:categoryId/products?price=10-150 - price от 10 до 150
+        //http://localhost:8080/categories/:categoryId/products?price=10-_ - price от 10
+        //http://localhost:8080/categories/:categoryId/products?price=_-150 - price до 150
         if (price != null) {
             String[] range = price.split("-");
             from = Objects.equals(range[0], String.valueOf('_')) ? from : Double.parseDouble(range[0]);
             to = Objects.equals(range[1], String.valueOf('_')) ? to : Double.parseDouble(range[1]);
         }
 
+        //Ставим соответствующую сортировку
         ProductSorting productSorting = ProductSorting.BY_RATING;
         switch (order) {
             case 1:
@@ -57,24 +67,36 @@ public class CategoryService {
                 productSorting = ProductSorting.BY_DISCOUNT;
                 break;
         }
-        PageRequest pageRequest = PageRequest.of(page - 1, ProjectConstants.PAGE_SIZE, Sort.by(productSorting.getDirection(), productSorting.getProperty()));
+
+        //Достаём все дочерние категории.
         List<Category> categories = category.getAllChildren();
         categories.add(category);
-        if (query != null) {
+
+        //Если мы отправили какие-то фильтры то применяем их.
+        if (filter != null) {
+            //Достаём отсортированные товары
+            Sort sort = Sort.by(productSorting.getDirection(), productSorting.getProperty());
+
+            //Выбираем только те из них, которые сответсвуют выбранными фильтрам
             return getProductsByProperties(productRepository.findAllByCategoryInAndPriceBetween(
-                    Sort.by(productSorting.getDirection(), productSorting.getProperty()), categories, from, to), query, page);
+                    sort, categories, from, to), filter, page);
         } else {
+            PageRequest pageRequest = PageRequest.of(page - 1, ProjectConstants.PAGE_SIZE, Sort.by(productSorting.getDirection(), productSorting.getProperty()));
             return productRepository.findAllByCategoryInAndPriceBetween(pageRequest, categories, from, to).getContent();
         }
     }
 
-    //query=Кол_во_ядер-4-8
-    private List<Product> getProductsByProperties(List<Product> products, String[] query, int page) {
+    private List<Product> getProductsByProperties(List<Product> products, String[] filter, int page) {
         Stream<Product> productStream = products.stream();
-        for (String q : query) {
+
+        //Проходимся по всем фильтрам
+        for (String q : filter) {
             String[] strings = q.split("-");
-            String characteristicName = strings[0]; //Количество_ядер
+            String characteristicName = strings[0];
             Characteristic characteristic = characteristicRepository.findByName(characteristicName.replace('_', ' ')).get();
+
+            //Если фильтр относится к isRange характеристике, проверяем, что указанное значение товара этой хар-ки находится в пределах [from,to].
+            //Если у товара не выставлено значение характеристики, но мы проводим filter по нему, такой товар не выведется.
             if (characteristic.getIsRange()) {
                 double from = 0, to = Double.MAX_VALUE;
                 from = Objects.equals(strings[1], String.valueOf('_')) ? from : Double.parseDouble(strings[1]);
@@ -90,7 +112,7 @@ public class CategoryService {
                                 .anyMatch(property -> Double.parseDouble(property.getValue()) >= finalFrom && Double.parseDouble(property.getValue()) <= finalTo));
             } else {
                 String[] propertiesId = new String[strings.length - 1];
-                System.arraycopy(strings, 1, propertiesId, 0, strings.length - 1); //propertiesId = {"3","5"}
+                System.arraycopy(strings, 1, propertiesId, 0, strings.length - 1);
                 productStream = productStream
                         .filter(product -> product
                                 .getProperties()
@@ -99,11 +121,16 @@ public class CategoryService {
                                 .anyMatch(id -> Arrays.stream(propertiesId).anyMatch(propertyId -> Integer.valueOf(propertyId).equals(id))));
             }
         }
+
+        //Достаём товары, уже отсортированные и прошедшие фильтры
         List<Product> productList = productStream.collect(Collectors.toList());
+
+        //Берём определённый промежуток товаров(page)
         int fromIndex = (page - 1) * ProjectConstants.PAGE_SIZE;
         int toIndex = page * ProjectConstants.PAGE_SIZE;
-        if (fromIndex >= productList.size())
+        if (fromIndex >= productList.size()) {
             return Collections.emptyList();
+        }
         toIndex = Math.min(toIndex, productList.size());
         return productList.subList(fromIndex, toIndex);
 

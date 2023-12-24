@@ -15,8 +15,10 @@ public class AuthenticationValidationAspect extends BasicValidationAspect {
 
     @Around(value = "execution(* ru.alexandrov.backend.controllers.AuthenticationController.registerCustomer(..)) && args(customer)",
             argNames = "joinPoint,customer")
-    public ResponseEntity<?>  validateCustomerRegistration(ProceedingJoinPoint joinPoint, Customer customer) throws Throwable {
+    public ResponseEntity<?> validateCustomerRegistration(ProceedingJoinPoint joinPoint, Customer customer) throws Throwable {
         StringBuilder errors = new StringBuilder();
+
+        //Проверяем наличие обязательных свойств нового пользователя
         if (customer.getName() == null) {
             errors.append("name - name is mandatory\n");
         }
@@ -29,22 +31,31 @@ public class AuthenticationValidationAspect extends BasicValidationAspect {
         if (customer.getEmail() == null) {
             errors.append("email - email is mandatory\n");
         } else {
+            //Проверяем уникальность email-а нового пользователя
             validateCustomerEmail(customer.getEmail(), errors);
         }
+
         return makeReturnStatement(errors, joinPoint);
     }
 
     @Around(value = "execution(* ru.alexandrov.backend.controllers.AuthenticationController.authenticate(..)) && args(authenticationRequest)",
             argNames = "joinPoint,authenticationRequest")
     public ResponseEntity<?> validateAndProcessCustomerAuthentication(ProceedingJoinPoint joinPoint,
-                                                                   AuthenticationRequest authenticationRequest) throws Throwable {
+                                                                      AuthenticationRequest authenticationRequest) throws Throwable {
         StringBuilder errors = new StringBuilder();
+
+        //Проверяем, что наличие email
         if (authenticationRequest.getEmail() == null) {
             errors.append("email - email is mandatory\n");
         }
+
+        //Проверяем наличие пароля
         if (authenticationRequest.getPassword() == null) {
             errors.append("password - password is mandatory\n");
         }
+
+        validateCustomerEmailExistence(authenticationRequest.getEmail(), errors);
+
         return makeReturnStatement(errors, joinPoint);
     }
 

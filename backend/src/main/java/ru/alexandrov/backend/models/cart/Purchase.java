@@ -21,13 +21,12 @@ public class Purchase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "purchase_id")
-//    @JsonIgnore
-    private int id;
+    private Integer id;
 
     @Column(name = "purchase_date")
     private Date date;
 
-    @OneToMany(mappedBy = "purchase")
+    @OneToMany(mappedBy = "purchase", fetch = FetchType.EAGER)
     private List<CartItem> cartItemList;
 
     @ManyToOne

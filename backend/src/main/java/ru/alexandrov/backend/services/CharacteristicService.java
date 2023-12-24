@@ -6,8 +6,6 @@ import ru.alexandrov.backend.models.Category;
 import ru.alexandrov.backend.models.Characteristic;
 import ru.alexandrov.backend.repositories.CharacteristicRepository;
 
-import javax.transaction.Transactional;
-
 @Service
 public class CharacteristicService {
     private final CharacteristicRepository characteristicRepository;
@@ -24,12 +22,12 @@ public class CharacteristicService {
         characteristicRepository.save(characteristic);
     }
 
-    @Transactional
     public void rename(int id, String newName) {
-        characteristicRepository.rename(id, newName);
+        Characteristic characteristic = characteristicRepository.findById(id).get();
+        characteristic.setName(newName);
+        characteristicRepository.save(characteristic);
     }
 
-    @Transactional
     public void delete(int id) {
         characteristicRepository.deleteById(id);
     }
