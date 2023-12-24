@@ -87,7 +87,7 @@ VALUES (default, 'Apple iPhone 14', 100000, 14,
 INSERT INTO characteristic (characteristic_id, name, is_range, category_id, from_, _to)
 VALUES (default, 'Объем оперативной памяти', false, 2, NULL, NULL),
        (default, 'Число ядер', false, 2, NULL, NULL),
-       (default, 'Версия Bluetooth', false, 6, NULL, NULL),
+       (default, 'Версия Bluetooth', false, 8, NULL, NULL),
        (default, 'Операционная система', false, 10, NULL, NULL),
        (default, 'Цвет', false, 7, NULL, NULL);
 
