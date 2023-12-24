@@ -12,10 +12,9 @@ app.use(cors());
 
 // Установка параметров
 
-
-app.post("/uploadFile",  (req, res) => {
+app.post("/uploadFile", (req, res) => {
   let goodStatus = 200
-  
+
   let urls = []
   req.files.forEach((file) => {
     let str = file.originalname;
@@ -41,9 +40,6 @@ app.post("/uploadFile",  (req, res) => {
     res.status(errorStatus).send(errorRes);
   }*/
   res.status(goodStatus).send(urls);
-
-  
-  
 });
 
 async function uploadFile(params) {
@@ -51,11 +47,11 @@ async function uploadFile(params) {
     let upload = await s3Client.send(new PutObjectCommand(params));
     console.log(
       "Successfully created " +
-        params.Key +
-        " and uploaded it to " +
-        params.Bucket +
-        "/" +
-        params.Key
+      params.Key +
+      " and uploaded it to " +
+      params.Bucket +
+      "/" +
+      params.Key
     );
     return upload
   } catch (err) {
