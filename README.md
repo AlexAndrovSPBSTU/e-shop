@@ -54,5 +54,5 @@ docker-compose up
 значение(отношение многие ко многим).
 
 \
-По указанной ссылке можно найти все методо api postman-е.\
+По указанной ссылке можно найти все методы api в postman-е.\
 https://www.postman.com/martian-meadow-737952/workspace/e-shop/collection/27254100-6a2c8515-5874-4c2c-9845-d64f6953290e?action=share&creator=27254100
