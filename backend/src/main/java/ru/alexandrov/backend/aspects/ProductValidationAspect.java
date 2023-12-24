@@ -15,7 +15,10 @@ public class ProductValidationAspect extends BasicValidationAspect {
             argNames = "joinPoint,id")
     public ResponseEntity<?> validateGetProductById(ProceedingJoinPoint joinPoint, int id) throws Throwable {
         StringBuilder errors = new StringBuilder();
+
+        //Проверяем, что данных продукт существует
         validateProductId(id, errors);
+
         return makeReturnStatement(errors, joinPoint);
     }
 
@@ -23,14 +26,18 @@ public class ProductValidationAspect extends BasicValidationAspect {
             argNames = "joinPoint,product,categoryId")
     public ResponseEntity<?> validateCreateProduct(ProceedingJoinPoint joinPoint, Product product, Integer categoryId) throws Throwable {
         StringBuilder errors = new StringBuilder();
+
+        //Проверяем, что название товара уникально
         validateProductName(product.getName(), errors);
+
+        //Проверяем, что указанная категория существует
         validateCategoryId(categoryId, errors);
-        if (product.getPhotos() != null)
+
+        //Проверяем уникальность всех фотографий
+        if (product.getPhotos() != null) {
             validatePhotos(product.getPhotos(), errors);
-        if (product.getDiscount() == null) product.setDiscount(0);
-        if (product.getAmount() == null) product.setAmount(0);
-        if (product.getDescription() == null) product.setDescription("");
-        if (product.getPrice() == null) product.setPrice(0.0);
+        }
+
         return makeReturnStatement(errors, joinPoint);
     }
 
@@ -38,7 +45,10 @@ public class ProductValidationAspect extends BasicValidationAspect {
             argNames = "joinPoint,id")
     public ResponseEntity<?> validateDeleteProduct(ProceedingJoinPoint joinPoint, int id) throws Throwable {
         StringBuilder errors = new StringBuilder();
+
+        //Проверяем наличие товара в базе данных
         validateProductId(id, errors);
+
         return makeReturnStatement(errors, joinPoint);
     }
 
@@ -46,11 +56,35 @@ public class ProductValidationAspect extends BasicValidationAspect {
             argNames = "joinPoint,id,name,categoryId")
     public ResponseEntity<?> validateChange(ProceedingJoinPoint joinPoint, int id, String name, Integer categoryId) throws Throwable {
         StringBuilder errors = new StringBuilder();
+
+        //Проверяем наличие товара в базе дынных
         validateProductId(id, errors);
-        validateCategoryId(categoryId, errors);
+
+        //Проверяем наличие категории
+        if (categoryId != null) {
+            validateCategoryId(categoryId, errors);
+        }
+
+        //Проверяем, что название товара уникально
         if (name != null) {
             validateProductName(name, errors);
         }
+
+        return makeReturnStatement(errors, joinPoint);
+    }
+
+
+    @Around(value = "execution(* ru.alexandrov.backend.controllers.ProductsController.setProductProperty(..)) && args(productId,propertyId)",
+            argNames = "joinPoint,productId,propertyId")
+    public ResponseEntity<?> validateSetProperty(ProceedingJoinPoint joinPoint, int productId, int propertyId) throws Throwable {
+        StringBuilder errors = new StringBuilder();
+
+        //Проверяем наличие товара в базе дынных
+        validateProductId(productId, errors);
+
+        //Проверяем наличие свойства в базе дынных
+        validateProductId(productId, errors);
+
         return makeReturnStatement(errors, joinPoint);
     }
 }

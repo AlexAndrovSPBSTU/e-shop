@@ -16,9 +16,13 @@ public class CharacteristicValidationAspect extends BasicValidationAspect {
             argNames = "joinPoint,characteristic,categoryId")
     public ResponseEntity<?>  validateCreateCharacteristic(ProceedingJoinPoint joinPoint, Characteristic characteristic, int categoryId) throws Throwable {
         StringBuilder errors = new StringBuilder();
-        validateCharacteristicName(characteristic.getName(), errors);
+
+        //Проверяем наличие свойства isRange
         validateCharacteristicRange(characteristic.getIsRange(), errors);
+
+        //Проверяем, что категория, к которой мы хотим присоединить новую хар-ку сущестует.
         validateCategoryId(categoryId, errors);
+
         return makeReturnStatement(errors, joinPoint);
     }
 
@@ -26,8 +30,10 @@ public class CharacteristicValidationAspect extends BasicValidationAspect {
             argNames = "joinPoint,id,newName")
     public ResponseEntity<?>  validateRename(ProceedingJoinPoint joinPoint, int id, String newName) throws Throwable {
         StringBuilder errors = new StringBuilder();
+
+        //Проверяем наличие хар-ки
         validateCharacteristicId(id, errors);
-        validateCharacteristicName(newName, errors);
+
         return makeReturnStatement(errors, joinPoint);
     }
 
@@ -35,7 +41,10 @@ public class CharacteristicValidationAspect extends BasicValidationAspect {
             argNames = "joinPoint,id")
     public ResponseEntity<?>  validateDelete(ProceedingJoinPoint joinPoint, int id) throws Throwable {
         StringBuilder errors = new StringBuilder();
+
+        //Проверяем наличие хар-ки
         validateCharacteristicId(id, errors);
+
         return makeReturnStatement(errors, joinPoint);
     }
 

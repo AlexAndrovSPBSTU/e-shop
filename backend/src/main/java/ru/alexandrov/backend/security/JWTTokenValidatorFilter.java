@@ -28,6 +28,7 @@ public class JWTTokenValidatorFilter extends OncePerRequestFilter {
         String jwt = request.getHeader(ProjectConstants.JWT_HEADER);
         if (null != jwt) {
             try {
+                //Создаём ключ
                 SecretKey key = Keys.hmacShaKeyFor(
                         ProjectConstants.JWT_KEY.getBytes(StandardCharsets.UTF_8));
 
@@ -37,13 +38,17 @@ public class JWTTokenValidatorFilter extends OncePerRequestFilter {
                         .parseClaimsJws(jwt)
                         .getBody();
 
-                String username = String.valueOf(claims.get(ProjectConstants.EMAIL));
+                //Достаём email и роль из токена
+                String email = String.valueOf(claims.get(ProjectConstants.EMAIL));
                 String role = String.valueOf(claims.get(ProjectConstants.ROLE));
 
-                Authentication auth = new UsernamePasswordAuthenticationToken(username, null,
+                Authentication auth = new UsernamePasswordAuthenticationToken(email, null,
                         Collections.singleton(new SimpleGrantedAuthority(role)));
+
+                //Сохраняем результат прохождения аутентификации в ContextHolder
                 SecurityContextHolder.getContext().setAuthentication(auth);
             } catch (Exception ex) {
+                //Если jwt неправильный, будет выброшено исключение. Отправляем 401.
                 response.addHeader("Content-Type", "application/json;charset=UTF-8");
                 response.getOutputStream().print(ex.getMessage());
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -55,6 +60,7 @@ public class JWTTokenValidatorFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
+        //Не проводим аутентифкацию если путь текущего запроса совпадает с одним из WHITE_LIST
         return Arrays.stream(ProjectConstants.WHITE_LIST[0]).anyMatch(str -> request.getServletPath().matches(str));
     }
 }

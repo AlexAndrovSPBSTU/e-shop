@@ -14,26 +14,30 @@ public class AuthenticationController {
     private final CustomerService customerService;
 
     @Autowired
-
     public AuthenticationController(CustomerService customerService) {
         this.customerService = customerService;
     }
 
     /**
-     * Registers a new customer. If there is already user with such
+     * Registers a new customer. If a user with this email already exists, returns 409.
      * email
      *
      * @param customer The new customer.
      * @return {@code 200} if the user was registered, {@code 409} otherwise
-     * //     * @see #authenticate(AuthenticationRequest)
      */
-
     @PostMapping(value = "/register", consumes = {"application/xml", "application/json"})
     public ResponseEntity<?> registerCustomer(@RequestBody Customer customer) {
         customerService.save(customer);
         return ResponseEntity.ok("Customer has been registered");
     }
 
+
+    /**
+     * Returns JWT token and some user information.
+     *
+     * @param authenticationRequest Email and password.
+     * @return {@code 200} if the user is authentic, {@code 409} otherwise
+     */
     @PostMapping("/authenticate")
     public ResponseEntity<?> authenticate(
             @RequestBody AuthenticationRequest authenticationRequest) {

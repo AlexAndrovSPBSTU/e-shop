@@ -15,5 +15,4 @@ public interface PropertyRepository extends CrudRepository<Property, Integer> {
     @Query(value = "update property set value=:newValue where property_id=:id", nativeQuery = true)
     void changeValue(@Param("id") int id, @Param("newValue") String newValue);
 
-    Optional<Property> findByValue(String value);
 }

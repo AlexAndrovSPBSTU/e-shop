@@ -14,6 +14,15 @@ public interface ProjectConstants {
     String EMAIL = "email";
     String ROLE = "role";
     int PAGE_SIZE = 5;
+
+    String[] ADMIN_ENDPOINTS = {
+            "/categories/insert/{category_id}", "/categories/new", "/categories/rename/{category_id}", "/categories/{category_id}",
+            "/products/change/{product_id}", "/products/new", "/products/{product_id}/addProperty","/photos",
+            "/comments/{comment_id}", "/characteristics/new", "/characteristics/rename/{characteristic_id}",
+            "/characteristics/{characteristic_id}","/properties/new","/properties/rename/{property_id}","/properties/{property_id}"
+    };
+
+    //Список эндпоинтов, не требующих аутентификации
     String[][] WHITE_LIST = {
             {
                     "^/register$",

@@ -15,7 +15,10 @@ public class PropertyValidationAspect extends BasicValidationAspect {
             argNames = "joinPoint,property,characteristicId")
     public ResponseEntity<?>  validateCreateProperty(ProceedingJoinPoint joinPoint, Property property, int characteristicId) throws Throwable {
         StringBuilder errors = new StringBuilder();
+
+        //Проверяем, что характеристика, к которой мы хотим присоединить новое свойство, существует
         validateCharacteristicId(characteristicId, errors);
+
         return makeReturnStatement(errors, joinPoint);
     }
 
@@ -24,7 +27,10 @@ public class PropertyValidationAspect extends BasicValidationAspect {
             argNames = "joinPoint,id")
     public ResponseEntity<?>  validateDeleteProperty(ProceedingJoinPoint joinPoint, int id) throws Throwable {
         StringBuilder errors = new StringBuilder();
+
+        //Проверяем, что такое свойство существует перед удалением
         validatePropertyId(id, errors);
+
         return makeReturnStatement(errors, joinPoint);
     }
 
@@ -32,7 +38,10 @@ public class PropertyValidationAspect extends BasicValidationAspect {
             argNames = "joinPoint,id,newValue")
     public ResponseEntity<?>  validateRenameProperty(ProceedingJoinPoint joinPoint, int id, String newValue) throws Throwable {
         StringBuilder errors = new StringBuilder();
+
+        //Проверяем, что такое свойство существует перед переименовыванием
         validatePropertyId(id, errors);
+
         return makeReturnStatement(errors, joinPoint);
     }
 }

@@ -17,6 +17,14 @@ public class CharacteristicsController {
         this.characteristicService = characteristicService;
     }
 
+
+    /**
+     * Creates new characteristic and assign to an existing category.
+     *
+     * @param characteristic new characteristic
+     * @param categoryId category's id to which we assign new characteristic
+     * @return {@code 200} if the category was created, {@code 409} otherwise
+     */
     @PostMapping("/new")
     public ResponseEntity<?> createCharacteristic(@RequestBody Characteristic characteristic,
                                                            @RequestParam int categoryId) {
@@ -24,6 +32,14 @@ public class CharacteristicsController {
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
+
+    /**
+     * Renames an existing characteristic.
+     *
+     * @param id      characteristic's id
+     * @param newName new name
+     * @return {@code 200} if the characteristic was renamed, {@code 409} otherwise
+     */
     @PatchMapping("/rename/{characteristic_id}")
     public ResponseEntity<?> rename(@PathVariable("characteristic_id") int id,
                                              @RequestParam String newName) {
@@ -31,6 +47,12 @@ public class CharacteristicsController {
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
+    /**
+     * Deletes a characteristic by id.
+     *
+     * @param id       characteristic's id
+     * @return {@code 200} if the category was deleted, {@code 409} otherwise
+     */
     @DeleteMapping("/{characteristic_id}")
     public ResponseEntity<?> deleteCharacteristic(@PathVariable("characteristic_id") int id) {
         characteristicService.delete(id);

@@ -14,12 +14,20 @@ public class CommentValidationAspect extends BasicValidationAspect {
             argNames = "joinPoint,comment,productId")
     public ResponseEntity<?> validateCreateComment(ProceedingJoinPoint joinPoint, Comment comment, int productId) throws Throwable {
         StringBuilder errors = new StringBuilder();
+
+        //Проверяем наличие товара
+        validateProductId(productId, errors);
+
+        //Рейтинг обязателен
         if (comment.getRating() == null) {
             errors.append("rating - rating must be provided\n");
         }
-        if (comment.getPhotos() != null)
+
+        //Проверяем, что фото уникальны
+        if (comment.getPhotos() != null) {
             validatePhotos(comment.getPhotos(), errors);
-        validateProductId(productId, errors);
+        }
+
         return makeReturnStatement(errors, joinPoint);
     }
 
@@ -27,7 +35,10 @@ public class CommentValidationAspect extends BasicValidationAspect {
             argNames = "joinPoint,id")
     public ResponseEntity<?> validateCreateComment(ProceedingJoinPoint joinPoint, int id) throws Throwable {
         StringBuilder errors = new StringBuilder();
+
+        //Проверяем наличие данного комментария
         validateCommentId(id, errors);
+
         return makeReturnStatement(errors, joinPoint);
     }
 

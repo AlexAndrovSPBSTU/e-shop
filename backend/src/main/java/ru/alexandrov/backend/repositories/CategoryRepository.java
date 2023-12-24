@@ -33,5 +33,4 @@ public interface CategoryRepository extends CrudRepository<Category, Integer> {
             nativeQuery = true)
     void rename(@Param("id") int categoryId, @Param("newName") String newName);
 
-    Optional<Category> findByName(String name);
 }

@@ -87,7 +87,7 @@ VALUES (default, 'Apple iPhone 14', 100000, 14,
 INSERT INTO characteristic (characteristic_id, name, is_range, category_id, from_, _to)
 VALUES (default, 'Объем оперативной памяти', false, 2, NULL, NULL),
        (default, 'Число ядер', false, 2, NULL, NULL),
-       (default, 'Версия Bluetooth', false, 6, NULL, NULL),
+       (default, 'Версия Bluetooth', false, 8, NULL, NULL),
        (default, 'Операционная система', false, 10, NULL, NULL),
        (default, 'Цвет', false, 7, NULL, NULL);
 
@@ -183,22 +183,50 @@ VALUES (default, 2, 'Зарядка смартфона очень плохая!'
 
 -- Insert data into the "photo" table
 INSERT INTO photo (url, product_id, comment_id)
-VALUES ('https://www.hwupgrade.it/i/n/iPhone14ProMaxDimensioni_720.jpg', 1, NULL),
-       ('https://avatars.mds.yandex.net/get-mpic/4449143/img_id4805498422263347727.jpeg/orig', 6, NULL),
-       ('https://avatars.mds.yandex.net/get-mpic/4465918/img_id1164587449292882755.jpeg/orig', 6, NULL),
-       ('https://avatars.mds.yandex.net/get-mpic/5254781/img_id2818580988479176360.jpeg/orig', 5, NULL),
-       ('https://avatars.mds.yandex.net/get-mpic/4592225/img_id6848066478882349945.jpeg/orig', 5, NULL),
-       ('https://avatars.mds.yandex.net/i?id=2532c1a3a5d323bc0c29aaf56a12f07331ff4ee2-10023671-images-thumbs&n=13', 2,
-        NULL),
-       ('https://bgr.com/wp-content/uploads/2021/04/iphone-13-design-schematic-3d-leak-1.jpg?quality=82&strip=all', 2,
-        NULL),
-       ('https://apple11.ru/10727-large_default/samsung-galaxy-s8-g950-orchid-gray-.jpg', 3, NULL),
-       ('https://www.cnet.com/a/img/mx3MSpyKNftH5i1cv3XMGfqy-Qg/u003d/940x0/2017/03/27/90111f8b-d4dd-4829-83a5-6310e8070ccf/gsocho-ny-02-jg.jpg',
-        3, NULL),
-       ('https://avatars.mds.yandex.net/i?id=78ad839d40dc413dbf83b61c6c48204b7b197f5d-9294167-images-thumbs&n=13', 4,
-        NULL),
-       ('https://cdn1.ozone.ru/s3/multimedia-8/6308830976.jpg', 4, NULL),
-       ('https://i4.stat01.com/2/8766/187656512/afacdb/8-1-jpg.jpg', 7, NULL),
+VALUES ('https://storage.yandexcloud.net/e-shop/11pro.png', 1, NULL),
+       ('https://storage.yandexcloud.net/e-shop/12iphone.png', 1, NULL),
+       ('https://storage.yandexcloud.net/e-shop/iphone11.jpg', 1, NULL),
+
+       ('https://storage.yandexcloud.net/e-shop/apple-iphone-12-violet-back.png', 2, NULL),
+       ('https://storage.yandexcloud.net/e-shop/14plus.jpg', 2, NULL),
+       ('https://storage.yandexcloud.net/e-shop/phone.jpg', 2, NULL),
+
+       ('https://storage.yandexcloud.net/e-shop/sum1S8.jpg', 3, NULL),
+       ('https://storage.yandexcloud.net/e-shop/sumS8.png', 3, NULL),
+       ('https://storage.yandexcloud.net/e-shop/sum3S8.png', 3, NULL),
+
+       ('https://storage.yandexcloud.net/e-shop/airpods1.png', 4, NULL),
+       ('https://storage.yandexcloud.net/e-shop/airpods2.png', 4, NULL),
+       ('https://storage.yandexcloud.net/e-shop/airpods3.png', 4, NULL),
+
+       ('https://storage.yandexcloud.net/e-shop/chehol1.png', 5, NULL),
+       ('https://storage.yandexcloud.net/e-shop/chehol2.png', 5, NULL),
+       ('https://storage.yandexcloud.net/e-shop/chehol3.png', 5, NULL),
+
+       ('https://storage.yandexcloud.net/e-shop/p50_1.png', 6, NULL),
+       ('https://storage.yandexcloud.net/e-shop/p50_2.png', 6, NULL),
+       ('https://storage.yandexcloud.net/e-shop/p50_3.png', 6, NULL),
+
+       ('https://storage.yandexcloud.net/e-shop/ya1.jpg', 7, NULL),
+       ('https://storage.yandexcloud.net/e-shop/ya2.jpg', 7, NULL),
+       ('https://storage.yandexcloud.net/e-shop/ya3.jpg', 7, NULL),
+
+       ('https://storage.yandexcloud.net/e-shop/Lenovo1.png', 8, NULL),
+       ('https://storage.yandexcloud.net/e-shop/Lenovo2.jpg', 8, NULL),
+       ('https://storage.yandexcloud.net/e-shop/Lenovo3.jpg', 8, NULL),
+
+       ('https://storage.yandexcloud.net/e-shop/thinkpad1.png', 9, NULL),
+       ('https://storage.yandexcloud.net/e-shop/thinkpad2.jpg', 9, NULL),
+       ('https://storage.yandexcloud.net/e-shop/thinkpad3.png', 9, NULL),
+
+       ('https://storage.yandexcloud.net/e-shop/air13.png', 10, NULL),
+       ('https://storage.yandexcloud.net/e-shop/air13_2.jpg', 10, NULL),
+       ('https://storage.yandexcloud.net/e-shop/air13_3.jpg', 10, NULL),
+
+       ('https://storage.yandexcloud.net/e-shop/14pro.jpg', 11, NULL),
+       ('https://storage.yandexcloud.net/e-shop/14pro_2.jpg', 11, NULL),
+       ('https://storage.yandexcloud.net/e-shop/14pro_3.jpg', 11, NULL),
+
        ('https://cdn.rbt.ru/images/gen/item_image/image/9728/24/972733_r83.jpg', 1, 1);
 
 INSERT INTO purchase(purchase_id)

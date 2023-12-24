@@ -2,7 +2,6 @@ package ru.alexandrov.backend.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import ru.alexandrov.backend.models.Customer;
 import ru.alexandrov.backend.models.Product;
@@ -23,7 +22,6 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 @Service
-@Repository
 public class ShopService {
     private final CartItemRepository cartItemRepository;
     private final CustomerRepository customerRepository;
@@ -99,8 +97,8 @@ public class ShopService {
     }
 
 
-    public void reduce(int productId) {
-        CartItem cartItem = getCartItemByProductAndCustomer(productId, null);
+    public void reduce(int productId, Principal principal) {
+        CartItem cartItem = getCartItemByProductAndCustomer(productId, principal);
         if (cartItem.getTotalCount() == 1) {
             cartItemRepository.delete(cartItem);
         } else {
@@ -110,15 +108,12 @@ public class ShopService {
     }
 
     public void deleteFromCart(int productId, Principal principal) {
-        cartItemRepository.delete(getCartItemByProductAndCustomer(productId, null));
+        cartItemRepository.delete(getCartItemByProductAndCustomer(productId, principal));
     }
 
-    private CartItem getCartItemByProductAndCustomer(int productId, String customerEmail) {
+    private CartItem getCartItemByProductAndCustomer(int productId, Principal principal) {
         // Get the currently authenticated customer
-        if (customerEmail == null) {
-            customerEmail = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        }
-        Customer customer = customerRepository.findByEmail(customerEmail)
+        Customer customer = customerRepository.findByEmail(principal.getName())
                 .get();
 
         // Get the product by its ID
@@ -131,7 +126,7 @@ public class ShopService {
     }
 
     @Transactional
-    public void buy(int[] id, Principal principal) {
+    public int buy(int[] id, Principal principal) {
         Purchase purchase = new Purchase();
         purchase.setDate(new Date());
         Customer customer = customerRepository.findByEmail(principal.getName()).get();
@@ -140,16 +135,18 @@ public class ShopService {
         for (int i : id) {
             Product product = productRepository.findById(i).get();
 
-            cartItemRepository.updatePurchase(customer.getId(), i, purchase.getId());
-
-            product.setAmount(product.getAmount() - cartItemRepository.findById(CartItemId.builder()
+            //Присоединяем сущность CartItem к новой покупке
+            cartItemRepository.updatePurchase(customer.getId(), product.getId(), purchase.getId());
+            CartItem cartItem = cartItemRepository.findById(CartItemId.builder()
+                    .purchase(Purchase.builder().id(-1).build())
                     .customer(customer)
-                    .product(Product.builder().id(i).build())
-                    .purchase(Purchase.builder().id(purchase.getId()).build()).build()).get().getTotalCount());
+                    .product(product).build()).get();
+
+            //Для каждого продукта уменьшаем его кол-во в БД
+            product.setAmount(product.getAmount() - cartItem.getTotalCount());
             productRepository.save(product);
         }
-
-        emailSenderService.sendEmail(customer.getEmail(), "Purchase completed", purchase.toString());
+        return purchase.getId();
     }
 
     public List<PurchasesResponse> getMyPurchases(Principal principal) {
