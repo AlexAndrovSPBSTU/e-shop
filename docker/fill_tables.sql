@@ -28,14 +28,14 @@ VALUES (1, 2),
        (10, 12);
 
 INSERT INTO product (product_id, name, price, amount, description, discount, category_id)
-VALUES (default, 'Apple iPhone 14', 100000, 14,
+VALUES (default, 'iPhone 14', 100000, 14,
         'Тонкий и легкий смартфон из новой линейки Apple iPhone 14 оснащен OLED-экраном с высоким разрешением, ' ||
         'достаточным объемом памяти и увеличенным временем автономной работы в водонепроницаемом корпусе. ' ||
         'Усовершенствованные камеры позволяют снимать фотографии и видео в отличном качестве даже при слабом освещении. ' ||
         'Функция экстренной помощи со спутниковой связью станет спасательным кругом при отсутствии доступа в Интернет. ' ||
         'Мощный процессор открывает новые возможности для игр и развлечений.',
         0, 3),
-       (default, 'Apple iPhone 13', 80000, 7, 'iPhone 13', 0, 3),
+       (default, 'iPhone 13', 80000, 7, 'iPhone 13', 0, 3),
        (default, 'Samsung Galaxy S8', 40000, 15, 'Samsung Galaxy S8 - это смартфон без рамки, ' ||
                                                  'который сочетает в себе все последние технические достижения бренда. ' ||
                                                  'Изогнутый с обеих сторон экран с диагональю 5,8 дюйма имеет удлиненный формат (18,5:9),' ||
@@ -87,7 +87,7 @@ VALUES (default, 'Apple iPhone 14', 100000, 14,
 INSERT INTO characteristic (characteristic_id, name, is_range, category_id, from_, _to)
 VALUES (default, 'Объем оперативной памяти', false, 2, NULL, NULL),
        (default, 'Число ядер', false, 2, NULL, NULL),
-       (default, 'Версия Bluetooth', false, 6, NULL, NULL),
+       (default, 'Версия Bluetooth', false, 8, NULL, NULL),
        (default, 'Операционная система', false, 10, NULL, NULL),
        (default, 'Цвет', false, 7, NULL, NULL);
 
