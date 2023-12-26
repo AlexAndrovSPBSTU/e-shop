@@ -267,6 +267,7 @@ export default {
           );
 
           this.selectedProduct = [];
+          this.$store.commit("setCount", 0);
           alert("Поздравляем! Вы успешно купили товары!");
 
           console.log("Купленные товары:", purchasedProducts);
