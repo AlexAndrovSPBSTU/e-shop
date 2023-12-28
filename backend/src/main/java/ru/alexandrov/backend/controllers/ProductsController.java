@@ -38,8 +38,10 @@ public class ProductsController {
      */
     @PatchMapping("/{product_id}/addProperty")
     public ResponseEntity<?> setProductProperty(@PathVariable("product_id") int productId,
-                                                @RequestParam int propertyId) {
-        productService.assignProperty(productId, propertyId);
+                                                @RequestParam(required = false) Integer propertyId,
+                                                @RequestParam(required = false) Integer characteristicId,
+                                                @RequestParam(required = false) String newValue) {
+        productService.assignProperty(productId, propertyId, characteristicId, newValue);
         return ResponseEntity.ok("Property has been assigned");
     }
 

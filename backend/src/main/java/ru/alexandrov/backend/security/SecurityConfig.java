@@ -3,6 +3,7 @@ package ru.alexandrov.backend.security;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+import org.springframework.http.HttpMethod;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
@@ -43,6 +44,7 @@ public class SecurityConfig {
                         .antMatchers(ProjectConstants.WHITE_LIST[1]).permitAll()
                         //ADMIN_ENDPOINTS - массив эндпоинтов которые, доступные
                         .antMatchers(ProjectConstants.ADMIN_ENDPOINTS).hasRole("ADMIN")
+                        .mvcMatchers(HttpMethod.DELETE, "/products/{product_id}").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(new JWTTokenValidatorFilter(), BasicAuthenticationFilter.class)
@@ -63,7 +65,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public JavaMailSenderImpl getJavaMailSender(){
+    public JavaMailSenderImpl getJavaMailSender() {
         return new JavaMailSenderImpl();
     }
 

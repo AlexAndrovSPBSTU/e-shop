@@ -98,7 +98,7 @@ VALUES (default, 'Диагональ экрана', true, 10, 0, 20),
 
 INSERT INTO customer
 VALUES (default, 'John', 'Wick', 'wick@gmail.com', '$2a$10$FHAGu5JX5LroDewAm6jVIugZ8gGKB9pMtRTdE6suNu8bZVmkkHoxe',
-        'ADMIN');
+        'ROLE_ADMIN');
 
 INSERT INTO property (property_id, value, characteristic_id)
 VALUES (default, '8 GB', 1),   --1

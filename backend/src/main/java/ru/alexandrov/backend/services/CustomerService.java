@@ -60,7 +60,7 @@ public class CustomerService {
         return ResponseEntity.ok(AuthenticationResponse
                 .builder()
                 .customer(customerRepository.findByEmail(authentication.getName()).get())
-                .role(customerRepository.findByEmail(authentication.getName()).get().getRole())
+                .role(customerRepository.findByEmail(authentication.getName()).get().getRole().substring(5))
                 .jwtToken(jwt).build()
         );
     }
