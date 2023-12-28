@@ -33,7 +33,7 @@ public class CommentValidationAspect extends BasicValidationAspect {
 
     @Around(value = "execution(* ru.alexandrov.backend.controllers.CommentsController.deleteComment(..)) && args(id)",
             argNames = "joinPoint,id")
-    public ResponseEntity<?> validateCreateComment(ProceedingJoinPoint joinPoint, int id) throws Throwable {
+    public ResponseEntity<?> validateDeleteComment(ProceedingJoinPoint joinPoint, int id) throws Throwable {
         StringBuilder errors = new StringBuilder();
 
         //Проверяем наличие данного комментария

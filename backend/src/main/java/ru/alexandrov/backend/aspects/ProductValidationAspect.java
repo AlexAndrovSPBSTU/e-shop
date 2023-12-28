@@ -74,16 +74,23 @@ public class ProductValidationAspect extends BasicValidationAspect {
     }
 
 
-    @Around(value = "execution(* ru.alexandrov.backend.controllers.ProductsController.setProductProperty(..)) && args(productId,propertyId)",
-            argNames = "joinPoint,productId,propertyId")
-    public ResponseEntity<?> validateSetProperty(ProceedingJoinPoint joinPoint, int productId, int propertyId) throws Throwable {
+    @Around(value = "execution(* ru.alexandrov.backend.controllers.ProductsController.setProductProperty(..)) && args(productId,propertyId,characteristicId,newValue)",
+            argNames = "joinPoint,productId,propertyId,characteristicId,newValue")
+    public ResponseEntity<?> validateSetProperty(ProceedingJoinPoint joinPoint, int productId, Integer propertyId, Integer characteristicId, String newValue) throws Throwable {
         StringBuilder errors = new StringBuilder();
 
         //Проверяем наличие товара в базе дынных
         validateProductId(productId, errors);
 
-        //Проверяем наличие свойства в базе дынных
-        validateProductId(productId, errors);
+        if (propertyId != null && characteristicId == null && newValue == null) {
+            //Проверяем наличие свойства в базе дынных
+            validateProductId(productId, errors);
+        }
+
+        if (propertyId == null && characteristicId != null && newValue != null) {
+            //Проверяем наличие такой хар-ки
+            validateCharacteristicId(characteristicId, errors);
+        }
 
         return makeReturnStatement(errors, joinPoint);
     }
