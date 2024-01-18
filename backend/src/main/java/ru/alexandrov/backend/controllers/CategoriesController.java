@@ -3,8 +3,8 @@ package ru.alexandrov.backend.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.alexandrov.backend.dto.CategoryDTO;
 import ru.alexandrov.backend.services.CategoryService;
-import ru.alexandrov.backend.models.Category;
 
 import java.util.List;
 
@@ -23,7 +23,7 @@ public class CategoriesController {
      * Returns all categories.
      */
     @GetMapping
-    public List<Category> getCategories() {
+    public List<CategoryDTO> getCategories() {
         return categoryService.getRootCategories();
     }
 
@@ -44,7 +44,6 @@ public class CategoriesController {
                                                    @RequestParam(required = false) Integer order,
                                                    @RequestParam(required = false) String price,
                                                    @RequestParam(required = false) String[] filter) {
-        page = (page == null) ? 1 : page;
         return ResponseEntity.ok(categoryService.getCategoryProducts(id, page, order, price, filter));
     }
 
@@ -70,7 +69,7 @@ public class CategoriesController {
      * @return {@code 200} if the category was created, {@code 409} otherwise
      */
     @PostMapping("/new")
-    public ResponseEntity<?> createCategory(@RequestBody Category category,
+    public ResponseEntity<?> createCategory(@RequestBody CategoryDTO category,
                                             @RequestParam int parentId) {
         categoryService.save(category, parentId);
         return ResponseEntity.ok("Category has been created");

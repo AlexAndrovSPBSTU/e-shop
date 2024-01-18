@@ -5,8 +5,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import ru.alexandrov.backend.models.AuthenticationRequest;
 import ru.alexandrov.backend.models.Customer;
-import ru.alexandrov.backend.security.AuthenticationRequest;
 import ru.alexandrov.backend.services.CustomerService;
 
 @RestController

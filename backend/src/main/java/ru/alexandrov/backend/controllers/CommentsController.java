@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.alexandrov.backend.models.Comment;
+import ru.alexandrov.backend.dto.CommentDTO;
 import ru.alexandrov.backend.services.CommentService;
 
 @RestController
@@ -26,7 +26,7 @@ public class CommentsController {
      * @return {@code 200} if the comment was assigned, {@code 409} otherwise
      */
     @PostMapping("/new")
-    public ResponseEntity<?> createComment(@RequestBody Comment comment,
+    public ResponseEntity<?> createComment(@RequestBody CommentDTO comment,
                                         @RequestParam int productId) {
         commentService.save(comment, productId);
         return ResponseEntity.ok(HttpStatus.OK);

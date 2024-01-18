@@ -1,13 +1,13 @@
 package ru.alexandrov.backend.models;
 
-import com.fasterxml.jackson.annotation.*;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSetter;
 import lombok.*;
-
 import ru.alexandrov.backend.constants.ProjectConstants;
-import ru.alexandrov.backend.util.PropertyListSerializer;
 
 import javax.persistence.*;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 @Entity
@@ -39,6 +39,7 @@ public class Product {
     private Integer discount;
 
     @Column(name = "rating")
+    @PositiveOrZero
     private Double rating;
 
     @ManyToOne
@@ -46,7 +47,7 @@ public class Product {
     private Category category;
 
     @ManyToMany(mappedBy = "products")
-    @JsonSerialize(using = PropertyListSerializer.class)
+//    @JsonSerialize(using = PropertyListSerializer.class)
     private List<Property> properties;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.PERSIST)
@@ -74,15 +75,18 @@ public class Product {
     @JsonSetter
     public void setPhotos(List<Photo> photos) {
         this.photos = photos;
-        if (this.photos != null)
+        if (this.photos != null) {
             this.photos.forEach(photo -> photo.setProduct(this));
+        }
     }
 
     @JsonGetter
     public Double getRating() {
         Double averageRating = 0.0;
-        for (Comment comment : comments) {
-            averageRating += comment.getRating();
+        if (comments != null) {
+            for (Comment comment : comments) {
+                averageRating += comment.getRating();
+            }
         }
         return (comments == null || comments.isEmpty()) ? averageRating : (double) Math.round((averageRating / comments.size()) * 10) / 10;
     }

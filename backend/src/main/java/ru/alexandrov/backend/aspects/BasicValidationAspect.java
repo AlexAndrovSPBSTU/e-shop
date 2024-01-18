@@ -5,9 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import ru.alexandrov.backend.dto.PhotoDTO;
+import ru.alexandrov.backend.dto.PropertyDTO;
 import ru.alexandrov.backend.models.Category;
 import ru.alexandrov.backend.models.Customer;
-import ru.alexandrov.backend.models.Photo;
 import ru.alexandrov.backend.models.Product;
 import ru.alexandrov.backend.models.cart.CartItem;
 import ru.alexandrov.backend.models.cart.CartItemId;
@@ -108,8 +109,8 @@ public class BasicValidationAspect {
         }
     }
 
-    protected void validatePhotos(List<Photo> photos, StringBuilder errors) {
-        for (Photo photo : photos) {
+    protected void validatePhotos(List<PhotoDTO> photos, StringBuilder errors) {
+        for (PhotoDTO photo : photos) {
             validatePhotoUrl(photo.getUrl(), errors);
         }
     }
@@ -184,11 +185,17 @@ public class BasicValidationAspect {
         }
     }
 
-    protected void validatePaternity(int id, int parentId, StringBuilder errors, ProceedingJoinPoint joinPoint) {
+    protected void validatePaternity(int id, int parentId, StringBuilder errors) {
         Category category = categoryRepository.findById(id).get();
         Category parentCategory = categoryRepository.findById(parentId).get();
         if (category.getAllChildren().stream().anyMatch(category1 -> category1.equals(parentCategory))) {
             errors.append("Parent category can not be inserted into one of subcategory.");
+        }
+    }
+
+    protected void validateProperty(PropertyDTO propertyDTO, StringBuilder errors) {
+        if (propertyDTO.getValue() == null) {
+            errors.append("value - values is mandatory");
         }
     }
 

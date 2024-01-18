@@ -1,4 +1,4 @@
-package ru.alexandrov.backend.services;
+package ru.alexandrov.backend.impl;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -13,21 +13,22 @@ import org.springframework.stereotype.Service;
 import ru.alexandrov.backend.constants.ProjectConstants;
 import ru.alexandrov.backend.models.Customer;
 import ru.alexandrov.backend.repositories.CustomerRepository;
-import ru.alexandrov.backend.security.AuthenticationRequest;
-import ru.alexandrov.backend.security.AuthenticationResponse;
+import ru.alexandrov.backend.models.AuthenticationRequest;
+import ru.alexandrov.backend.models.AuthenticationResponse;
+import ru.alexandrov.backend.services.CustomerService;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 @Service
-public class CustomerService {
+public class CustomerServiceImpl implements CustomerService {
     private final CustomerRepository customerRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
 
     @Autowired
-    public CustomerService(CustomerRepository customerRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager) {
+    public CustomerServiceImpl(CustomerRepository customerRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager) {
         this.customerRepository = customerRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;

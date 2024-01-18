@@ -5,14 +5,14 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import ru.alexandrov.backend.models.Comment;
+import ru.alexandrov.backend.dto.CommentDTO;
 
 @Component
 @Aspect
 public class CommentValidationAspect extends BasicValidationAspect {
     @Around(value = "execution(* ru.alexandrov.backend.controllers.CommentsController.createComment(..)) && args(comment,productId)",
             argNames = "joinPoint,comment,productId")
-    public ResponseEntity<?> validateCreateComment(ProceedingJoinPoint joinPoint, Comment comment, int productId) throws Throwable {
+    public ResponseEntity<?> validateCreateComment(ProceedingJoinPoint joinPoint, CommentDTO comment, int productId) throws Throwable {
         StringBuilder errors = new StringBuilder();
 
         //Проверяем наличие товара

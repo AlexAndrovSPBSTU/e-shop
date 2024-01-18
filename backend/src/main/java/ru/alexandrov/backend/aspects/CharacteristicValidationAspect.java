@@ -5,7 +5,7 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import ru.alexandrov.backend.models.Characteristic;
+import ru.alexandrov.backend.dto.CharacteristicDTO;
 
 @Aspect
 @Component
@@ -14,7 +14,7 @@ public class CharacteristicValidationAspect extends BasicValidationAspect {
     @Around(value = "execution(* ru.alexandrov.backend.controllers.CharacteristicsController.createCharacteristic(..)) " +
             "&& args(characteristic,categoryId)",
             argNames = "joinPoint,characteristic,categoryId")
-    public ResponseEntity<?>  validateCreateCharacteristic(ProceedingJoinPoint joinPoint, Characteristic characteristic, int categoryId) throws Throwable {
+    public ResponseEntity<?>  validateCreateCharacteristic(ProceedingJoinPoint joinPoint, CharacteristicDTO characteristic, int categoryId) throws Throwable {
         StringBuilder errors = new StringBuilder();
 
         //Проверяем наличие свойства isRange

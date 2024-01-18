@@ -5,7 +5,7 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import ru.alexandrov.backend.models.Property;
+import ru.alexandrov.backend.dto.PropertyDTO;
 
 @Aspect
 @Component
@@ -13,11 +13,13 @@ public class PropertyValidationAspect extends BasicValidationAspect {
 
     @Around(value = "execution(* ru.alexandrov.backend.controllers.PropertiesController.createProperty(..)) && args(property,characteristicId)",
             argNames = "joinPoint,property,characteristicId")
-    public ResponseEntity<?>  validateCreateProperty(ProceedingJoinPoint joinPoint, Property property, int characteristicId) throws Throwable {
+    public ResponseEntity<?> validateCreateProperty(ProceedingJoinPoint joinPoint, PropertyDTO property, int characteristicId) throws Throwable {
         StringBuilder errors = new StringBuilder();
 
         //Проверяем, что характеристика, к которой мы хотим присоединить новое свойство, существует
         validateCharacteristicId(characteristicId, errors);
+
+        validateProperty(property, errors);
 
         return makeReturnStatement(errors, joinPoint);
     }
@@ -25,7 +27,7 @@ public class PropertyValidationAspect extends BasicValidationAspect {
 
     @Around(value = "execution(* ru.alexandrov.backend.controllers.PropertiesController.deleteProperty(..)) && args(id)",
             argNames = "joinPoint,id")
-    public ResponseEntity<?>  validateDeleteProperty(ProceedingJoinPoint joinPoint, int id) throws Throwable {
+    public ResponseEntity<?> validateDeleteProperty(ProceedingJoinPoint joinPoint, int id) throws Throwable {
         StringBuilder errors = new StringBuilder();
 
         //Проверяем, что такое свойство существует перед удалением
@@ -36,7 +38,7 @@ public class PropertyValidationAspect extends BasicValidationAspect {
 
     @Around(value = "execution(* ru.alexandrov.backend.controllers.PropertiesController.rename(..)) && args(id,newValue)",
             argNames = "joinPoint,id,newValue")
-    public ResponseEntity<?>  validateRenameProperty(ProceedingJoinPoint joinPoint, int id, String newValue) throws Throwable {
+    public ResponseEntity<?> validateRenameProperty(ProceedingJoinPoint joinPoint, int id, String newValue) throws Throwable {
         StringBuilder errors = new StringBuilder();
 
         //Проверяем, что такое свойство существует перед переименовыванием

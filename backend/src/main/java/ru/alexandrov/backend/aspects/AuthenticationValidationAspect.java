@@ -6,7 +6,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import ru.alexandrov.backend.models.Customer;
-import ru.alexandrov.backend.security.AuthenticationRequest;
+import ru.alexandrov.backend.models.AuthenticationRequest;
 
 
 @Aspect

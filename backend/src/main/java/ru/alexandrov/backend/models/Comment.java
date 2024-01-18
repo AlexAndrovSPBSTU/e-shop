@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.util.Date;
 import java.util.List;
 
@@ -21,6 +23,8 @@ public class Comment {
     private int id;
 
     @Column(name = "rating")
+    @Min(0)
+    @Max(5)
     private Integer rating;
 
     @Column(name = "note")
@@ -43,7 +47,6 @@ public class Comment {
     private List<Photo> photos;
 
     @JsonSetter
-
     public void setPhotos(List<Photo> photos) {
         this.photos = photos;
         if (this.photos != null)

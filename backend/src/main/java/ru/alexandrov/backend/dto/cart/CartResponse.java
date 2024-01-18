@@ -1,4 +1,4 @@
-package ru.alexandrov.backend.models.cart;
+package ru.alexandrov.backend.dto.cart;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;

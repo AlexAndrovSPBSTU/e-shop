@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.alexandrov.backend.models.Property;
+import ru.alexandrov.backend.dto.PropertyDTO;
 import ru.alexandrov.backend.services.PropertyService;
 
 @RestController
@@ -26,7 +26,7 @@ public class PropertiesController {
      * @return {@code 200} if the category was created, {@code 409} otherwise
      */
     @PostMapping("/new")
-    public ResponseEntity<?> createProperty(@RequestBody Property property, @RequestParam int characteristicId) {
+    public ResponseEntity<?> createProperty(@RequestBody PropertyDTO property, @RequestParam int characteristicId) {
         propertyService.save(property, characteristicId);
         return ResponseEntity.ok(HttpStatus.OK);
     }

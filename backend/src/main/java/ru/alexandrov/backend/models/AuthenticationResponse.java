@@ -1,8 +1,7 @@
-package ru.alexandrov.backend.security;
+package ru.alexandrov.backend.models;
 
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import lombok.*;
-import ru.alexandrov.backend.models.Customer;
 
 @Getter
 @Setter
