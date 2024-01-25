@@ -5,9 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.alexandrov.backend.models.AuthenticationRequest;
 import ru.alexandrov.backend.models.AuthenticationResponse;
+import ru.alexandrov.backend.repositories.CustomerRepository;
 import ru.alexandrov.backend.services.CustomerService;
-
-import javax.transaction.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static ru.alexandrov.backend.TestsUtil.CUSTOMER_EMAIL_EXPECTED;
@@ -19,10 +18,12 @@ public class AuthenticationTests {
     private CustomerService customerServiceImpl;
 
     @Autowired
+    private CustomerRepository customerRepository;
+
+    @Autowired
     private TestsUtil testsUtil;
 
     @Test
-    @Transactional
     public void Registration_With_ValidData() {
         testsUtil.createCustomerWithUserRole();
 
@@ -33,5 +34,6 @@ public class AuthenticationTests {
                 .extracting("jwtToken", "customer", "role")
                 .allSatisfy(field -> assertThat(field).isNotNull());
 
+        customerRepository.deleteById(authenticationResponse.getCustomer().getId());
     }
 }

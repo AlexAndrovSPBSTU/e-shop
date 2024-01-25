@@ -6,7 +6,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import ru.alexandrov.backend.dto.CategoryDTO;
 import ru.alexandrov.backend.services.CategoryService;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,7 +19,6 @@ public class CategoriesTests {
     private CategoryService categoryService;
 
     @Test
-    @Transactional
     public void Save_And_Remove() {
         //Create a new category
         CategoryDTO category = CategoryDTO.builder()
@@ -32,7 +30,8 @@ public class CategoriesTests {
         categoryService.save(category, 1);
 
         //Fetch all the categories
-        List<String> categories = categoryService.getRootCategories().stream().map(CategoryDTO::getName).collect(Collectors.toList());
+        List<String> categories = categoryService.getRootCategories().stream().map(CategoryDTO::getName)
+                .collect(Collectors.toList());
 
         //Check whether one of them is ours
         assertThat(categories).contains(CATEGORY_EXPECTED_NAME);
@@ -55,8 +54,7 @@ public class CategoriesTests {
     //строка categoryService.rename(id, RENAMED_NAME) не выполняется. Вернее сказать она выоплняется, но
     // результат её будет только в конце метода во время закрытия сессии.
     //Не знаю как это обойти.
-    @Transactional
-//    @Test
+    @Test
     public void Rename() {
         CategoryDTO category = CategoryDTO.builder()
                 .name(CATEGORY_EXPECTED_NAME)
@@ -75,6 +73,8 @@ public class CategoriesTests {
 
         assertThat(categories).doesNotContain(CATEGORY_EXPECTED_NAME);
         assertThat(categories).contains(CATEGORY_RENAMED_NAME);
+
+        categoryService.delete(id);
     }
 
 }

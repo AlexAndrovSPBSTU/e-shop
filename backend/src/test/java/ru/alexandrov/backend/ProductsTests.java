@@ -58,7 +58,8 @@ public class ProductsTests {
         productServiceImpl.save(productDTO, categoryId);
 
         //Fetch all the products
-        List<String> products = categoryService.getCategoryProducts(categoryId, null, null, null, null).stream().map(ProductDTO::getName).collect(Collectors.toList());
+        List<String> products = categoryService.getCategoryProducts(categoryId, null, null, null, null)
+                .stream().map(ProductDTO::getName).collect(Collectors.toList());
 
         //Check whether one of them is ours
         assertThat(products).contains(PRODUCT_EXPECTED_NAME);

@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.alexandrov.backend.dto.cart.CartItemResponse;
+import ru.alexandrov.backend.repositories.CategoryRepository;
 import ru.alexandrov.backend.services.ShopService;
 
 import javax.transaction.Transactional;
@@ -15,6 +16,9 @@ import static ru.alexandrov.backend.TestsUtil.PRODUCT_EXPECTED_NAME;
 public class ShopTests {
     @Autowired
     private ShopService shopServiceImpl;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     @Autowired
     private TestsUtil testsUtil;
@@ -38,6 +42,8 @@ public class ShopTests {
         assertThat(shopServiceImpl.getCartItems().getProducts()).isNotEmpty()
                 .map(CartItemResponse::getName).contains(PRODUCT_EXPECTED_NAME);
 
+        //Delete a category and all its products
+        categoryRepository.deleteById(categoryId);
     }
 
 
@@ -82,8 +88,8 @@ public class ShopTests {
 
 
     //То же самое что и в Categories.Rename().
-    @Transactional
-    //    @Test
+//    @Transactional
+//        @Test
     public void Test_Buy() {
         int categoryId = testsUtil.createCategory();
         int productId = testsUtil.createProduct(categoryId);
