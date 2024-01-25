@@ -4,17 +4,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.alexandrov.backend.models.Characteristic;
+import ru.alexandrov.backend.dto.CharacteristicDTO;
 import ru.alexandrov.backend.services.CharacteristicService;
 
 @RestController
 @RequestMapping("/characteristics")
 public class CharacteristicsController {
-    private final CharacteristicService characteristicService;
+    private final CharacteristicService characteristicServiceImpl;
 
     @Autowired
-    public CharacteristicsController(CharacteristicService characteristicService) {
-        this.characteristicService = characteristicService;
+    public CharacteristicsController(CharacteristicService characteristicServiceImpl) {
+        this.characteristicServiceImpl = characteristicServiceImpl;
     }
 
 
@@ -26,9 +26,9 @@ public class CharacteristicsController {
      * @return {@code 200} if the category was created, {@code 409} otherwise
      */
     @PostMapping("/new")
-    public ResponseEntity<?> createCharacteristic(@RequestBody Characteristic characteristic,
+    public ResponseEntity<?> createCharacteristic(@RequestBody CharacteristicDTO characteristic,
                                                            @RequestParam int categoryId) {
-        characteristicService.save(characteristic,categoryId);
+        characteristicServiceImpl.save(characteristic,categoryId);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
@@ -43,7 +43,7 @@ public class CharacteristicsController {
     @PatchMapping("/rename/{characteristic_id}")
     public ResponseEntity<?> rename(@PathVariable("characteristic_id") int id,
                                              @RequestParam String newName) {
-        characteristicService.rename(id, newName);
+        characteristicServiceImpl.rename(id, newName);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
@@ -55,7 +55,7 @@ public class CharacteristicsController {
      */
     @DeleteMapping("/{characteristic_id}")
     public ResponseEntity<?> deleteCharacteristic(@PathVariable("characteristic_id") int id) {
-        characteristicService.delete(id);
+        characteristicServiceImpl.delete(id);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 

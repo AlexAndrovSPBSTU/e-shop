@@ -1,5 +1,6 @@
 package ru.alexandrov.backend.security;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
@@ -18,6 +19,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import ru.alexandrov.backend.constants.ProjectConstants;
+import ru.alexandrov.backend.dto.CategoryDTO;
+import ru.alexandrov.backend.models.Category;
 
 import java.util.Collections;
 
@@ -73,4 +76,19 @@ public class SecurityConfig {
     public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
         return new PropertySourcesPlaceholderConfigurer();
     }
+
+    @Bean
+    public ModelMapper modelMapper() {
+        ModelMapper modelMapper = new ModelMapper();
+
+        modelMapper.getConfiguration()
+                .setSkipNullEnabled(true)
+                .setFieldAccessLevel(org.modelmapper.config.Configuration.AccessLevel.PRIVATE);
+
+        modelMapper.createTypeMap(Category.class, CategoryDTO.class)
+                .addMapping(Category::getProductAmountOfCategory, CategoryDTO::setProductAmountOfCategory);
+
+        return modelMapper;
+    }
+
 }

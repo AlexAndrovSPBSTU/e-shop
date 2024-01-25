@@ -11,7 +11,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import ru.alexandrov.backend.models.Customer;
 import ru.alexandrov.backend.repositories.CustomerRepository;
-import ru.alexandrov.backend.services.CustomerService;
 
 import java.util.Collections;
 import java.util.Optional;

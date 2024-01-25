@@ -5,20 +5,22 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import ru.alexandrov.backend.models.Photo;
+import ru.alexandrov.backend.dto.Photos;
 
 @Component
 @Aspect
 public class PhotoValidationAspect extends BasicValidationAspect {
     @Around(value = "execution(* ru.alexandrov.backend.controllers.PhotosController.savePhoto(..)) && args(photo,commentId,productId)",
             argNames = "joinPoint,photo,commentId,productId")
-    public ResponseEntity<?> validateSavePhoto(ProceedingJoinPoint joinPoint, Photo photo, Integer commentId, Integer productId) throws Throwable {
+    public ResponseEntity<?> validateSavePhoto(ProceedingJoinPoint joinPoint, Photos photo, Integer commentId, Integer productId) throws Throwable {
         StringBuilder errors = new StringBuilder();
 
         //Фото обязательно должно быть прикреплено или к комментарию или к продукту
         if (commentId == null && productId == null) {
             errors.append("Either commentId or productId must be provided\n");
         }
+
+        validatePhotos(photo.getPhotos(), errors);
 
         if (commentId != null) {
             validateCommentId(commentId, errors);

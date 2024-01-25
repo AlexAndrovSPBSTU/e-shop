@@ -1,6 +1,5 @@
 package ru.alexandrov.backend.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,10 +21,8 @@ public class Property {
 
     @ManyToOne
     @JoinColumn(name = "characteristic_id", referencedColumnName = "characteristic_id")
-    @JsonIgnore
     private Characteristic characteristic;
 
-    @JsonIgnore
     @ManyToMany
     @JoinTable(name = "product_property",
             joinColumns = @JoinColumn(name = "property_id"),

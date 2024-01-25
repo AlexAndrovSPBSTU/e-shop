@@ -47,13 +47,23 @@ public class Category {
 
     @JsonProperty("productAmountOfCategory")
     public int getProductAmountOfCategory() {
-        return products.size() + children.stream().mapToInt(Category::getProductAmountOfCategory).sum();
+        int amount = 0;
+        if (products != null && !products.isEmpty()) {
+            amount += products.size();
+        }
+        if (children != null && !children.isEmpty()) {
+            amount += children.stream().mapToInt(Category::getProductAmountOfCategory).sum();
+        }
+        return amount;
     }
 
     @JsonIgnore
     public List<Category> getAllChildren() {
-        List<Category> list = new ArrayList<>(children);
-        children.forEach(child -> list.addAll(child.getAllChildren()));
+        List<Category> list = new ArrayList<>();
+        if (children != null) {
+            list.addAll(children);
+            children.forEach(child -> list.addAll(child.getAllChildren()));
+        }
         return list;
     }
 

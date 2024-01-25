@@ -2,18 +2,19 @@ package ru.alexandrov.backend.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import ru.alexandrov.backend.models.cart.Purchase;
 
 import javax.persistence.*;
-
 import java.util.List;
 
 @Entity
 @Table(name = "customer")
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Customer {
     @Id
     @Column(name = "customer_id")
@@ -21,9 +22,11 @@ public class Customer {
     private int id;
 
     @Column(name = "name")
+//    @Max(30)
     private String name;
 
     @Column(name = "surname")
+//    @Max(30)
     private String surname;
 
     @Column(name = "email")

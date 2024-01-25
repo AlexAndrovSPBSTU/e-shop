@@ -6,11 +6,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ru.alexandrov.backend.models.cart.CartResponse;
+import ru.alexandrov.backend.dto.cart.CartResponse;
 import ru.alexandrov.backend.services.EmailSenderService;
 import ru.alexandrov.backend.services.ShopService;
-
-import java.security.Principal;
 
 @RestController
 public class ShopController {
@@ -28,8 +26,8 @@ public class ShopController {
      * Renames the user's cart.
      */
     @GetMapping("/cart")
-    public CartResponse getCart(Principal principal) {
-        return shopService.getCartItems(principal);
+    public CartResponse getCart() {
+        return shopService.getCartItems();
     }
 
 
@@ -52,8 +50,8 @@ public class ShopController {
      * @return {@code 200} if the product was reduced in the cart, {@code 409} otherwise
      */
     @PostMapping("/reduce")
-    public ResponseEntity<?> reduceProductFromCart(@RequestParam int id, Principal principal) {
-        shopService.reduce(id, principal);
+    public ResponseEntity<?> reduceProductFromCart(@RequestParam int id) {
+        shopService.reduce(id);
         return ResponseEntity.ok("Product has been reduced!");
     }
 
@@ -65,8 +63,8 @@ public class ShopController {
      * @return {@code 200} if the product was deleted in the cart, {@code 409} otherwise
      */
     @PostMapping("/delete")
-    public ResponseEntity<?> deleteFromCart(@RequestParam int id, Principal principal) {
-        shopService.deleteFromCart(id, principal);
+    public ResponseEntity<?> deleteFromCart(@RequestParam int id) {
+        shopService.deleteFromCart(id);
         return ResponseEntity.ok("Product has been deleted from cart!");
     }
 
@@ -77,9 +75,9 @@ public class ShopController {
      * @return {@code 200} if a purchase completed, {@code 409} otherwise
      */
     @PostMapping("/buy")
-    public ResponseEntity<?> buy(@RequestParam int[] id, Principal principal) {
-        int purcahseId =  shopService.buy(id, principal);
-        emailSenderService.sendEmail(purcahseId, principal);
+    public ResponseEntity<?> buy(@RequestParam int[] id) {
+        int purcahseId =  shopService.buy(id );
+        emailSenderService.sendEmail(purcahseId );
         return ResponseEntity.ok("Purchase completed!");
     }
 
@@ -89,7 +87,7 @@ public class ShopController {
      * @return {@code 200} if ok, {@code 409} otherwise
      */
     @GetMapping("/myPurchases")
-    public ResponseEntity<?> getMyPurchases(Principal principal) {
-        return ResponseEntity.ok(shopService.getMyPurchases(principal));
+    public ResponseEntity<?> getMyPurchases() {
+        return ResponseEntity.ok(shopService.getMyPurchases());
     }
 }

@@ -6,7 +6,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import ru.alexandrov.backend.models.cart.CheckBeforeBuyResponse;
+import ru.alexandrov.backend.dto.cart.CheckBeforeBuyResponse;
 
 import java.security.Principal;
 import java.util.ArrayList;

@@ -5,7 +5,7 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import ru.alexandrov.backend.models.Product;
+import ru.alexandrov.backend.dto.ProductDTO;
 
 @Aspect
 @Component
@@ -24,7 +24,7 @@ public class ProductValidationAspect extends BasicValidationAspect {
 
     @Around(value = "execution(* ru.alexandrov.backend.controllers.ProductsController.createProduct(..)) && args(product,categoryId)",
             argNames = "joinPoint,product,categoryId")
-    public ResponseEntity<?> validateCreateProduct(ProceedingJoinPoint joinPoint, Product product, Integer categoryId) throws Throwable {
+    public ResponseEntity<?> validateCreateProduct(ProceedingJoinPoint joinPoint, ProductDTO product, Integer categoryId) throws Throwable {
         StringBuilder errors = new StringBuilder();
 
         //Проверяем, что название товара уникально

@@ -5,7 +5,7 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import ru.alexandrov.backend.models.Category;
+import ru.alexandrov.backend.dto.CategoryDTO;
 
 @Component
 @Aspect
@@ -40,7 +40,7 @@ public class CategoryValidationAspect extends BasicValidationAspect {
 
     @Around(value = "execution(* ru.alexandrov.backend.controllers.CategoriesController.createCategory(..)) && args(category,parentId)",
             argNames = "joinPoint,category,parentId")
-    public ResponseEntity<?> validateCreateCategory(ProceedingJoinPoint joinPoint, Category category,
+    public ResponseEntity<?> validateCreateCategory(ProceedingJoinPoint joinPoint, CategoryDTO category,
                                                     Integer parentId) throws Throwable {
         StringBuilder errors = new StringBuilder();
 
@@ -98,7 +98,7 @@ public class CategoryValidationAspect extends BasicValidationAspect {
         }
 
         //Проверяем, что мы не пытаемся сделать категорию подкатегорией одного из своих сыновей или сыновей сыновей и тд.
-        validatePaternity(id, parentId, errors, joinPoint);
+        validatePaternity(id, parentId, errors);
 
         return makeReturnStatement(errors, joinPoint);
     }

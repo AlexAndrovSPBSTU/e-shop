@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.alexandrov.backend.models.Product;
+import ru.alexandrov.backend.dto.ProductDTO;
 import ru.alexandrov.backend.services.ProductService;
 
 @RestController
@@ -53,7 +53,7 @@ public class ProductsController {
      * @return {@code 200} if the category was created, {@code 409} otherwise
      */
     @PostMapping("/new")
-    public ResponseEntity<?> createProduct(@RequestBody Product product,
+    public ResponseEntity<?> createProduct(@RequestBody ProductDTO product,
                                            @RequestParam int categoryId) {
         productService.save(product, categoryId);
         return ResponseEntity.ok(HttpStatus.OK);

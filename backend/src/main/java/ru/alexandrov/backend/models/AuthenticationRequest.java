@@ -1,10 +1,12 @@
-package ru.alexandrov.backend.security;
+package ru.alexandrov.backend.models;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class AuthenticationRequest {
     private String email;
     private String password;
