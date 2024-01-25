@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.*;
 import ru.alexandrov.backend.util.PropertyListSerializer;
 
-import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 @Getter
@@ -25,7 +24,6 @@ public class ProductDTO {
 
     private Integer discount;
 
-    @PositiveOrZero
     private Double rating;
 
     private String category;

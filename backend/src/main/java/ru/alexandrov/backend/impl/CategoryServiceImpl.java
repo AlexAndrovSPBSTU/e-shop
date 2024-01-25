@@ -171,7 +171,6 @@ public class CategoryServiceImpl implements CategoryService {
         categoryRepository.deleteParentChildRelation(child_id, parent_id);
     }
 
-    @Transactional
     public void delete(int id) {
         categoryRepository.deleteById(id);
     }

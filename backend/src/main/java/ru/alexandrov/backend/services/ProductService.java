@@ -8,14 +8,10 @@ import java.util.Optional;
 @Component
 public interface ProductService {
 
-    public Optional<ProductDTO> getProductById(int id);
-
-    public void save(ProductDTO productDTO, int categoryId);
-
-    public void delete(int id);
-
-    public void change(int id, String name, Double price, Integer amount,
-                       String description, Integer discount, Integer categoryId);
-
-    public void assignProperty(int productId, Integer propertyId, Integer characteristicId, String newValue);
+    Optional<ProductDTO> getProductById(int id);
+    void save(ProductDTO productDTO, int categoryId);
+    void delete(int id);
+    void change(int id, String name, Double price, Integer amount,
+            String description, Integer discount, Integer categoryId);
+    void assignProperty(int productId, Integer propertyId, Integer characteristicId, String newValue);
 }

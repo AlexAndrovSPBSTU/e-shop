@@ -7,6 +7,8 @@ import lombok.*;
 import ru.alexandrov.backend.constants.ProjectConstants;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
@@ -24,18 +26,23 @@ public class Product {
     private Integer id;
 
     @Column(name = "name")
+    @NotEmpty
     private String name;
 
     @Column(name = "price")
+    @NotNull
     private Double price;
 
     @Column(name = "amount")
+    @NotNull
     private Integer amount;
 
     @Column(name = "description")
+    @NotNull
     private String description;
 
     @Column(name = "discount")
+    @NotNull
     private Integer discount;
 
     @Column(name = "rating")
@@ -47,7 +54,6 @@ public class Product {
     private Category category;
 
     @ManyToMany(mappedBy = "products")
-//    @JsonSerialize(using = PropertyListSerializer.class)
     private List<Property> properties;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.PERSIST)

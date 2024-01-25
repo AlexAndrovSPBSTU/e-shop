@@ -21,4 +21,5 @@ public class CategoryDTO {
     private List<CategoryDTO> children;
 
     private int productAmountOfCategory;
+
 }

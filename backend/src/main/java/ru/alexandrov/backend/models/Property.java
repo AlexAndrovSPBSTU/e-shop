@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
 @Entity
@@ -17,6 +18,7 @@ public class Property {
     private int id;
 
     @Column(name = "value")
+    @NotEmpty
     private String value;
 
     @ManyToOne

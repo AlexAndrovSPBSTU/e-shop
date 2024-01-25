@@ -8,7 +8,7 @@ import ru.alexandrov.backend.models.Customer;
 @Component
 public interface CustomerService {
 
-    public void save(Customer customer);
+    void save(Customer customer);
 
-    public ResponseEntity<?> authenticate(AuthenticationRequest authenticationRequest);
+    ResponseEntity<?> authenticate(AuthenticationRequest authenticationRequest);
 }
