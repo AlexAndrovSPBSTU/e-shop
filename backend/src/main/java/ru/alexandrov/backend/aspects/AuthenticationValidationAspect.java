@@ -21,9 +21,17 @@ public class AuthenticationValidationAspect extends BasicValidationAspect {
         //Проверяем наличие обязательных свойств нового пользователя
         if (customer.getName() == null) {
             errors.append("name - name is mandatory\n");
+        } else {
+            if (customer.getName().length() > 30) {
+                errors.append("name - name must have less than 30 symbols\n");
+            }
         }
         if (customer.getSurname() == null) {
             errors.append("surname - surname is mandatory\n");
+        } else {
+            if (customer.getSurname().length() > 30) {
+                errors.append("surname - surname must have less than 30 symbols\n");
+            }
         }
         if (customer.getPassword() == null) {
             errors.append("password - password is mandatory\n");
