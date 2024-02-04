@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "vite",
+    "dev:development": "vite --mode development",
+    "dev:production": "vite --mode production",
     "build": "vite build",
     "preview": "vite preview",
     "lint": "eslint . --fix --ignore-path .gitignore"
@@ -11,8 +12,6 @@
   "dependencies": {
     "@mdi/font": "7.0.96",
     "core-js": "^3.29.0",
-    "easy-yandex-s3": "^2.0.0",
-    "pinia": "^2.1.6",
     "roboto-fontface": "*",
     "vee-validate": "^4.11.6",
     "vue": "^3.2.0",

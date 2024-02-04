@@ -129,7 +129,7 @@
                           v-model="specificProperty"
                           type="number"
                           clearable
-                          label="До*"
+                          label="Значение*"
                           required
                         ></v-text-field>
                       </v-col>
@@ -271,18 +271,34 @@ export default {
 
     async addPropertyInProductFunc() {
       this.loading = true;
+      //http://localhost:8080/products/:productId/addProperty?characteristicId=3&newProperty=7
+      //http://localhost:8080/products/:productId/addProperty?propertyId=7
 
-      let idProp = this.specificCharacteristic.properties.find(
-        (v) => v.value === this.specificProperty
-      );
 
-      await addPropertyInProduct(this.specificProduct.id, idProp.id).then((data) => {
+      if(this.specificCharacteristic.isRange){
+        await addPropertyInProduct(this.specificProduct.id, `characteristicId=${this.specificCharacteristic.id}&newValue=${this.specificProperty}`).then(() => {
         this.loading = false;
         this.categories = null;
         this.specificProduct = null;
         this.specificCharacteristic = null;
         this.specificProperty = null;
       });
+      }
+      else{
+        let idProp = this.specificCharacteristic.properties.find(
+        (v) => v.value === this.specificProperty
+      );
+
+      console.log(idProp)
+      await addPropertyInProduct(this.specificProduct.id, "propertyId="+idProp.id).then(() => {
+        this.loading = false;
+        this.categories = null;
+        this.specificProduct = null;
+        this.specificCharacteristic = null;
+        this.specificProperty = null;
+      });
+      }
+      
     },
   },
 };
