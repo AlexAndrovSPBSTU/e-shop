@@ -85,8 +85,6 @@ public class CategoryServiceImpl implements CategoryService {
 
         Session session = getSession();
         Category category = session.find(Category.class, id);
-//                categoryRepository.findById(id).get();
-
 
         //Достаём все дочерние категории.
         List<Category> categories = category.getAllChildren();
@@ -179,8 +177,8 @@ public class CategoryServiceImpl implements CategoryService {
         Session session = getSession();
         Category category = (Category) session.merge(modelMapper.map(categoryDTO, Category.class));
         NativeQuery<?> nativeQuery = session.createNativeQuery("insert into category_parent_child values (?,?)");
-        nativeQuery.setParameter(1, category.getId());
-        nativeQuery.setParameter(2, parentId);
+        nativeQuery.setParameter(1, parentId);
+        nativeQuery.setParameter(2, category.getId());
         nativeQuery.executeUpdate();
         session.close();
     }

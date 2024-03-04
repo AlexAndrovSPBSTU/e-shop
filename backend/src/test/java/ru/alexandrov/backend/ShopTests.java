@@ -4,10 +4,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.alexandrov.backend.dto.cart.CartItemResponse;
-import ru.alexandrov.backend.repositories.CategoryRepository;
+import ru.alexandrov.backend.repositories.CustomerRepository;
+import ru.alexandrov.backend.services.CategoryService;
 import ru.alexandrov.backend.services.ShopService;
-
-import javax.transaction.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static ru.alexandrov.backend.TestsUtil.PRODUCT_EXPECTED_NAME;
@@ -18,13 +17,15 @@ public class ShopTests {
     private ShopService shopServiceImpl;
 
     @Autowired
-    private CategoryRepository categoryRepository;
+    private CategoryService categoryService;
+
+    @Autowired
+    private CustomerRepository customerRepository;
 
     @Autowired
     private TestsUtil testsUtil;
 
     @Test
-    @Transactional
     public void Test_Add_To_Cart() {
         int categoryId = testsUtil.createCategory();
         int productId = testsUtil.createProduct(categoryId);
@@ -43,12 +44,13 @@ public class ShopTests {
                 .map(CartItemResponse::getName).contains(PRODUCT_EXPECTED_NAME);
 
         //Delete a category and all its products
-        categoryRepository.deleteById(categoryId);
+        categoryService.delete(categoryId);
+        customerRepository.deleteByEmail(TestsUtil.CUSTOMER_EMAIL_EXPECTED);
+
     }
 
 
     @Test
-    @Transactional
     public void Test_Total_Count() {
         int categoryId = testsUtil.createCategory();
         int productId = testsUtil.createProduct(categoryId);
@@ -61,10 +63,12 @@ public class ShopTests {
 
         //Check that our cart contains added product with totalCount - 2
         assertThat(shopServiceImpl.getCartItems().getProducts().get(0).getTotalCount()).isEqualTo(2);
+
+        categoryService.delete(categoryId);
+        customerRepository.deleteByEmail(TestsUtil.CUSTOMER_EMAIL_EXPECTED);
     }
 
     @Test
-    @Transactional
     public void Test_Delete_From_Cart() {
         int categoryId = testsUtil.createCategory();
         int productId = testsUtil.createProduct(categoryId);
@@ -84,12 +88,13 @@ public class ShopTests {
         shopServiceImpl.addProductToCart(productId);
         shopServiceImpl.deleteFromCart(productId);
         assertThat(shopServiceImpl.getCartItems().getProducts()).isEmpty();
+
+        categoryService.delete(categoryId);
+        customerRepository.deleteByEmail(TestsUtil.CUSTOMER_EMAIL_EXPECTED);
     }
 
 
-    //То же самое что и в Categories.Rename().
-//    @Transactional
-//        @Test
+    @Test
     public void Test_Buy() {
         int categoryId = testsUtil.createCategory();
         int productId = testsUtil.createProduct(categoryId);
@@ -102,6 +107,9 @@ public class ShopTests {
         shopServiceImpl.buy(new int[]{productId});
 
         assertThat(shopServiceImpl.getMyPurchases().get(0).getProducts().get(0).getProductId()).isEqualTo(productId);
+
+        categoryService.delete(categoryId);
+        customerRepository.deleteByEmail(TestsUtil.CUSTOMER_EMAIL_EXPECTED);
     }
 
 }

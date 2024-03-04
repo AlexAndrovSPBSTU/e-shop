@@ -31,10 +31,8 @@ public class TestsUtil {
     private CustomerService customerServiceImpl;
 
     public static final String PRODUCT_EXPECTED_NAME = "Xiaomi air dots 2";
-
     public static final String CATEGORY_EXPECTED_NAME = "Xiaomi";
     public static final String CATEGORY_RENAMED_NAME = "Компьютерные мыши";
-
     public static final String CUSTOMER_NAME_EXPECTED = "bob";
     public static final String CUSTOMER_SURNAME_EXPECTED = "jonson";
     public static final String CUSTOMER_EMAIL_EXPECTED = "jonson@gmail.com";
