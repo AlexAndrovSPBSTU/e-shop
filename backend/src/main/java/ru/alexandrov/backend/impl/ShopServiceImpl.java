@@ -33,6 +33,7 @@ public class ShopServiceImpl implements ShopService {
     private final CustomerRepository customerRepository;
     private final ProductRepository productRepository;
     private final PurchaseRepository purchaseRepository;
+    private final static Purchase DEFAULT_PURCHASE = Purchase.builder().id(-1).build();
 
     @Autowired
     public ShopServiceImpl(CartItemRepository cartItemRepository, CustomerRepository customerRepository,
@@ -47,12 +48,13 @@ public class ShopServiceImpl implements ShopService {
         return SecurityContextHolder.getContext().getAuthentication().getName();
     }
 
+    @Transactional
     public CartResponse getCartItems() {
         AtomicInteger totalCount = new AtomicInteger();
         AtomicReference<Double> totalPrice = new AtomicReference<>((double) 0);
 
         List<CartItemResponse> cartItems = cartItemRepository.findAllByCustomerAndPurchase(customerRepository.findByEmail(
-                        getCustomerEmail()).get(), Purchase.builder().id(-1).build()).stream()
+                        getCustomerEmail()).get(), DEFAULT_PURCHASE).stream()
                 .map(cartItem -> {
                             Product product = cartItem.getProductObject();
                             totalCount.addAndGet(cartItem.getTotalCount());
@@ -84,7 +86,7 @@ public class ShopServiceImpl implements ShopService {
 
         // Check if the product is already in the customer's cart
         Optional<CartItem> existingCartItem = cartItemRepository.findById(CartItemId.builder()
-                .customer(customer).purchase(Purchase.builder().id(-1).build()).product(product).build());
+                .customer(customer).purchase(DEFAULT_PURCHASE).product(product).build());
 
         if (existingCartItem.isPresent()) {
             // If the product is already in the cart, update the quantity
@@ -97,7 +99,7 @@ public class ShopServiceImpl implements ShopService {
             CartItem cartItem = CartItem.builder()
                     .customer(customer)
                     .product(product)
-                    .purchase(Purchase.builder().id(-1).build())
+                    .purchase(DEFAULT_PURCHASE)
                     .totalCount(1)
                     .build();
             cartItemRepository.save(cartItem);
@@ -130,7 +132,7 @@ public class ShopServiceImpl implements ShopService {
                 .get();
         return cartItemRepository.findById(CartItemId.builder()
                 .product(product)
-                .purchase(Purchase.builder().id(-1).build())
+                .purchase(DEFAULT_PURCHASE)
                 .customer(customer).build()).get();
     }
 
@@ -145,11 +147,11 @@ public class ShopServiceImpl implements ShopService {
             Product product = productRepository.findById(i).get();
 
             //Присоединяем сущность CartItem к новой покупке
-            cartItemRepository.updatePurchase(customer.getId(), product.getId(), purchase.getId());
             CartItem cartItem = cartItemRepository.findById(CartItemId.builder()
-                    .purchase(Purchase.builder().id(-1).build())
+                    .purchase(DEFAULT_PURCHASE)
                     .customer(customer)
                     .product(product).build()).get();
+            cartItemRepository.updatePurchase(customer.getId(), product.getId(), purchase.getId());
 
             //Для каждого продукта уменьшаем его кол-во в БД
             product.setAmount(product.getAmount() - cartItem.getTotalCount());
@@ -158,6 +160,7 @@ public class ShopServiceImpl implements ShopService {
         return purchase.getId();
     }
 
+    @Transactional
     public List<PurchasesResponse> getMyPurchases() {
         Customer customer = customerRepository.findByEmail(getCustomerEmail())
                 .get();

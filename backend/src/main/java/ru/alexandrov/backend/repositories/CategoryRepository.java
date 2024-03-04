@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 import ru.alexandrov.backend.models.Category;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface CategoryRepository extends CrudRepository<Category, Integer> {
@@ -22,15 +21,5 @@ public interface CategoryRepository extends CrudRepository<Category, Integer> {
     @Query(value = "insert into category_parent_child values (:parentId,:childId)",
             nativeQuery = true)
     void insert(@Param("childId") int childId, @Param("parentId") int parentId);
-
-    @Modifying
-    @Query(value = "delete from category_parent_child where parent_id=:parentId and child_id=:childId",
-            nativeQuery = true)
-    void deleteParentChildRelation(@Param("childId") int childId, @Param("parentId") int parentId);
-
-    @Modifying
-    @Query(value = "update category set name=:newName where category_id=:id",
-            nativeQuery = true)
-    void rename(@Param("id") int categoryId, @Param("newName") String newName);
 
 }

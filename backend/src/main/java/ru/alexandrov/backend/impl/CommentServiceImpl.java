@@ -12,6 +12,7 @@ import ru.alexandrov.backend.repositories.CustomerRepository;
 import ru.alexandrov.backend.repositories.ProductRepository;
 import ru.alexandrov.backend.services.CommentService;
 
+import javax.transaction.Transactional;
 import java.util.Date;
 
 @Service
@@ -29,6 +30,7 @@ public class CommentServiceImpl implements CommentService {
         this.modelMapper = modelMapper;
     }
 
+    @Transactional
     public void save(CommentDTO commentDTO, int productId) {
         Product product = productRepository.findById(productId).get();
         Comment comment = modelMapper.map(commentDTO, Comment.class);
@@ -40,6 +42,7 @@ public class CommentServiceImpl implements CommentService {
         productRepository.save(product);
     }
 
+    @Transactional
     public void deleteComment(int id) {
         int productId = commentRepository.findById(id).get().getProduct().getId();
         commentRepository.deleteById(id);
