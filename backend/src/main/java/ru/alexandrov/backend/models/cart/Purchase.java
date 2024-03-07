@@ -26,7 +26,7 @@ public class Purchase {
     @Column(name = "purchase_date")
     private Date date;
 
-    @OneToMany(mappedBy = "purchase", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "purchase")
     private List<CartItem> cartItemList;
 
     @ManyToOne

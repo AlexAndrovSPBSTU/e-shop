@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "photo")
@@ -13,6 +14,7 @@ import javax.persistence.*;
 public class Photo {
     @Id
     @Column(name = "url")
+    @NotNull
     private String url;
 
     @ManyToOne

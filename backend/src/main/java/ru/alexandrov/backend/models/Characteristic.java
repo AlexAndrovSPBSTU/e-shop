@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -22,9 +24,11 @@ public class Characteristic {
     private int id;
 
     @Column(name = "name")
+    @NotEmpty
     private String name;
 
     @Column(name = "is_range")
+    @NotNull
     private Boolean isRange;
 
     @Column(name = "from_")
@@ -43,8 +47,12 @@ public class Characteristic {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Characteristic that = (Characteristic) o;
         return id == that.id;
     }

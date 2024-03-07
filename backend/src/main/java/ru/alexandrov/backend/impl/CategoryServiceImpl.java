@@ -1,5 +1,7 @@
 package ru.alexandrov.backend.impl;
 
+import org.hibernate.Session;
+import org.hibernate.query.NativeQuery;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -13,12 +15,13 @@ import ru.alexandrov.backend.models.Category;
 import ru.alexandrov.backend.models.Characteristic;
 import ru.alexandrov.backend.models.Product;
 import ru.alexandrov.backend.models.Property;
-import ru.alexandrov.backend.repositories.CategoryRepository;
 import ru.alexandrov.backend.repositories.CharacteristicRepository;
 import ru.alexandrov.backend.repositories.ProductRepository;
 import ru.alexandrov.backend.services.CategoryService;
 import ru.alexandrov.backend.util.ProductSorting;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -26,25 +29,32 @@ import java.util.stream.Stream;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
-    private final CategoryRepository categoryRepository;
-    private final ProductRepository productRepository;
-    private final CharacteristicRepository characteristicRepository;
     private final ModelMapper modelMapper;
+    @PersistenceContext
+    private EntityManager entityManager;
+    private final CharacteristicRepository characteristicRepository;
+    private final ProductRepository productRepository;
 
     @Autowired
-    public CategoryServiceImpl(CategoryRepository categoryRepository, ProductRepository productRepository, CharacteristicRepository characteristicRepository, ModelMapper modelMapper) {
-        this.categoryRepository = categoryRepository;
-        this.productRepository = productRepository;
-        this.characteristicRepository = characteristicRepository;
+    public CategoryServiceImpl(ModelMapper modelMapper, CharacteristicRepository characteristicRepository, ProductRepository productRepository) {
         this.modelMapper = modelMapper;
+        this.characteristicRepository = characteristicRepository;
+        this.productRepository = productRepository;
     }
 
+    @Transactional
     public List<CategoryDTO> getRootCategories() {
-        return categoryRepository.getRootCategories().stream()
+        Session session = getSession();
+        NativeQuery<Category> nativeQuery = session.createNativeQuery(
+                "select * from category where category_id in " +
+                        "(select child_id from category_parent_child where parent_id = 1)", Category.class);
+        return nativeQuery.getResultList()
+                .stream()
                 .map(category -> modelMapper.map(category, CategoryDTO.class)).collect(Collectors.toList());
     }
 
 
+    @Transactional
     public List<ProductDTO> getCategoryProducts(int id, Integer page, Integer order, String price, String[] filter) {
         //price это isRange хар-ка. Примеры
         //http://localhost:8080/categories/:categoryId/products?price=10-150 - price от 10 до 150
@@ -73,7 +83,8 @@ public class CategoryServiceImpl implements CategoryService {
                 break;
         }
 
-        Category category = categoryRepository.findById(id).get();
+        Session session = getSession();
+        Category category = session.find(Category.class, id);
 
         //Достаём все дочерние категории.
         List<Category> categories = category.getAllChildren();
@@ -146,12 +157,14 @@ public class CategoryServiceImpl implements CategoryService {
 
     }
 
+    @Transactional
     public Set<CharacteristicDTO> getCharacteristicsByCategoryId(int id, Boolean isRange) {
+        Session session = getSession();
         if (isRange == null) {
-            return categoryRepository.findById(id).get().getCharacteristics()
+            return session.find(Category.class, id).getCharacteristics()
                     .stream().map(characteristic -> modelMapper.map(characteristic, CharacteristicDTO.class)).collect(Collectors.toSet());
         } else {
-            return categoryRepository.findById(id).get().getCharacteristics()
+            return session.find(Category.class, id).getCharacteristics()
                     .stream()
                     .map(characteristic -> modelMapper.map(characteristic, CharacteristicDTO.class))
                     .filter(characteristic -> characteristic.getIsRange().equals(isRange))
@@ -161,28 +174,52 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Transactional
     public void save(CategoryDTO categoryDTO, int parentId) {
-        Category category = categoryRepository.save(modelMapper.map(categoryDTO, Category.class));
-        categoryRepository.insert(category.getId(), parentId);
+        Session session = getSession();
+        Category category = (Category) session.merge(modelMapper.map(categoryDTO, Category.class));
+        NativeQuery<?> nativeQuery = session.createNativeQuery("insert into category_parent_child values (?,?)");
+        nativeQuery.setParameter(1, parentId);
+        nativeQuery.setParameter(2, category.getId());
+        nativeQuery.executeUpdate();
+        session.close();
     }
 
 
     @Transactional
     public void deleteParentChildRelation(int child_id, int parent_id) {
-        categoryRepository.deleteParentChildRelation(child_id, parent_id);
+        Session session = getSession();
+        NativeQuery<?> nativeQuery = session.createNativeQuery("delete from category_parent_child where parent_id=? and child_id=?");
+        nativeQuery.setParameter(1, parent_id);
+        nativeQuery.setParameter(2, child_id);
+        nativeQuery.executeUpdate();
+        session.close();
     }
 
     @Transactional
     public void delete(int id) {
-        categoryRepository.deleteById(id);
+        Session session = getSession();
+        session.remove(session.find(Category.class, id));
+        session.close();
     }
 
     @Transactional
     public void insert(int child_id, int parent) {
-        categoryRepository.insert(child_id, parent);
+        Session session = getSession();
+        NativeQuery<?> nativeQuery = session.createNativeQuery("insert into category_parent_child values (?,?)");
+        nativeQuery.setParameter(1, parent);
+        nativeQuery.setParameter(2, child_id);
+        nativeQuery.executeUpdate();
+        session.close();
     }
 
     @Transactional
     public void rename(int categoryId, String newName) {
-        categoryRepository.rename(categoryId, newName);
+        Session session = getSession();
+        Category category = session.find(Category.class, categoryId);
+        category.setName(newName);
+        session.close();
+    }
+
+    public Session getSession() {
+        return entityManager.unwrap(Session.class);
     }
 }

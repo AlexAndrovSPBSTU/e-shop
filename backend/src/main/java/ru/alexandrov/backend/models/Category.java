@@ -1,10 +1,11 @@
 package ru.alexandrov.backend.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.*;
 
 @Entity
@@ -21,27 +22,26 @@ public class Category {
     private int id;
 
     @Column(name = "name")
+    @NotEmpty
     private String name;
 
     @Column(name = "diverged")
+    @NotNull
     private Boolean isDiverged;
 
-    @ManyToMany(mappedBy = "parents")
+    @ManyToMany(mappedBy = "parents", fetch = FetchType.EAGER)
     private List<Category> children;
 
     @ManyToMany
     @JoinTable(name = "category_parent_child",
             joinColumns = @JoinColumn(name = "child_id"),
             inverseJoinColumns = @JoinColumn(name = "parent_id"))
-    @JsonIgnore
     private List<Category> parents;
 
-    @OneToMany(mappedBy = "category")
-    @JsonIgnore
+    @OneToMany(mappedBy = "category", fetch = FetchType.EAGER)
     private List<Product> products;
 
     @OneToMany(mappedBy = "category")
-    @JsonIgnore
     private List<Characteristic> characteristics;
 
 
@@ -57,7 +57,6 @@ public class Category {
         return amount;
     }
 
-    @JsonIgnore
     public List<Category> getAllChildren() {
         List<Category> list = new ArrayList<>();
         if (children != null) {

@@ -33,6 +33,7 @@ public class ProductServiceImpl implements ProductService {
         this.modelMapper = modelMapper;
     }
 
+    @Transactional
     public Optional<ProductDTO> getProductById(int id) {
         return productRepository.findById(id).map(product -> modelMapper.map(product, ProductDTO.class));
     }

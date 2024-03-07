@@ -9,6 +9,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
 
@@ -25,6 +26,7 @@ public class Comment {
     @Column(name = "rating")
     @Min(0)
     @Max(5)
+    @NotNull
     private Integer rating;
 
     @Column(name = "note")
@@ -32,6 +34,7 @@ public class Comment {
 
     @Column(name = "date_time")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy")
+    @NotNull
     private Date date;
 
     @ManyToOne
@@ -49,7 +52,8 @@ public class Comment {
     @JsonSetter
     public void setPhotos(List<Photo> photos) {
         this.photos = photos;
-        if (this.photos != null)
+        if (this.photos != null) {
             this.photos.forEach(photo -> photo.setComment(this));
+        }
     }
 }

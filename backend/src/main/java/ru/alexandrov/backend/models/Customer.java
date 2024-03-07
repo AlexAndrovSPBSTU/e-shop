@@ -6,6 +6,9 @@ import lombok.*;
 import ru.alexandrov.backend.models.cart.Purchase;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 @Entity
@@ -22,22 +25,27 @@ public class Customer {
     private int id;
 
     @Column(name = "name")
-//    @Max(30)
+    @NotNull
+    @Size(min = 2, max = 30)
     private String name;
 
     @Column(name = "surname")
-//    @Max(30)
+    @NotNull
+    @Size(min = 2, max = 30)
     private String surname;
 
     @Column(name = "email")
+    @NotEmpty
     private String email;
 
     @Column(name = "password")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @NotEmpty
     private String password;
 
     @Column(name = "role")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @NotEmpty
     private String role;
 
     @OneToMany(mappedBy = "customer")

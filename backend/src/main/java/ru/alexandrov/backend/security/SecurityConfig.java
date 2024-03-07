@@ -27,6 +27,9 @@ import java.util.Collections;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
+    private org.hibernate.cfg.Configuration configuration;
+
     @Bean
     public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -90,5 +93,6 @@ public class SecurityConfig {
 
         return modelMapper;
     }
+
 
 }
